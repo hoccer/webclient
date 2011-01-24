@@ -1,0 +1,3 @@
+[submodule "lib/linccer"]
+	path = lib/linccer
+	url = git@github.com:hoccer/javascript.git
