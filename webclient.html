@@ -93,11 +93,31 @@
 	<style type="text/css" media="screen">
 	
 		#content { width: 700px; margin: 0 auto}
-		#content > div { padding-top: 20px;}
+		#content > div { margin-top: 20px;}
 		#location #coordinates { display: none; }
 		
 		#map_canvas { height: 450px; }
 		#map_container { margin-top: -1000px; }
+		
+		div.fileinputs {
+			position: relative;
+		}
+
+		div.fakefile {
+			position: absolute;
+			top: 0px;
+			left: 0px;
+			z-index: 1;
+		}
+
+		input.file {
+			position: relative;
+			text-align: right;
+			-moz-opacity:0 ;
+			filter:alpha(opacity: 0);
+			opacity: 0;
+			z-index: 2;
+		}
 	</style>
 	
 </head>
@@ -117,8 +137,15 @@
 		</div>
 
 		<div>			
-			File: <input id="fileInputField" type="file" name="upload[filename]" />
+			<div class="fileinputs">
+				<input type="file" class="file" />
+				<div class="fakefile">
+					<img style="background-color: red; width: 30px; height: 30px" />
+				</div>
+			</div>
+
 		</div>
+		
 		<div>
 			<a href="#" id="receiveButton">Receive</a>
 			<a href="#" id="sendButton">Send</a>

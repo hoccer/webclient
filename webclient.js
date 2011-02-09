@@ -3,8 +3,6 @@ var HoccerMap = function(id) {
 	HC.observable(that)
 	
 	var geocoder = new google.maps.Geocoder();
-	var visible = false;
-	
   var berlin = new google.maps.LatLng(52.520816, 13.410186);
 	var myOptions = {
     zoom: 15,
@@ -30,13 +28,16 @@ var HoccerMap = function(id) {
 	}
 	
 	google.maps.event.addListener(marker, 'dragend', function() {
+		that.manualLocation = true;
 		
 		that.latitude = marker.getPosition().lat();
 		that.longitude = marker.getPosition().lng();
 		that.fire('position_changed');
-		
 		geocode();	
 	});
+	
+	that.visible = false;
+	that.manualLocation = false;
 	
 	that.setCenter = function(latitude, longitude) {
 		that.latitude = latitude;
@@ -45,7 +46,7 @@ var HoccerMap = function(id) {
 		
 		var pos = new google.maps.LatLng(that.latitude, that.longitude);
 		map.panTo(pos);
-    if (visible) {
+    if (that.visible) {
   			marker.setPosition(pos);
 		}
 	}
@@ -63,6 +64,7 @@ var HoccerMap = function(id) {
 	}
 	
 	that.setAddress = function(address) {
+		that.visible = false;
 		geocoder.geocode({"address": address}, function(result, status) {
 			if (status != google.maps.GeocoderStatus.OK) {
 				return;
