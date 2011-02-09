@@ -28,16 +28,26 @@
 		  };
 		  var map = new google.maps.Map(document.getElementById(id), myOptions);
 			
+			var marker = new google.maps.Marker({
+	      map: map,
+	      draggable: true,
+	      animation: google.maps.Animation.DROP
+	    });
+			
 			var geocode = function() {
-
 				geocoder.geocode({"latLng": new google.maps.LatLng(that.latitude, that.longitude) }, function(result, status) {
+					if (status != google.maps.GeocoderStatus.OK) {
+						return;
+					}
+					
 					that.fire('address_changed', result[0].formatted_address);
 				});
 			}
 			
-			google.maps.event.addListener(map, 'dragend', function() {
-				that.latitude = map.getCenter().lat();
-				that.longitude = map.getCenter().lng();
+			google.maps.event.addListener(marker, 'dragend', function() {
+				
+				that.latitude = marker.getPosition().lat();
+				that.longitude = marker.getPosition().lng();
 				that.fire('position_changed');
 				
 				geocode();	
@@ -47,13 +57,24 @@
 				that.latitude = latitude;
 				that.longitude = longitude;
 				
-				map.panTo(new google.maps.LatLng(that.latitude, that.longitude));
+				var pos = new google.maps.LatLng(that.latitude, that.longitude);
+				map.panTo(pos);
+				
+				marker.setPosition(pos);
 				geocode();
+			}
+			
+			that.resize = function() {
+				google.maps.event.trigger(map, 'resize');
 			}
 			
 			that.setAddress = function(address) {
 				geocoder.geocode({"address": address}, function(result, status) {
-					console.log(result);
+					if (status != google.maps.GeocoderStatus.OK) {
+						return;
+					}
+
+					that.setCenter(result[0].geometry.location.lat(), result[0].geometry.location.lng());
 				});
 			}
 
@@ -66,13 +87,13 @@
 						
 			$("#sendButton").click(function() { that.fire('send'); } );
 			$("#receiveButton").click(function() {that.fire('receive') } );
+			$("#show_map > a").click(function() { $("#map_container").slideDown(), map.resize()} );
 			$("#addressForm").submit( function(event) {
 					map.setAddress($("#addressInput").val());
-					event.stopPropagating();
+					event.stopPropagation();
 					return false;
 			});
 						
-			
 			that.enableSend = function() {
 			};
 			
@@ -96,8 +117,6 @@
 		}
 	
 		$(document).ready(function() {
-			console.log("loaded");
-			
 			var fileCache = FileCache( {'api_key': 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta' });			
 			var linccer = Linccer( {'api_key' : 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta'});
 
@@ -105,12 +124,10 @@
 			var client = WebClient(map);
 		 	
 		  map.on('position_changed', function() {
-				console.log(map.latitude + " " + map.longitude);
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
 			});
 			
 			map.on('address_changed', function(address) {
-				console.log("address changed");
 				$("#coordinates").text(address);
 			})
 		
@@ -141,7 +158,6 @@
 			fileCache.on('uploaded', function(uri) {
 		    console.log("uploaded: " + uri);
 			});
-			
 			
 			linccer.on('sent', function(data) {
 				console.log("sent!!!!!! " + data);
@@ -178,10 +194,11 @@
 	<style type="text/css" media="screen">
 	
 		#content { width: 700px; margin: 0 auto}
-		#content div { margin-top: 20px;}
+		#content > div { padding-top: 20px;}
 		#location #coordinates { display: none; }
 		
-		#map_canvas { height: 400px; }
+		#map_canvas { height: 450px; }
+		#map_container { display: none; }
 	</style>
 	
 </head>
@@ -193,7 +210,7 @@
 			<span id="coordinates">32,12 1212</span>
 			
 			<span id="show_map"><a href="#">showMap</a></span>
-			<div>
+			<div id="map_container">
 				<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
 				<div id="map_canvas">
 				</div>
