@@ -7,20 +7,71 @@
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Robert Palmer">
 	<!-- Date: 2010-12-15 -->
-	<script src="lib/jquery-1.4.4.min.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	
-	<script src="lib/base.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/filecache.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-		var WebClient = function() {
-			that = {};
+		var HoccerMap = function(id) {
+			var that = {};
+			HC.observable(that);
+			var geocoder = new google.maps.Geocoder();
+			
+			var latlng = new google.maps.LatLng(52, 13);
+			var myOptions = {
+		    zoom: 16,
+		    center: latlng,
+		    mapTypeId: google.maps.MapTypeId.ROADMAP
+		  };
+		  var map = new google.maps.Map(document.getElementById(id), myOptions);
+			
+			var geocode = function() {
+
+				geocoder.geocode({"latLng": new google.maps.LatLng(that.latitude, that.longitude) }, function(result, status) {
+					that.fire('address_changed', result[0].formatted_address);
+				});
+			}
+			
+			google.maps.event.addListener(map, 'dragend', function() {
+				that.latitude = map.getCenter().lat();
+				that.longitude = map.getCenter().lng();
+				that.fire('position_changed');
+				
+				geocode();	
+			});
+			
+			that.setCenter = function(latitude, longitude) {
+				that.latitude = latitude;
+				that.longitude = longitude;
+				
+				map.panTo(new google.maps.LatLng(that.latitude, that.longitude));
+				geocode();
+			}
+			
+			that.setAddress = function(address) {
+				geocoder.geocode({"address": address}, function(result, status) {
+					console.log(result);
+				});
+			}
+
+			return that;
+		}
+		
+		var WebClient = function(map) {
+			var that = {};
 			HC.observable(that);
 						
 			$("#sendButton").click(function() { that.fire('send'); } );
 			$("#receiveButton").click(function() {that.fire('receive') } );
+			$("#addressForm").submit( function(event) {
+					map.setAddress($("#addressInput").val());
+					event.stopPropagating();
+					return false;
+			});
+						
 			
 			that.enableSend = function() {
 			};
@@ -44,17 +95,27 @@
 			return that;
 		}
 	
-	
 		$(document).ready(function() {
 			console.log("loaded");
 			
-			var fileCache = FileCache();			
-			var linccer = Linccer( {'api_key' : '1234567890'});
-		  var client = WebClient();
-		  
+			var fileCache = FileCache( {'api_key': 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta' });			
+			var linccer = Linccer( {'api_key' : 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta'});
+
+			var map = HoccerMap('map_canvas');
+			var client = WebClient(map);
+		 	
+		  map.on('position_changed', function() {
+				console.log(map.latitude + " " + map.longitude);
+				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
+			});
+			
+			map.on('address_changed', function(address) {
+				console.log("address changed");
+				$("#coordinates").text(address);
+			})
+		
 		  client.on('send', function() {
-				console.log('sending');
-				var content = document.getElementById("input").value;
+				var content = document.getElementById("fileInputField").value;
 				var data = [
 				   {
 						"type": "text/plain",
@@ -63,7 +124,6 @@
 				];
 
 				linccer.send("one-to-many", data);
-				
 			});
 
 			client.on('receive', function() {
@@ -75,7 +135,7 @@
 			});
 			
 			fileCache.on('progress', function(progress) {
-				console.log(progress);
+				// console.log(progress);
 			});
 
 			fileCache.on('uploaded', function(uri) {
@@ -93,6 +153,7 @@
 			
 			linccer.on('updated_environment', function(data) {
 				console.log('updated environments!!!!!');
+				map.setCenter(data.gps.latitude, data.gps.longitude)
 			});
 			
 			linccer.on('received', function(data) {
@@ -107,7 +168,7 @@
 			$("#fileInputField").change(function() {
 				var file = document.getElementById('fileInputField').files[0];
 				fileCache.upload(file);
-			});
+			});				
 		});
 		
 
@@ -116,9 +177,11 @@
 	
 	<style type="text/css" media="screen">
 	
-		#content { width: 500px; margin: 0 auto}
+		#content { width: 700px; margin: 0 auto}
 		#content div { margin-top: 20px;}
 		#location #coordinates { display: none; }
+		
+		#map_canvas { height: 400px; }
 	</style>
 	
 </head>
@@ -128,6 +191,13 @@
 		<div id="location">
 			<span id="waiting">locating...</span>
 			<span id="coordinates">32,12 1212</span>
+			
+			<span id="show_map"><a href="#">showMap</a></span>
+			<div>
+				<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
+				<div id="map_canvas">
+				</div>
+			</div>
 		</div>
 
 		<div>			
