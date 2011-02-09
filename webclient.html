@@ -13,109 +13,8 @@
 	<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-	
-	<script type="text/javascript" charset="utf-8">
-		var HoccerMap = function(id) {
-			var that = {};
-			HC.observable(that);
-			var geocoder = new google.maps.Geocoder();
-			
-			var latlng = new google.maps.LatLng(52, 13);
-			var myOptions = {
-		    zoom: 16,
-		    center: latlng,
-		    mapTypeId: google.maps.MapTypeId.ROADMAP
-		  };
-		  var map = new google.maps.Map(document.getElementById(id), myOptions);
-			
-			var marker = new google.maps.Marker({
-	      map: map,
-	      draggable: true,
-	      animation: google.maps.Animation.DROP
-	    });
-			
-			var geocode = function() {
-				geocoder.geocode({"latLng": new google.maps.LatLng(that.latitude, that.longitude) }, function(result, status) {
-					if (status != google.maps.GeocoderStatus.OK) {
-						return;
-					}
-					
-					that.fire('address_changed', result[0].formatted_address);
-				});
-			}
-			
-			google.maps.event.addListener(marker, 'dragend', function() {
-				
-				that.latitude = marker.getPosition().lat();
-				that.longitude = marker.getPosition().lng();
-				that.fire('position_changed');
-				
-				geocode();	
-			});
-			
-			that.setCenter = function(latitude, longitude) {
-				that.latitude = latitude;
-				that.longitude = longitude;
-				
-				var pos = new google.maps.LatLng(that.latitude, that.longitude);
-				map.panTo(pos);
-				
-				marker.setPosition(pos);
-				geocode();
-			}
-			
-			that.resize = function() {
-				google.maps.event.trigger(map, 'resize');
-			}
-			
-			that.setAddress = function(address) {
-				geocoder.geocode({"address": address}, function(result, status) {
-					if (status != google.maps.GeocoderStatus.OK) {
-						return;
-					}
-
-					that.setCenter(result[0].geometry.location.lat(), result[0].geometry.location.lng());
-				});
-			}
-
-			return that;
-		}
-		
-		var WebClient = function(map) {
-			var that = {};
-			HC.observable(that);
-						
-			$("#sendButton").click(function() { that.fire('send'); } );
-			$("#receiveButton").click(function() {that.fire('receive') } );
-			$("#show_map > a").click(function() { $("#map_container").slideDown(), map.resize()} );
-			$("#addressForm").submit( function(event) {
-					map.setAddress($("#addressInput").val());
-					event.stopPropagation();
-					return false;
-			});
-						
-			that.enableSend = function() {
-			};
-			
-			that.enableReceive = function() {
-			};
-			
-			that.displayLocation = function(location) {
-				$("#waiting").css("display", "none");
-				$("#coordinates").css("display", "inline");
-			};
-			
-			that.showUploadingState = function() {
-				// $("#").css("display": "none");	
-			};
-			
-			that.uploadReady = function() {
-				
-			}
-			
-			return that;
-		}
-	
+	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
 			var fileCache = FileCache( {'api_key': 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta' });			
 			var linccer = Linccer( {'api_key' : 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta'});
@@ -198,7 +97,7 @@
 		#location #coordinates { display: none; }
 		
 		#map_canvas { height: 450px; }
-		#map_container { display: none; }
+		#map_container { margin-top: -1000px; }
 	</style>
 	
 </head>
