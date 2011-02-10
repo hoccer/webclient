@@ -22,6 +22,8 @@
 			var map = HoccerMap('map_canvas');
 			var client = WebClient(map);
 		 	
+			var content;
+		
 		  map.on('position_changed', function() {
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
 			});
@@ -31,13 +33,7 @@
 			})
 		
 		  client.on('send', function() {
-				var content = document.getElementById("fileInputField").value;
-				var data = [
-				   {
-						"type": "text/plain",
-						"content": content
-						}
-				];
+				var data = [ content ];
 
 				linccer.send("one-to-many", data);
 			});
@@ -82,7 +78,7 @@
 						
 			$("#fileInputField").change(function() {
 				var file = document.getElementById('fileInputField').files[0];
-				fileCache.upload(file);
+				content = fileCache.upload(file);
 			});				
 		});
 		
@@ -90,15 +86,18 @@
 		
 	</script>
 	
+	<link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/defaults.css" />
+  <link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/style.css" />
 	<style type="text/css" media="screen">
 	
-		#content { width: 700px; margin: 0 auto}
-		#content > div { margin-top: 20px;}
 		#location #coordinates { display: none; }
 		
 		#map_canvas { height: 450px; }
-		#map_container { margin-top: -1000px; }
+		#map_container { position: absolute; width: 650px; margin-top: -1000px; }
 		
+		#content_select { height: 50px; }
+		
+	
 		div.fileinputs {
 			position: relative;
 		}
@@ -122,37 +121,39 @@
 	
 </head>
 <body>
-
-	<div id="content">
-		<div id="location">
-			<span id="waiting">locating...</span>
-			<span id="coordinates">32,12 1212</span>
-			
-			<span id="show_map"><a href="#">showMap</a></span>
-			<div id="map_container">
-				<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
-				<div id="map_canvas">
+		<div class="row">
+			<div class="column grid_6 info_box" id="content_select">
+				<div class="fileinputs">
+					<input type="file" class="file" id="fileInputField" />
+					<div class="fakefile">
+						<img style="background-color: red; width: 30px; height: 30px" />
+					</div>
 				</div>
 			</div>
-		</div>
-
-		<div>			
-			<div class="fileinputs">
-				<input type="file" class="file" />
-				<div class="fakefile">
-					<img style="background-color: red; width: 30px; height: 30px" />
-				</div>
-			</div>
-
 		</div>
 		
-		<div>
-			<a href="#" id="receiveButton">Receive</a>
-			<a href="#" id="sendButton">Send</a>
+		<div class="row">
+			<div id="location" class="column grid_6 info_box" >
+				<section><p>
+					<span id="waiting">locating...</span>
+					<span id="coordinates">32,12 1212</span>
+					<span id="show_map"><a href="#">showMap</a></span>
+				</p></section>
+				<div id="map_container" style="background-color: green">
+					<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
+					<div id="map_canvas">
+					</div>
+				</div>
+			</div>
+			<div class="column grid_5">
+			</div>
 		</div>
-
-
-
-</div>
+		
+		<div class="row">
+			<div class="column grid_7">
+				<a href="#" id="receiveButton">Receive</a>
+				<a href="#" id="sendButton">Send</a>
+			</div>
+		</div>
 </body>
 </html>
