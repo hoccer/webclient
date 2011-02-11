@@ -81,9 +81,11 @@ var WebClient = function(map) {
 	var that = {};
 	HC.observable(that);
 	
-	var mode = "sendMode";
+	var content;
+	var mode = "receiveMode";
+	
 	$("#send_mode_button").click(function() {
-	  mode = "sendMode"
+    mode = "sendMode"
     $("#content_select").slideDown();
 	});
 	
@@ -92,22 +94,82 @@ var WebClient = function(map) {
 	  $("#content_select").slideUp();
 	});
 	
-				
-	$("#sendButton").click(function() { that.fire('send'); } );
-	$("#receiveButton").click(function() {that.fire('receive') } );
+	$("#transfer_button").click(function() {
+	  if (mode === "sendMode") {
+	    that.fire('send');
+	  } else {
+	    that.fire('receive')
+	  }
+	});		
+	
+	$('#textcontent').bind('focus', function() {
+	  console.log("focus");
+    showTextMode();
+	});
+	
+	$('#textcontent').focusout( function() {
+    if ($(this).val() == "") {
+      showBothModes();
+    } else {
+      content = { 'type': "text/plain", 'content': $(this).val() }
+    }
+	});
 	
 	$("#show_map > a").click(function() { 
-	  
-	  $("#map_container")
-	    .css({ 'display': 'none', 'margin': '0px' })
-	    .slideDown(500, function() { map.show() });
+	  var map =  $('#map_container');
+	  if ( map.is(':hidden') || map.css('margin-top') == "-1000px" ) {
+	    map
+  	    .css({ 'position': 'static','display': 'none', 'margin': '0px' })
+  	    .slideDown(500, function() { map.show() });
+	  } else {
+	    map.slideUp();
+	  }
 	});
+	
+	$("#fileInputField").change(function() {
+    var file = document.getElementById('fileInputField').files[0];
+  
+    $("#filename").text(file.name);
+    showFileMode();
+    
+    that.fire('file_selected', file);
+	});
+  
 	
 	$("#addressForm").submit( function(event) {
 			map.setAddress($("#addressInput").val());
 			event.stopPropagation();
 			return false;
 	});
+	
+	var showTextMode = function() {
+    $("#fileinput").css({'display': 'none' });
+    $("#content_select > section > span").css({'display': 'none'});
+    $("#textcontent").animate({'width': "575px"});
+	}
+	
+	var showBothModes = function() {
+    $("#textcontent").animate({'width': "250px"}, function() {
+      $("#fileinput").css({'display': 'block' });
+      $("#content_select > section > span").css({'display': 'inline'});
+      
+    });
+	}
+	
+	var showFileMode = function() {
+	  $("#textinput").css({'display': 'none' });
+    $("#content_select > section > span").css({'display': 'none'});
+    $("#fileinput").css({'width': "605px"});
+	}
+	
+	that.content = function() {
+	  return content;
+	}
+	
+	that.setContent = function(newContent) {
+	  console.log(newContent);
+	  content = newContent;
+	}
 	
 	that.enableSend = function() {
 	};
@@ -123,10 +185,6 @@ var WebClient = function(map) {
 	that.showUploadingState = function() {
 		// $("#").css("display": "none");	
 	};
-	
-	that.uploadReady = function() {
-		
-	}
-	
+
 	return that;
 }

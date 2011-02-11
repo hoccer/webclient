@@ -33,13 +33,18 @@
 			})
 		
 		  client.on('send', function() {
-				var data = [ content ];
+				var data = [ client.content() ];
 
 				linccer.send("one-to-many", data);
 			});
 
 			client.on('receive', function() {
 				linccer.receive("one-to-many")
+			});
+			
+			client.on('file_selected', function(file) {
+				content = fileCache.upload(file);
+				client.setContent(content);	
 			});
 			
 			fileCache.on('started', function(url) {
@@ -71,19 +76,12 @@
 				console.log(data);
 				document.getElementById("input").value = data[0][0].content;
 			});
-			
+		
 			linccer.on('error', function(error) {
 				console.log(error);
-			});
-						
-			$("#fileInputField").change(function() {
-				var file = document.getElementById('fileInputField').files[0];
-				content = fileCache.upload(file);
-			});				
+			});			
 		});
-		
 
-		
 	</script>
 	
 	<link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/defaults.css" />
@@ -93,8 +91,10 @@
 		#location #coordinates { display: none; }
 		#webclient .info_box { margin-bottom: 10px; }
 		.info_box section { border: 0; }
-		#map_canvas { height: 450px; }
-		#map_container { position: absolute; width: 650px; margin-top: -1000px; }
+		#map_canvas { height: 450px; padding-top: 6px;}
+		#map_container { position: absolute; width: 600px; padding: 10px; margin-top: -1000px; }
+		#map_container { font-size: 15pt;}
+		#location #show_map {float: right;}
 		
 		#location span, #content_select span, .centered span { vertical-align: middle; }
 		#location img, #content_select img, .centered img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
@@ -103,7 +103,6 @@
 		#textinput {
 			vertical-align: center;
 			float:right;
-			
 			padding: 20px;
 		}
 		
@@ -118,9 +117,9 @@
 			display: none;
 		}
 		
-		#transfer h1 {  padding: 0 15px 10px; }
+		#transfer h1 			{  padding: 0 15px 10px; }
 		#transfer h1 span { vertical-align: middle; }
-		#transfer h1 img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
+		#transfer h1 img 	{ margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
 	
 		#transfer img#drag { 
 			float: left; 
@@ -135,15 +134,14 @@
 			list-style-position: inside;
 			margin: 0;
 		}
-		#transfer_button { width: 315px; margin-bottom: 17px; }	
 		
 		.button { 
-			height: 31px;
 			font-size: 14pt;
+			width: 254px;
+			height: 40px;
+			background: url('images/webapp_transfer_track_bg.png') repeat;
 			
 			color: #fff;
-			background-color: #39A7BE; 
-					
 		  background-repeat: no-repeat;
 		  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
 		  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
@@ -156,16 +154,22 @@
 			vertical-align: middle;
 			margin: 4px 5px;
 		}
+		
 		.button img {
-			margin: 4px 15px 4px 35px;
+			padding: 4px 15px 4px 35px;
 		}
+		
+		#button_intern {
+			margin: 4px;
+			background: url('images/webapp_transfer_bg_blue.png') repeat-x;
+		}
+		
 			
 		div.fileinputs {
 			position: relative;
 		}
 
 		div.fakefile {
-
 			position: absolute;
 			top: 30px;
 			left: 30px;
@@ -181,8 +185,7 @@
 			opacity: 0;
 			z-index: 2;
 			
-			height: 70px;
-			
+			height: 70px;	
 		}
 	</style>
 	
@@ -192,29 +195,28 @@
 		<div class="row">
 			<div class="column grid_4 info_box centered">
 				<section id="receive_mode_button">
-					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Webapp Btn Receive">Receive
+					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Receive">Receive
 				</section>
 			</div>
 		
 			<div class="column grid_4 info_box centered">
 				<section id="send_mode_button">
-					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Webapp Btn Send">Send
+					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Send">Send
 				</section>
 			</div>
 		</div>
 
 		<div class="row">
 			<div id="location" class="column grid_8 info_box" >
-				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Webapp Icon Location">
+				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
 					<span id="waiting">locating...</span>
-					<span id="coordinates">32,12 1212</span>
+					<span id="coordinates"></span>
 					<span id="show_map"><a href="#">Change</a></span>
-				</p></section>
-				<div id="map_container" style="background-color: green">
-					<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
-					<div id="map_canvas">
+					<div id="map_container">
+						<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
+						<div id="map_canvas"></div>
 					</div>
-				</div>
+				</p></section>
 			</div>
 			<div class="column grid_5">
 			</div>
@@ -227,13 +229,13 @@
 				<div id="fileinput" class="fileinputs">
 					<input type="file" class="file" id="fileInputField" />
 					<div class="fakefile">
-						<img src="images/webapp_icon_selectfile.png" width="52" height="40" alt="Webapp Icon Selectfile">
-						<span>Select File</span>
+						<img src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
+						<span id="filename">Select File</span>
 					</div>
 				</div>
-				or
+				<span>or</span>
 				<div id="textinput">
-					<textarea id="textcontent"></textarea>
+					<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
 				</div>
 				</section>
 			</div>
@@ -251,8 +253,10 @@
 				
 					<div id="transfer_action">
 						<div id="transfer_button" class="button">
-							<img src="images/webapp_icon_starttransfer.png" width="27" height="22" alt="Webapp Icon Starttransfer">
-							<span>Start Transfer</span>
+							<div id="button_intern">
+								<img src="images/webapp_icon_starttransfer.png" width="27" height="22" alt="Start Transfer">
+								<span>Start Transfer</span>
+							</div>
 						</div>
 						<ol>
 							<li>Open Hoccer App on your mobile</li>
@@ -260,8 +264,6 @@
 							<li>Swipe over Hoccer canvas on your mobile</li>
 						</ol>
 					</div>
-					<!-- <a href="#" id="receiveButton">Receive</a>
-					<a href="#" id="sendButton">Send</a> -->
 					<br style="clear: both" />
 				</p></section>
 			</div>
