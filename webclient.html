@@ -91,13 +91,72 @@
 	<style type="text/css" media="screen">
 	
 		#location #coordinates { display: none; }
-		
+		.info_box section { border: 0; }
 		#map_canvas { height: 450px; }
 		#map_container { position: absolute; width: 650px; margin-top: -1000px; }
 		
-		#content_select { height: 50px; }
+		#location span, #content_select span { vertical-align: middle; }
+		#location img, #content_select img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
+		#content_select { font-size: 15pt; }
 		
+		#textinput {
+			border: 1px solid green;
+			vertical-align: center;
+			float:right;
+			
+			padding: 20px;
+		}
+		
+		#fileinput {
+			border: 1px solid red;
+			float: left;
+			width: 250px;
+			padding: 20px;
+		}
+		
+		
+		#transfer h1 {  padding: 0 15px 10px; }
+		#transfer h1 span { vertical-align: middle; }
+		#transfer h1 img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
 	
+		#transfer img#drag { 
+			float: left; 
+			margin-left: 15px; 
+			border: 1px solid #bdbdbd;
+		  -moz-border-radius: 5px;
+		  -webkit-border-radius: 5px;
+		}
+		
+		#transfer_action { float: right; width: 340px;}
+		#transfer_action ol { 
+			list-style-position: inside;
+			margin: 0;
+		}
+		#transfer_button { width: 315px; margin-bottom: 17px; }	
+		
+		.button { 
+			height: 31px;
+			font-size: 14pt;
+			
+			color: #fff;
+			background-color: #39A7BE; 
+					
+		  background-repeat: no-repeat;
+		  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
+		  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
+		  box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
+		  -moz-border-radius: 5px;
+		  -webkit-border-radius: 5px;
+		}
+		
+		.button img, .button span {
+			vertical-align: middle;
+			margin: 4px 5px;
+		}
+		.button img {
+			margin: 4px 15px 4px 35px;
+		}
+			
 		div.fileinputs {
 			position: relative;
 		}
@@ -116,28 +175,39 @@
 			filter:alpha(opacity: 0);
 			opacity: 0;
 			z-index: 2;
+			
+			height: 50px;
+			
 		}
 	</style>
 	
 </head>
-<body>
+<body style="padding: 30px">
 		<div class="row">
-			<div class="column grid_6 info_box" id="content_select">
-				<div class="fileinputs">
+			<div class="column grid_8 info_box" id="content_select"><section>
+ 				
+				<div id="fileinput" class="fileinputs">
 					<input type="file" class="file" id="fileInputField" />
 					<div class="fakefile">
-						<img style="background-color: red; width: 30px; height: 30px" />
+						<img src="images/webapp_icon_selectfile.png" width="52" height="40" alt="Webapp Icon Selectfile">
+						<span>Select File</span>
 					</div>
 				</div>
+				<div id="textinput">
+					<textarea></textarea>
+				</div>
+				
+				
+				</section>
 			</div>
 		</div>
 		
 		<div class="row">
-			<div id="location" class="column grid_6 info_box" >
-				<section><p>
+			<div id="location" class="column grid_8 info_box" >
+				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Webapp Icon Location">
 					<span id="waiting">locating...</span>
 					<span id="coordinates">32,12 1212</span>
-					<span id="show_map"><a href="#">showMap</a></span>
+					<span id="show_map"><a href="#">Change</a></span>
 				</p></section>
 				<div id="map_container" style="background-color: green">
 					<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
@@ -150,9 +220,30 @@
 		</div>
 		
 		<div class="row">
-			<div class="column grid_7">
-				<a href="#" id="receiveButton">Receive</a>
-				<a href="#" id="sendButton">Send</a>
+			<div class="column grid_8 info_box" id="transfer">
+				<section><p>
+					<h1>
+					<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
+					<span>Transfer Data</span>
+					</h1>
+					
+					<img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+					
+					<div id="transfer_action">
+						<div id="transfer_button" class="button">
+							<img src="images/webapp_icon_starttransfer.png" width="27" height="22" alt="Webapp Icon Starttransfer">
+							<span>Start Transfer</span>
+						</div>
+						<ol>
+							<li>Open Hoccer App on your mobile</li>
+							<li>Hit "Start Transfer" Button above</li>
+							<li>Swipe over Hoccer canvas on your mobile</li>
+						</ol>
+					</div>
+					<!-- <a href="#" id="receiveButton">Receive</a>
+					<a href="#" id="sendButton">Send</a> -->
+					<br style="clear: both" />
+				</p></section>
 			</div>
 		</div>
 </body>
