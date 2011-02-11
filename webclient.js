@@ -80,22 +80,35 @@ var HoccerMap = function(id) {
 var WebClient = function(map) {
 	var that = {};
 	HC.observable(that);
+	
+	var mode = "sendMode";
+	$("#send_mode_button").click(function() {
+	  mode = "sendMode"
+    $("#content_select").slideDown();
+	});
+	
+	$("#receive_mode_button").click(function() {
+	  mode = "receiveMode"
+	  $("#content_select").slideUp();
+	});
+	
 				
 	$("#sendButton").click(function() { that.fire('send'); } );
 	$("#receiveButton").click(function() {that.fire('receive') } );
 	
 	$("#show_map > a").click(function() { 
 	  
-	  $("#map_container").css({ 'display': 'none', 'margin': '0px' })
-	                     .slideDown(500, function() { map.show() });
-	  });
+	  $("#map_container")
+	    .css({ 'display': 'none', 'margin': '0px' })
+	    .slideDown(500, function() { map.show() });
+	});
 	
 	$("#addressForm").submit( function(event) {
 			map.setAddress($("#addressInput").val());
 			event.stopPropagation();
 			return false;
 	});
-				
+	
 	that.enableSend = function() {
 	};
 	

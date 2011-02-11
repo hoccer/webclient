@@ -91,16 +91,16 @@
 	<style type="text/css" media="screen">
 	
 		#location #coordinates { display: none; }
+		#webclient .info_box { margin-bottom: 10px; }
 		.info_box section { border: 0; }
 		#map_canvas { height: 450px; }
 		#map_container { position: absolute; width: 650px; margin-top: -1000px; }
 		
-		#location span, #content_select span { vertical-align: middle; }
-		#location img, #content_select img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
-		#content_select { font-size: 15pt; }
+		#location span, #content_select span, .centered span { vertical-align: middle; }
+		#location img, #content_select img, .centered img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
+		#content_select, .centered { font-size: 15pt; }
 		
 		#textinput {
-			border: 1px solid green;
 			vertical-align: center;
 			float:right;
 			
@@ -108,12 +108,15 @@
 		}
 		
 		#fileinput {
-			border: 1px solid red;
 			float: left;
-			width: 250px;
-			padding: 20px;
+			width: 300px;
+			height: 100px;
 		}
 		
+		#content_select {
+			text-align: center;
+			display: none;
+		}
 		
 		#transfer h1 {  padding: 0 15px 10px; }
 		#transfer h1 span { vertical-align: middle; }
@@ -162,13 +165,15 @@
 		}
 
 		div.fakefile {
+
 			position: absolute;
-			top: 0px;
-			left: 0px;
+			top: 30px;
+			left: 30px;
 			z-index: 1;
 		}
 
 		input.file {
+			border: 1px solid gray;
 			position: relative;
 			text-align: right;
 			-moz-opacity:0 ;
@@ -176,32 +181,28 @@
 			opacity: 0;
 			z-index: 2;
 			
-			height: 50px;
+			height: 70px;
 			
 		}
 	</style>
 	
 </head>
 <body style="padding: 30px">
+	<div id="webclient">
 		<div class="row">
-			<div class="column grid_8 info_box" id="content_select"><section>
- 				
-				<div id="fileinput" class="fileinputs">
-					<input type="file" class="file" id="fileInputField" />
-					<div class="fakefile">
-						<img src="images/webapp_icon_selectfile.png" width="52" height="40" alt="Webapp Icon Selectfile">
-						<span>Select File</span>
-					</div>
-				</div>
-				<div id="textinput">
-					<textarea></textarea>
-				</div>
-				
-				
+			<div class="column grid_4 info_box centered">
+				<section id="receive_mode_button">
+					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Webapp Btn Receive">Receive
+				</section>
+			</div>
+		
+			<div class="column grid_4 info_box centered">
+				<section id="send_mode_button">
+					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Webapp Btn Send">Send
 				</section>
 			</div>
 		</div>
-		
+
 		<div class="row">
 			<div id="location" class="column grid_8 info_box" >
 				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Webapp Icon Location">
@@ -218,6 +219,25 @@
 			<div class="column grid_5">
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="column grid_8 info_box" id="content_select">
+				<section>
+ 			
+				<div id="fileinput" class="fileinputs">
+					<input type="file" class="file" id="fileInputField" />
+					<div class="fakefile">
+						<img src="images/webapp_icon_selectfile.png" width="52" height="40" alt="Webapp Icon Selectfile">
+						<span>Select File</span>
+					</div>
+				</div>
+				or
+				<div id="textinput">
+					<textarea id="textcontent"></textarea>
+				</div>
+				</section>
+			</div>
+		</div>
 		
 		<div class="row">
 			<div class="column grid_8 info_box" id="transfer">
@@ -226,9 +246,9 @@
 					<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
 					<span>Transfer Data</span>
 					</h1>
-					
+				
 					<img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
-					
+				
 					<div id="transfer_action">
 						<div id="transfer_button" class="button">
 							<img src="images/webapp_icon_starttransfer.png" width="27" height="22" alt="Webapp Icon Starttransfer">
@@ -246,5 +266,6 @@
 				</p></section>
 			</div>
 		</div>
+	</div>
 </body>
 </html>
