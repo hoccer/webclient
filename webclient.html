@@ -30,7 +30,6 @@
 			});
 			
 			map.on('address_changed', function(address) {
-				console.log(address);
 				$("#coordinates").text(address);
 			})
 		
@@ -66,7 +65,6 @@
 			});
 			
 			linccer.on('ready', function() {
-				console.log("ready");
 				client.displayLocation();
 			})
 			
@@ -81,7 +79,7 @@
 			});
 		
 			linccer.on('error', function(error) {
-				console.log(error);
+				$("#coordinates").text("no location");
 			});			
 		});
 

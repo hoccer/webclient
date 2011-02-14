@@ -136,7 +136,6 @@ var WebClient = function(map) {
     that.fire('file_selected', file);
 	});
   
-	
 	$("#addressForm").submit( function(event) {
 			map.setAddress($("#addressInput").val());
 			event.stopPropagation();
@@ -181,7 +180,7 @@ var WebClient = function(map) {
 		$("#waiting").css("display", "none");
 		$("#coordinates").css("display", "inline");
 	};
-	
+		
 	that.showUploadingState = function() {
 		// $("#").css("display": "none");	
 	};
