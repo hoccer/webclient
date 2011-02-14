@@ -43,7 +43,6 @@ var HoccerMap = function(id) {
 	that.manualLocation = false;
 	
 	that.setCenter = function(latitude, longitude) {
-		that.visible   = true; 
 		that.latitude  = latitude;
 		that.longitude = longitude;
 		geocode();
@@ -57,7 +56,7 @@ var HoccerMap = function(id) {
 	
 	that.show = function() {
 		google.maps.event.trigger(map, 'resize');
-		visible = true;
+		that.visible = true;
 		
 		if (!that.longitude) {
 		  return;
@@ -68,7 +67,6 @@ var HoccerMap = function(id) {
 	}
 	
 	that.setAddress = function(address) {
-		that.visible = false;
 		geocoder.geocode({"address": address}, function(result, status) {
 			if (status != google.maps.GeocoderStatus.OK) {
 				return;
