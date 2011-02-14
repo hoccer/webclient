@@ -25,7 +25,7 @@ var HoccerMap = function(id) {
 			if (status != google.maps.GeocoderStatus.OK) {
 				return;
 			}
-			
+			console.log("change");
 			that.fire('address_changed', result[0].formatted_address);
 		});
 	}
@@ -43,7 +43,8 @@ var HoccerMap = function(id) {
 	that.manualLocation = false;
 	
 	that.setCenter = function(latitude, longitude) {
-		that.latitude = latitude;
+		that.visible   = true; 
+		that.latitude  = latitude;
 		that.longitude = longitude;
 		geocode();
 		
@@ -72,8 +73,8 @@ var HoccerMap = function(id) {
 			if (status != google.maps.GeocoderStatus.OK) {
 				return;
 			}
-
 			that.setCenter(result[0].geometry.location.lat(), result[0].geometry.location.lng());
+			that.fire('position_changed');
 		});
 	}
 
