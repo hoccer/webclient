@@ -167,7 +167,6 @@ var WebClient = function(map) {
 	}
 	
 	that.setContent = function(newContent) {
-	  console.log(newContent);
 	  content = newContent;
 	}
 	
