@@ -10,12 +10,15 @@ var HoccerMap = function(id) {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
   var map = new google.maps.Map(document.getElementById(id), myOptions);
-	
+  
 	var marker = new google.maps.Marker({
     map: map,
     draggable: true,
     animation: google.maps.Animation.DROP
   });
+	
+	that.latitude  = 52.520816;
+	that.longitude = 13.410186;
 	
 	var geocode = function() {
 		geocoder.geocode({"latLng": new google.maps.LatLng(that.latitude, that.longitude) }, function(result, status) {
@@ -48,7 +51,7 @@ var HoccerMap = function(id) {
 		map.panTo(pos);
     if (that.visible) {
   			marker.setPosition(pos);
-		}
+    }
 	}
 	
 	that.show = function() {
@@ -58,7 +61,7 @@ var HoccerMap = function(id) {
 		if (!that.longitude) {
 		  return;
 		}
-		
+
 		var pos = new google.maps.LatLng(that.latitude, that.longitude);
 		marker.setPosition(pos);
 	}
@@ -103,7 +106,6 @@ var WebClient = function(map) {
 	});		
 	
 	$('#textcontent').bind('focus', function() {
-	  console.log("focus");
     showTextMode();
 	});
 	
@@ -116,13 +118,13 @@ var WebClient = function(map) {
 	});
 	
 	$("#show_map > a").click(function() { 
-	  var map =  $('#map_container');
-	  if ( map.is(':hidden') || map.css('margin-top') == "-1000px" ) {
-	    map
+	  var map_div =  $('#map_container');
+	  if ( map_div.is(':hidden') || map_div.css('margin-top') == "-1000px" ) {
+	    map_div
   	    .css({ 'position': 'static','display': 'none', 'margin': '0px' })
   	    .slideDown(500, function() { map.show() });
 	  } else {
-	    map.slideUp();
+	    map_div.slideUp();
 	  }
 	});
 	
