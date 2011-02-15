@@ -161,6 +161,13 @@ var WebClient = function(map) {
     $("#content_select > section > span").css({'display': 'none'});
     $("#fileinput").css({'width': "605px"});
 	}
+
+  that.connecting = function() {
+    console.log("connecting");
+    var button = $("#transfer_button");
+    jQuery.data(button[0], 'html', button.html() );
+    button.html("connecting");
+  };
 	
 	that.content = function() {
 	  return content;
@@ -168,19 +175,12 @@ var WebClient = function(map) {
 	
 	that.setContent = function(newContent) {
 	  content = newContent;
-	}
-	
-	that.enableTransfer = function() {
-	  
-	}
-		
-	that.disableTransfer = function() {
-	  
-	}	
-  
-  that.waiting = function() {
-    
-  }
+	};
+
+  that.unconnecting = function() {
+    var button = $("#transfer_button");
+    button.html(jQuery.data(button[0], 'html'));
+  };
   
 	that.displayLocation = function(location) {
 		$("#waiting").css("display", "none");
@@ -188,7 +188,7 @@ var WebClient = function(map) {
 	};
 		
 	that.showUploadingState = function() {
-		// $("#").css("display": "none");	
+	  // $("#").css("display": "none");	
 	};
 
 	return that;

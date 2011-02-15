@@ -34,12 +34,15 @@
 			})
 		
 		  client.on('send', function() {
+				client.connecting();
 				var data = [ client.content() ];
 
 				linccer.send("one-to-many", data);
 			});
-
+			
 			client.on('receive', function() {
+				client.connecting();
+				
 				linccer.receive("one-to-many")
 			});
 			
@@ -82,7 +85,7 @@
 				if (error.code == 3) {
 					$("#coordinates").text("no location");
 				} else {
-					
+					client.unconnecting();
 				}
 			});
 		});
