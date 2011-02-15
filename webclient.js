@@ -170,12 +170,18 @@ var WebClient = function(map) {
 	  content = newContent;
 	}
 	
-	that.enableSend = function() {
-	};
-	
-	that.enableReceive = function() {
-	};
-	
+	that.enableTransfer = function() {
+	  
+	}
+		
+	that.disableTransfer = function() {
+	  
+	}	
+  
+  that.waiting = function() {
+    
+  }
+  
 	that.displayLocation = function(location) {
 		$("#waiting").css("display", "none");
 		$("#coordinates").css("display", "inline");

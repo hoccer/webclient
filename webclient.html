@@ -69,18 +69,22 @@
 			})
 			
 			linccer.on('updated_environment', function(data) {
-				console.log('updated environments!!!!!');
 				map.setCenter(data.gps.latitude, data.gps.longitude)
 			});
 			
 			linccer.on('received', function(data) {
-				console.log(data);
-				document.getElementById("input").value = data[0][0].content;
+				console.log(data[0][0].content);
 			});
 		
 			linccer.on('error', function(error) {
-				$("#coordinates").text("no location");
-			});			
+				console.log(error);
+				
+				if (error.code == 3) {
+					$("#coordinates").text("no location");
+				} else {
+					
+				}
+			});
 		});
 
 	</script>
@@ -164,11 +168,10 @@
 		}
 		
 		#button_intern {
-			margin: 4px;
+			padding: 8px 2px;
 			background: url('images/webapp_transfer_bg_blue.png') repeat-x;
 		}
 		
-			
 		div.fileinputs {
 			position: relative;
 		}
