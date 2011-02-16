@@ -37,8 +37,7 @@
 		
 		  client.on('send', function() {
 				client.connecting();
-				var data = { 'data': [ client.content() ]};
-				console.log(data);
+				var data = { 'client' : 'webclient', 'data': [ client.content() ] };
 				linccer.send("one-to-one", data);
 			});
 			
