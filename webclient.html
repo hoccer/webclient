@@ -37,15 +37,15 @@
 		
 		  client.on('send', function() {
 				client.connecting();
-				var data = [ client.content() ];
-
-				linccer.send("one-to-many", data);
+				var data = { 'data': [ client.content() ]};
+				console.log(data);
+				linccer.send("one-to-one", data);
 			});
 			
 			client.on('receive', function() {
 				client.connecting();
 				
-				linccer.receive("one-to-many")
+				linccer.receive("one-to-one")
 			});
 			
 			client.on('file_selected', function(file) {
@@ -75,18 +75,25 @@
 			
 			linccer.on('sent', function(data) {
 				client.unconnecting();
-				
-				console.log("sent!!!!!! " + data);
 			});
 
 			linccer.on('received', function(data) {
-				console.log(data[0][0].content);
+				console.log(data);
 				client.unconnecting();
 				
-				Shadowbox.open({
-					content: "<div class='received_text'>" + data[0][0].content + "</div>",
-					player : "html"
-				})
+				var firstContent = data[0]['data'][0];
+				
+				if (firstContent.type == "text/plain") {
+					Shadowbox.open({
+						content: "<div class='received_text'>" + firstContent.content + "</div>",
+						player : "html"
+					});
+				} else if (firstContent.type == "image/jpeg") {
+					Shadowbox.open({
+						content: firstContent.uri,
+						player : "img"
+					});
+				}
 				
 			});
 		
