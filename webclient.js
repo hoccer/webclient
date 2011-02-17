@@ -116,7 +116,7 @@ var WebClient = function(map) {
 	
 	$('#textcontent').focusout( function() {
     if ($(this).val() == "") {
-      showBothModes();
+      showBothModesFromTextMode();
     } else {
       content = { 'type': "text/plain", 'content': $(this).val() }
     }
@@ -135,12 +135,21 @@ var WebClient = function(map) {
 	
 	$("#fileInputField").change(function() {
     var file = document.getElementById('fileInputField').files[0];
-  
-    $("#filename").text(file.name);
+    $(this).css({"z-index": 0});
+    $("#filename").html(file.name + '<a href="" id="cancelFile">(close)</a>');
     showFileMode();
     
-    that.fire('file_selected', file);
+    $("#cancelFile").click(function(event) {
+      $("#filename").html("Select File");
+      showBothModesFromFileMode();
+  	  event.stopPropagation();
+  	  return false;	  
+  	});
+  	
+  	  that.fire('file_selected', file);
 	});
+	
+	
   
 	$("#addressForm").submit( function(event) {
 			map.setAddress($("#addressInput").val());
@@ -154,12 +163,17 @@ var WebClient = function(map) {
     $("#textcontent").animate({'width': "490px"});
 	}
 	
-	var showBothModes = function() {
+	var showBothModesFromTextMode = function() {
     $("#textcontent").animate({'width': "210px"}, function() {
       $("#fileinput").css({'display': 'block' });
       $("#content_select > section > span").css({'display': 'inline'});
-      
     });
+	}
+	
+	var showBothModesFromFileMode = function() {
+    $("#fileinput").css({'width': "230px"});
+    $("#textinput").css({'display': 'block'});
+    $("#content_select > section > span").css({'display': 'inline'});
 	}
 	
 	var showFileMode = function() {
