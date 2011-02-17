@@ -141,8 +141,12 @@ var WebClient = function(map) {
     
     $("#cancelFile").click(function(event) {
       $("#filename").html("Select File");
+      $("#fileInputField").css({"z-index": 2});
+      
       showBothModesFromFileMode();
   	  event.stopPropagation();
+  	  
+  	  that.fire('file_canceled');
   	  return false;	  
   	});
   	
