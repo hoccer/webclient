@@ -81,6 +81,15 @@ var HoccerMap = function(id) {
 
 var WebClient = function(map) {
 	var that = {};
+	var SEND_HELP = '<li>Open Hoccer App on your mobile</li>' + 
+	                '<li>Hit "Start Transfer" Button above</li>' +
+	                '<li>Swipe over Hoccer canvas on your mobile</li>';
+	var RECEIVE_HELP= '<li>Select content in Hoccer on your mobile</li>' + 
+	                  '<li>Swipe it out of your mobile\'s screen</li>' +
+	                  '<li>Hit "Start Transfer" Button above</li>'
+	              
+	
+	
 	HC.observable(that);
 	
 	var content;
@@ -93,6 +102,7 @@ var WebClient = function(map) {
     $("#receive_mode_button").css({'background': "url('images/receive_gray.png') no-repeat"});
 	  $("#send_mode_button").css({'background': "url('images/send_blau.png') no-repeat"});
 	  
+	  $("#help").html(SEND_HELP);
 	});
 	
 	$("#receive_mode_button").click(function() {
@@ -100,6 +110,8 @@ var WebClient = function(map) {
 	  $("#content_select").slideUp();
 	  $("#receive_mode_button").css({'background': "url('images/receive_blau.png') no-repeat"});
 	  $("#send_mode_button").css({'background': "url('images/send_gray.png') no-repeat"});
+	  
+	  $("#help").html(RECEIVE_HELP);
 	});
 	
 	$("#transfer_button").click(function() {
@@ -150,7 +162,7 @@ var WebClient = function(map) {
   	  return false;	  
   	});
   	
-  	  that.fire('file_selected', file);
+  	that.fire('file_selected', file);
 	});
 	
 	
