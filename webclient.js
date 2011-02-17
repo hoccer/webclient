@@ -89,11 +89,17 @@ var WebClient = function(map) {
 	$("#send_mode_button").click(function() {
     mode = "sendMode"
     $("#content_select").slideDown();
+    
+    $("#receive_mode_button").css({'background': "url('images/receive_gray.png') no-repeat"});
+	  $("#send_mode_button").css({'background': "url('images/send_blau.png') no-repeat"});
+	  
 	});
 	
 	$("#receive_mode_button").click(function() {
 	  mode = "receiveMode"
 	  $("#content_select").slideUp();
+	  $("#receive_mode_button").css({'background': "url('images/receive_blau.png') no-repeat"});
+	  $("#send_mode_button").css({'background': "url('images/send_gray.png') no-repeat"});
 	});
 	
 	$("#transfer_button").click(function() {
@@ -145,11 +151,11 @@ var WebClient = function(map) {
 	var showTextMode = function() {
     $("#fileinput").css({'display': 'none' });
     $("#content_select > section > span").css({'display': 'none'});
-    $("#textcontent").animate({'width': "575px"});
+    $("#textcontent").animate({'width': "490px"});
 	}
 	
 	var showBothModes = function() {
-    $("#textcontent").animate({'width': "250px"}, function() {
+    $("#textcontent").animate({'width': "210px"}, function() {
       $("#fileinput").css({'display': 'block' });
       $("#content_select > section > span").css({'display': 'inline'});
       

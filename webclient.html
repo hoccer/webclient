@@ -132,7 +132,7 @@
 		#content_select, .centered { font-size: 15pt; }
 		#content_select { line-height: 90px;}
 		
-		#receive_mode_button, #send_mode_button, #transfer_button { cursor: pointer }
+		#receive_mode_button, #send_mode_button, #transfer_button, #fileInputField { cursor: pointer }
 		
 		#textinput {
 			vertical-align: center;
@@ -142,8 +142,12 @@
 		
 		#fileinput {
 			float: left;
-			width: 300px;
+			width: 230px;
 			height: 100px;
+		}
+		
+		#fileInputField {
+			width: 230px;
 		}
 		
 		#content_select {
@@ -151,7 +155,7 @@
 			display: none;
 		}
 		
-		#transfer h1 			{  padding: 0 15px 10px; }
+		#transfer h1 			{ padding: 0 15px 10px; }
 		#transfer h1 span { vertical-align: middle; }
 		#transfer h1 img 	{ margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
 	
@@ -163,17 +167,21 @@
 		  -webkit-border-radius: 5px;
 		}
 		
-		#transfer_action { float: right; width: 340px;}
+		#transfer_action { float: right; width: 300px;}
 		#transfer_action ol { 
 			list-style-position: inside;
 			margin: 0;
 		}
+
+		#transfer_button {
+			background: url('images/start_transfer.png') no-repeat;
+			margin-bottom: 30px;
+		}
 		
 		.button { 
 			font-size: 14pt;
-			width: 254px;
-			height: 40px;
-			background: url('images/webapp_transfer_track_bg.png') repeat;
+			width: 250px;
+			height: 36px;
 			
 			color: #fff;
 		  background-repeat: no-repeat;
@@ -191,11 +199,6 @@
 		
 		.button img {
 			padding: 4px 15px 4px 35px;
-		}
-		
-		#button_intern {
-			padding: 8px 2px;
-			background: url('images/webapp_transfer_bg_blue.png') repeat-x;
 		}
 		
 		div.fileinputs {
@@ -221,43 +224,48 @@
 			height: 50px;	
 			width: 260px;
 		}
+		
+		#send_mode_button {
+			background: #DDD url('images/send_blau.png') no-repeat;
+		}
+		
+		#receive_mode_button {
+			background: #DDD url('images/receive_gray.png') no-repeat;
+		}
+		
+		.info_box #send_mode_button {
+			border-width: 0px;
+		}
+		
+		textarea {
+			width: 210px;
+			-moz-border-radius: 5px;
+		  -webkit-border-radius: 5px;
+		  
+			background: #F6F6F6;
+		}
+		
 	</style>
 	
 </head>
 <body style="padding: 30px">
 	<div id="webclient">
 		<div class="row">
-			<div class="column grid_4 info_box centered">
+			<div class="column grid_3 info_box centered">
 				<section id="receive_mode_button">
-					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Receive">Receive
+					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Receive">
 				</section>
 			</div>
-		
-			<div class="column grid_4 info_box centered">
+			<div class="column grid_1">&nbsp;</div>
+			<div class="column grid_3 info_box centered">
 				<section id="send_mode_button">
-					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Send">Send
+					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Send">
 				</section>
 			</div>
 		</div>
 
 		<div class="row">
-			<div id="location" class="column grid_8 info_box" >
-				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
-					<span id="waiting">locating...</span>
-					<span id="coordinates"></span>
-					<span id="show_map"><a href="#">Change</a></span>
-					<div id="map_container">
-						<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
-						<div id="map_canvas"></div>
-					</div>
-				</p></section>
-			</div>
-			<div class="column grid_5">
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="column grid_8 info_box" id="content_select">
+			<div class="column grid_7 info_box" id="content_select">
 				<section>
  			
 				<div id="fileinput" class="fileinputs">
@@ -274,9 +282,26 @@
 				</section>
 			</div>
 		</div>
+
+		<div class="row">
+			<div id="location" class="column grid_7 info_box" >
+				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
+					<span id="waiting">locating...</span>
+					<span id="coordinates"></span>
+					<span id="show_map"><a href="#">Change</a></span>
+					<div id="map_container">
+						<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
+						<div id="map_canvas"></div>
+					</div>
+				</p></section>
+			</div>
+			<div class="column grid_5">
+			</div>
+		</div>
+
 		
 		<div class="row">
-			<div class="column grid_8 info_box" id="transfer">
+			<div class="column grid_7 info_box" id="transfer">
 				<section><p>
 					<h1>
 					<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
@@ -287,10 +312,7 @@
 				
 					<div id="transfer_action">
 						<div id="transfer_button" class="button">
-							<div id="button_intern">
-								<img src="images/webapp_icon_starttransfer.png" width="27" height="22" alt="Start Transfer">
-								<span>Start Transfer</span>
-							</div>
+							&nbsp;
 						</div>
 						<ol>
 							<li>Open Hoccer App on your mobile</li>
