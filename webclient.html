@@ -38,7 +38,7 @@
 			var showDownload = function(uri) {
 				Shadowbox.open({
 					content:"<div class=\"box\">" +
-									"<h2>Received</h2>" +
+									"<h2>Received File</h2>" +
 									"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>" + 
 									"</div>",
 
@@ -104,11 +104,13 @@
 			
 			linccer.on('sent', function(data) {
 				client.unconnecting();
+				client.showSuccess();
 			});
 
 			linccer.on('received', function(data) {
 				console.log(data);
 				client.unconnecting();
+				client.showSuccess();
 				
 				var firstContent = data[0]['data'][0];
 				

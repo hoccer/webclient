@@ -224,6 +224,10 @@ var WebClient = function(map) {
 	that.showUploadingState = function() {
 	  // $("#").css("display": "none");	
 	};
+	
+	that.showSuccess= function() {
+	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+	}
 
 	return that;
 }
