@@ -198,7 +198,6 @@ var WebClient = function(map) {
 	}
 
   that.connecting = function() {
-    console.log("connecting");
     var button = $("#transfer_button");
     jQuery.data(button[0], 'html', button.html() );
     button.html("connecting");

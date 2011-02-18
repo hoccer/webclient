@@ -37,8 +37,10 @@
 		
 			var showDownload = function(uri) {
 				Shadowbox.open({
-					content: "<h2>Received</h2>" +
-									"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>",
+					content:"<div class=\"box\">" +
+									"<h2>Received</h2>" +
+									"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>" + 
+									"</div>",
 
 					player : "html"
 				});
@@ -46,8 +48,10 @@
 			
 			var showText = function(text) {
 				Shadowbox.open({
-					content: "<h2>Received</h2>" +
-										"<textarea class='received_text'>" + text + "</textarea>",
+					content:  "<div class=\"box\">" +
+									  "<h2>Received Text</h2>" +
+										"<textarea class='received_text'>" + text + "</textarea>" +
+										"</div>",
 
 					player : "html"
 				});
@@ -282,6 +286,23 @@
 			padding: 0;
 		}
 		
+		#sb-body {
+			background-color: #fbfbfb;
+		}
+		
+		.box {
+			margin: 20px;
+		}
+		
+		.box h2 {
+			padding-bottom: 15px;
+		}
+		
+		.box textarea {
+			width: 450px;
+			height: 210px;
+		}
+				
 	</style>
 	
 </head>
