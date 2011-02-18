@@ -27,6 +27,32 @@
 		 	
 			var content;
 		
+			var showImage = function(uri) {
+				Shadowbox.open({
+					content: uri,
+					player : "img"
+				});
+				
+			}
+		
+			var showDownload = function(uri) {
+				Shadowbox.open({
+					content: "<h2>Received</h2>" +
+									"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>",
+
+					player : "html"
+				});
+			}
+			
+			var showText = function(text) {
+				Shadowbox.open({
+					content: "<h2>Received</h2>" +
+										"<textarea class='received_text'>" + text + "</textarea>",
+
+					player : "html"
+				});
+			}
+		
 		  map.on('position_changed', function() {
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
 			});
@@ -83,15 +109,11 @@
 				var firstContent = data[0]['data'][0];
 				
 				if (firstContent.type == "text/plain") {
-					Shadowbox.open({
-						content: "<div class='received_text'>" + firstContent.content + "</div>",
-						player : "html"
-					});
+					showText(firstContent.content);
 				} else if (firstContent.type == "image/jpeg") {
-					Shadowbox.open({
-						content: firstContent.uri,
-						player : "img"
-					});
+					showImage(firstContent.uri);
+				} else {
+					showDownload(firstContent.uri)
 				}
 				
 			});
@@ -123,7 +145,7 @@
 		#webclient .info_box { margin-bottom: 10px; }
 		.info_box section { border: 0; }
 		#map_canvas { height: 450px; padding-top: 6px;}
-		#map_container { position: absolute; width: 600px; padding: 10px; margin-top: -1000px; }
+		#map_container { position: absolute; width: 520px; padding: 10px; margin-top: -1000px; }
 		#map_container { font-size: 15pt;}
 		#location #show_map {float: right;}
 		
@@ -176,6 +198,10 @@
 		#transfer_button {
 			background: url('images/start_transfer.png') no-repeat;
 			margin-bottom: 30px;
+		}
+		
+		#addressForm {
+			margin: 10px 0;
 		}
 		
 		.button { 
@@ -245,6 +271,17 @@
 			background: #F6F6F6;
 		}
 		
+		hr {
+			background-color: #F0F0F0;
+			
+			display: block;
+			height: 1px;
+			border: 0;
+			border-top: 1px solid #CCC;
+			margin: 0;
+			padding: 0;
+		}
+		
 	</style>
 	
 </head>
@@ -290,6 +327,7 @@
 					<span id="coordinates"></span>
 					<span id="show_map"><a href="#">Change</a></span>
 					<div id="map_container">
+						<hr />
 						<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
 						<div id="map_canvas"></div>
 					</div>

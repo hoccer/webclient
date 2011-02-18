@@ -87,9 +87,7 @@ var WebClient = function(map) {
 	var RECEIVE_HELP= '<li>Select content in Hoccer on your mobile</li>' + 
 	                  '<li>Swipe it out of your mobile\'s screen</li>' +
 	                  '<li>Hit "Start Transfer" Button above</li>'
-	              
-	
-	
+	                  
 	HC.observable(that);
 	
 	var content;
@@ -139,7 +137,10 @@ var WebClient = function(map) {
 	  if ( map_div.is(':hidden') || map_div.css('margin-top') == "-1000px" ) {
 	    map_div
   	    .css({ 'position': 'static','display': 'none', 'margin': '0px' })
-  	    .slideDown(500, function() { map.show() });
+  	    .slideDown(500, function() { 
+  	      map.show();
+  	      $("#addressInput").focus();
+  	    });
 	  } else {
 	    map_div.slideUp();
 	  }
@@ -165,8 +166,6 @@ var WebClient = function(map) {
   	that.fire('file_selected', file);
 	});
 	
-	
-  
 	$("#addressForm").submit( function(event) {
 			map.setAddress($("#addressInput").val());
 			event.stopPropagation();
