@@ -241,7 +241,7 @@ var WebClient = function(map) {
 
   that.setInactive = function() {
 	  active = false;
-	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+	  $("#transfer_button").css({'background': "url('images/inactive_transfer.png') no-repeat" });
 	}
 	
 	that.setActive = function() {
