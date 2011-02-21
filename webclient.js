@@ -92,6 +92,7 @@ var WebClient = function(map) {
 	HC.observable(that);
 	
 	var content;
+	var active = true;
 	var mode = "receiveMode";
 	
 	$("#send_mode_button").click(function() {
@@ -114,6 +115,10 @@ var WebClient = function(map) {
 	});
 	
 	$("#transfer_button").click(function() {
+	  if (!active) {
+	    return;
+	  }
+	  
 	  if (mode === "sendMode") {
 	    that.fire('send');
 	  } else {
@@ -198,15 +203,6 @@ var WebClient = function(map) {
     $("#fileinput").css({'width': "605px"});
 	}
 
-  that.connecting = function() {
-    // var button = $("#transfer_button");
-    // jQuery.data(button[0], 'html', button.html() );
-    // button.html("connecting");
-    $("#connecting_info")
-              .text("Connecting...")
-              .css({"visibility": "visible"});
-  };
-	
 	that.content = function() {
 	  return content;
 	}
@@ -215,9 +211,15 @@ var WebClient = function(map) {
 	  content = newContent;
 	};
 
+  that.connecting = function() {
+    that.setInactive();
+    $("#connecting_info")
+              .text("Connecting...")
+              .css({"visibility": "visible"});
+  };
+
   that.unconnecting = function() {
-//    var button = $("#transfer_button");
-//    button.html(jQuery.data(button[0], 'html'));
+    that.setActive();
     $("#connecting_info").css({"visibility": "hidden"});
   };
   
@@ -225,21 +227,26 @@ var WebClient = function(map) {
 		$("#waiting").css("display", "none");
 		$("#coordinates").css("display", "inline");
 	};
-		
-	that.showUploadingState = function() {
-	  // $("#").css("display": "none");	
-	};
 	
 	that.showError = function(message) {
+	  that.setActive();
 	  $("#connecting_info")
 	            .css({"visibiliy": "visible"})
 	            .text(message);
-	            
-	  
-	}
+		}
 	
 	that.showSuccess= function() {
 	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+	}
+
+  that.setInactive = function() {
+	  active = false;
+	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+	}
+	
+	that.setActive = function() {
+	  active = true;
+	  $("#transfer_button").css({'background': "url('images/start_transfer.png') no-repeat" });
 	}
 
 	return that;
