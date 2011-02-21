@@ -22,7 +22,7 @@
 			var TIMEOUT_ERROR = 'No transfer partner found';
 			
 			var fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0' });			
-			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0'});
+			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0q'});
 
 			var map = HoccerMap('map_canvas');
 			var client = WebClient(map);
@@ -115,6 +115,8 @@
 					showText(firstContent.content);
 				} else if (firstContent.type == "image/jpeg") {
 					showImage(firstContent.uri);
+				} else if (firstContent.type == "text/uri-list") {
+					showDownload(firstContent.content);
 				} else {
 					showDownload(firstContent.uri)
 				}
