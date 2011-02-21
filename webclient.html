@@ -39,14 +39,16 @@
 			}
 		
 			var showDownload = function(uri) {
-				Shadowbox.open({
-					content:"<div class=\"box\">" +
-									"<h2>Received File</h2>" +
-									"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>" + 
-									"</div>",
-
-					player : "html"
-				});
+				window.location = uri;
+				
+				// Shadowbox.open({
+				// 	content:"<div class=\"box\">" +
+				// 					"<h2>Received File</h2>" +
+				// 					"<a href=\"" + uri + "\" class='received_link'>" + uri + "</a>" + 
+				// 					"</div>",
+				// 
+				// 	player : "html"
+				// });
 			}
 			
 			var showText = function(text) {
