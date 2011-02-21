@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Hoccer Webclient</title>
+	<title>Hoccer Webapp</title>
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Robert Palmer">
 	<!-- Date: 2010-12-15 -->
@@ -318,84 +318,119 @@
 	</style>
 	
 </head>
-<body style="padding: 30px">
-	<div id="webclient">
-		<div class="row">
-			<div class="column grid_3 info_box centered">
-				<section id="receive_mode_button">
-					<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Receive">
-				</section>
-			</div>
-			<div class="column grid_1">&nbsp;</div>
-			<div class="column grid_3 info_box centered">
-				<section id="send_mode_button">
-					<img src="images/webapp_btn_send.png" width="68" height="52" alt="Send">
-				</section>
-			</div>
-		</div>
+<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 
-		<div class="row">
-			<div class="column grid_7 info_box" id="content_select">
-				<section>
- 			
-				<div id="fileinput" class="fileinputs">
-					<input type="file" class="file" id="fileInputField" />
-					<div class="fakefile">
-						<img src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
-						<span id="filename">Select File</span>
+<!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
+  <div id="container">
+    <header>
+      <div class="row">
+        <div class="column grid_3">
+           <a href="/">
+          <img src="http://hoccer.com/wp-content/themes/hoccer/images/logo.jpg" alt="logo" />
+          </a>
+        </div>
+        <nav id="main_navigation" class="column grid_9">
+          <ul>
+            <!-- <li><a href="/hoc/">Send &amp; Receive</a></li> -->
+            <li><a href="/webapp/">Web App</a></li>
+            <li><a href="/support/">Support</a></li>
+            <li><a href="/developer/">Developer</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a href="/company/">Company</a></li>
+            <li><a href="/contact/">Contact</a></li>
+            <li><a href="http://www.twitter.com/hoccer"><img src="http://hoccer.com/wp-content/themes/hoccer/images/twitter.png" alt="twitter"/></a></li>
+            <li><a href="http://www.facebook.com/hoccer"><img src="http://hoccer.com/wp-content/themes/hoccer/images/facebook.png" alt="facebook"/></a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="page">
+      <div class="row">
+      	<div class="column grid_12 page_header page_header_small">
+        	<h1>Support</h1>
+        	<p class="grid_5"></p>
+       	</div>
+    	</div>
+			<div id="webclient">
+				<div class="row">
+					<div class="column grid_3 info_box centered">
+						<section id="receive_mode_button">
+							<img src="images/webapp_btn_receive.png" width="68" height="52" alt="Receive">
+						</section>
+					</div>
+					<div class="column grid_1">&nbsp;</div>
+					<div class="column grid_3 info_box centered">
+						<section id="send_mode_button">
+							<img src="images/webapp_btn_send.png" width="68" height="52" alt="Send">
+						</section>
 					</div>
 				</div>
-				<span>or</span>
-				<div id="textinput">
-					<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+
+				<div class="row">
+					<div class="column grid_7 info_box" id="content_select">
+						<section>
+ 							<div id="fileinput" class="fileinputs">
+								<input type="file" class="file" id="fileInputField" />
+								<div class="fakefile">
+									<img src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
+									<span id="filename">Select File</span>
+								</div>
+							</div>
+							<span>or</span>
+							<div id="textinput">
+								<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+							</div>
+						</section>
+					</div>
 				</div>
-				</section>
-			</div>
-		</div>
 
-		<div class="row">
-			<div id="location" class="column grid_7 info_box" >
-				<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
-					<span id="waiting">locating...</span>
-					<span id="coordinates"></span>
-					<span id="show_map"><a href="#">Change</a></span>
-					<div id="map_container">
-						<hr />
-						<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
-						<div id="map_canvas"></div>
+				<div class="row">
+					<div id="location" class="column grid_7 info_box" >
+						<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
+							<span id="waiting">locating...</span>
+							<span id="coordinates"></span>
+							<span id="show_map"><a href="#">Change</a></span>
+							<div id="map_container">
+								<hr />
+								<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
+								<div id="map_canvas"></div>
+							</div>
+						</p></section>
 					</div>
-				</p></section>
-			</div>
-			<div class="column grid_5">
-			</div>
-		</div>
-
-		
-		<div class="row">
-			<div class="column grid_7 info_box" id="transfer">
-				<section><p>
-					<h1>
-					<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
-					<span>Transfer Data</span>
-					</h1>
-				
-					<img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
-				
-					<div id="transfer_action">
-						<div id="transfer_button" class="button">
-							&nbsp;
-						</div>
-						<div id="connecting_info">Connecting..</div>
-						<ol id="help">
-							<li>Select content in Hoccer on your mobile</li>
-							<li>Swipe it out of your mobile's screen</li>
-							<li>Hit "Start Transfer" Button above</li>
-						</ol>
+					<div class="column grid_5">
 					</div>
-					<br style="clear: both" />
-				</p></section>
+				</div>
+				<div class="row">
+					<div class="column grid_7 info_box" id="transfer">
+						<section><p>
+							<h1>
+								<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
+								<span>Transfer Data</span>
+							</h1>
+							<img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+							<div id="transfer_action">
+								<div id="transfer_button" class="button">
+									&nbsp;
+								</div>
+								<div id="connecting_info">Connecting..</div>
+								<ol id="help">
+									<li>Select content in Hoccer on your mobile</li>
+									<li>Swipe it out of your mobile's screen</li>
+									<li>Hit "Start Transfer" Button above</li>
+								</ol>
+							</div>
+							<br style="clear: both" />
+						</p></section>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 </body>
+
 </html>
