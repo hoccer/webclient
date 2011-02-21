@@ -155,7 +155,17 @@ var WebClient = function(map) {
 	$("#fileInputField").change(function() {
     var file = document.getElementById('fileInputField').files[0];
     $(this).css({"z-index": 0});
-    $("#filename").html(file.name + '<a href="" id="cancelFile">(close)</a>');
+    
+    var filename = "";
+    console.log(file.name.length);
+    if(file.name.length > 38) {
+      console.log("concatinating");
+      filename = file.name.substring(0, 17) + "..." + file.name.substring(file.name.length - 17);
+    } else {
+      filename = file.name;
+    }
+    
+    $("#filename").html(filename + ' <a href="" id="cancelFile">(cancel)</a>');
     showFileMode();
     
     $("#cancelFile").click(function(event) {
