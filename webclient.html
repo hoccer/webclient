@@ -19,7 +19,7 @@
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually';
-			var TIMEOUT_ERROR = 'No other partner found';
+			var TIMEOUT_ERROR = 'No transfer partner found';
 			
 			var fileCache = FileCache( {'api_key': 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta' });			
 			var linccer = Linccer( {'api_key' : 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta'});
@@ -265,12 +265,18 @@
 			width: 260px;
 		}
 		
+	
+/*		#send_mode_button, #receive_mode_button { 
+			width: 68px;
+			height: 52px;
+		}
+*/		
 		#send_mode_button {
-			background: #DDD url('images/send_blau.png') no-repeat;
+			background: #DDD url('images/send_gray.png') no-repeat;
 		}
 		
 		#receive_mode_button {
-			background: #DDD url('images/receive_gray.png') no-repeat;
+			background: #DDD url('images/receive_blau.png') no-repeat;
 		}
 		
 		.info_box #send_mode_button {
