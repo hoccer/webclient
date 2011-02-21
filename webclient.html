@@ -18,6 +18,9 @@
 	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
+			var LOCATION_ERROR = 'Could not locate you. Please set your location manually';
+			var TIMEOUT_ERROR = 'No other partner found';
+			
 			var fileCache = FileCache( {'api_key': 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta' });			
 			var linccer = Linccer( {'api_key' : 'e101e890ea97012d6b6f00163e001ab0', 'server': 'beta'});
 
@@ -128,9 +131,10 @@
 				console.log(error);
 				
 				if (error.code == 3) {
-					$("#coordinates").text("no location");
+					$("#coordinates").text(LOCATION_ERROR);
+					client.displayLocation();
 				} else {
-					client.unconnecting();
+					client.showError(TIMEOUT_ERROR);
 				}
 			});
 		});
@@ -203,6 +207,10 @@
 
 		#transfer_button {
 			background: url('images/start_transfer.png') no-repeat;
+		}
+		
+		#connecting_info {
+			visibility: hidden;
 			margin-bottom: 30px;
 		}
 		
@@ -375,6 +383,7 @@
 						<div id="transfer_button" class="button">
 							&nbsp;
 						</div>
+						<div id="connecting_info">Connecting..</div>
 						<ol id="help">
 							<li>Select content in Hoccer on your mobile</li>
 							<li>Swipe it out of your mobile's screen</li>

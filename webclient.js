@@ -81,13 +81,14 @@ var HoccerMap = function(id) {
 
 var WebClient = function(map) {
 	var that = {};
+	
 	var SEND_HELP = '<li>Open Hoccer App on your mobile</li>' + 
 	                '<li>Hit "Start Transfer" Button above</li>' +
 	                '<li>Swipe over Hoccer canvas on your mobile</li>';
 	var RECEIVE_HELP= '<li>Select content in Hoccer on your mobile</li>' + 
 	                  '<li>Swipe it out of your mobile\'s screen</li>' +
 	                  '<li>Hit "Start Transfer" Button above</li>'
-	                  
+	                  	
 	HC.observable(that);
 	
 	var content;
@@ -198,9 +199,12 @@ var WebClient = function(map) {
 	}
 
   that.connecting = function() {
-    var button = $("#transfer_button");
-    jQuery.data(button[0], 'html', button.html() );
-    button.html("connecting");
+    // var button = $("#transfer_button");
+    // jQuery.data(button[0], 'html', button.html() );
+    // button.html("connecting");
+    $("#connecting_info")
+              .text("Connecting...")
+              .css({"visibility": "visible"});
   };
 	
 	that.content = function() {
@@ -212,8 +216,9 @@ var WebClient = function(map) {
 	};
 
   that.unconnecting = function() {
-    var button = $("#transfer_button");
-    button.html(jQuery.data(button[0], 'html'));
+//    var button = $("#transfer_button");
+//    button.html(jQuery.data(button[0], 'html'));
+    $("#connecting_info").css({"visibility": "hidden"});
   };
   
 	that.displayLocation = function(location) {
@@ -224,6 +229,14 @@ var WebClient = function(map) {
 	that.showUploadingState = function() {
 	  // $("#").css("display": "none");	
 	};
+	
+	that.showError = function(message) {
+	  $("#connecting_info")
+	            .css({"visibiliy": "visible"})
+	            .text(message);
+	            
+	  
+	}
 	
 	that.showSuccess= function() {
 	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
