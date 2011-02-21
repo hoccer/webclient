@@ -25,7 +25,7 @@ var HoccerMap = function(id) {
 			if (status != google.maps.GeocoderStatus.OK) {
 				return;
 			}
-			console.log("change");
+
 			that.fire('address_changed', result[0].formatted_address);
 		});
 	}
@@ -241,12 +241,12 @@ var WebClient = function(map) {
 
   that.setInactive = function() {
 	  active = false;
-	  $("#transfer_button").css({'background': "url('images/inactive_transfer.png') no-repeat" });
+	  $("#transfer_button").css({'background': "url('images/inactive_transfer.png') no-repeat", 'cursor': 'default' });
 	}
 	
 	that.setActive = function() {
 	  active = true;
-	  $("#transfer_button").css({'background': "url('images/start_transfer.png') no-repeat" });
+	  $("#transfer_button").css({'background': "url('images/start_transfer.png') no-repeat", 'cursor': 'pointer' });
 	}
 
 	return that;
