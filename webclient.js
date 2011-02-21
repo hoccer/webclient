@@ -246,7 +246,10 @@ var WebClient = function(map) {
 		}
 	
 	that.showSuccess= function() {
-	  $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+	  // $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
+    $("#connecting_info")
+	            .css({"visibiliy": "visible"})
+	            .text("Transfer successful");
 	}
 
   that.setInactive = function() {
