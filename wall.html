@@ -16,7 +16,8 @@
 	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
-			var MAX_SIZE = 400;
+			var MAX_SIZE = 400,
+			    MAX_ROTATION = 15;
 			
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
@@ -26,26 +27,32 @@
 			
 			var images = [];
 			
+			var scaleImage = function(img) {
+					if (img.width > img.height) {
+					if (img.width > MAX_SIZE) {
+						img.width = MAX_SIZE;
+					}
+				} else {
+					if (img.height > MAX_SIZE) {
+						img.height = MAX_SIZE;
+					}	
+				}
+			}
+			
 			
 			var addImage = function(uri) {
-				var img = new Image();
+				var img = new Image(),
+						rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
+						
+				console.log(rotation);
 				img.src = uri;
 				img.onload = function() {
-					console.log('image', img.width, img.height);
-					if (img.width > img.height) {
-						if (img.width > MAX_SIZE) {
-							img.width = MAX_SIZE;
-						}
-					} else {
-						if (img.height > MAX_SIZE) {
-							img.height = MAX_SIZE;
-						}	
-					}
-				
-					console.log('image', img.width, img.height);
+					scaleImage(img);
 					var div = $("<div></div").
 									attr('class', 'image').
 									append(img).
+									css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' }).
+									css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
 									appendTo('body');
 				}
 			}
