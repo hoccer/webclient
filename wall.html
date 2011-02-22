@@ -28,7 +28,7 @@
 			var images = [];
 			
 			var scaleImage = function(img) {
-					if (img.width > img.height) {
+				if (img.width > img.height) {
 					if (img.width > MAX_SIZE) {
 						img.width = MAX_SIZE;
 					}
@@ -39,22 +39,30 @@
 				}
 			}
 			
+			var positionElement = function(element) {
+				var doc = $(document);
+				var top = doc.height() / 2 - element.height()/ 2;
+				var left = doc.width() / 2 - element.width() / 2;
+				
+				element.css({ 'top': top + 'px', 'left': left+'px' });
+			}
 			
 			var addImage = function(uri) {
 				var img = new Image(),
 						rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
 						
-				console.log(rotation);
 				img.src = uri;
 				img.onload = function() {
-					
 					scaleImage(img);
 					var div = $("<div></div").
-									attr('class', 'image').
 									append(img).
+									attr('class', 'image').
 									css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' }).
 									css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
 									appendTo('body');
+
+					console.log(div.width(), div.height())
+					positionElement(div);
 				}
 			}
 			
@@ -62,19 +70,8 @@
 				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 20000 } );
 			}
 			
-			fileCache.on('started', function(url) {
-			});
-			
-			fileCache.on('progress', function(progress) {
-				// console.log(progress);
-			});
-
-			fileCache.on('uploaded', function(uri) {
-		    console.log("uploaded: " + uri);
-			});
-			
 			linccer.on('ready', function() {
-				console.log("ready");
+				console.log('ready');
 				watch();
 			})
 			
@@ -114,6 +111,7 @@
 		
 		.image { 
 			position: absolute;
+			margin: auto;
 			background-color: white; 
 			
 			padding: 10px;
