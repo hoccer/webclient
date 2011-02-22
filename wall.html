@@ -16,8 +16,9 @@
 	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
-			var MAX_SIZE = 400,
-			    MAX_ROTATION = 15;
+			var MAX_SIZE = $(document).height() - 200,
+			    MAX_ROTATION = 15
+					MAX_ELEMENTS = 6;
 			
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
@@ -61,8 +62,13 @@
 									css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
 									appendTo('body');
 
-					console.log(div.width(), div.height())
 					positionElement(div);
+					
+					images.push(div);
+					if (images.length > MAX_ELEMENTS) {
+						$(images.shift()).remove();
+					}
+					
 				}
 			}
 			
