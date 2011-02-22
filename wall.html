@@ -16,20 +16,42 @@
 	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
+			var MAX_SIZE = 400;
+			
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 			
-			var fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', server: 'beta' });			
+			var fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', server: 'beta' });
 			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', server: 'beta' });
 			
+			var images = [];
+			
+			
 			var addImage = function(uri) {
-				var img = $("<image />")
-							.attr("src", uri)
-							.appendTo("body");				
+				var img = new Image();
+				img.src = uri;
+				img.onload = function() {
+					console.log('image', img.width, img.height);
+					if (img.width > img.height) {
+						if (img.width > MAX_SIZE) {
+							img.width = MAX_SIZE;
+						}
+					} else {
+						if (img.height > MAX_SIZE) {
+							img.height = MAX_SIZE;
+						}	
+					}
+				
+					console.log('image', img.width, img.height);
+					var div = $("<div></div").
+									attr('class', 'image').
+									append(img).
+									appendTo('body');
+				}
 			}
 			
 			var watch = function() {
-				linccer.receive( 'one-to-many', { 'waiting': 'true' } );
+				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 20000 } );
 			}
 			
 			fileCache.on('started', function(url) {
@@ -69,9 +91,10 @@
 				
 				if (error.code == 3) {
 					console.log('position error');
-
+				} else if (error.message === 'request_timeout') {
+					watch();
 				} else {
-					console.log('timeout, or so');
+					console.log(error);
 				}
 			});
 		});
@@ -80,6 +103,13 @@
 	
 	<style type="text/css" media="screen">
 		body { background-color: black;}
+		
+		.image { 
+			position: absolute;
+			background-color: white; 
+			
+			padding: 10px;
+		}
 	</style>
 	<body>
 		
