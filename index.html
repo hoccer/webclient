@@ -78,15 +78,12 @@
 			});
 			
 			fileCache.on('started', function(url) {
-				console.log('started:' + url);
 			});
 			
 			fileCache.on('progress', function(progress) {
-				// console.log(progress);
 			});
 
 			fileCache.on('uploaded', function(uri) {
-		    console.log("uploaded: " + uri);
 			});
 			
 			linccer.on('ready', function() {
@@ -104,7 +101,6 @@
 			});
 
 			linccer.on('received', function(data) {
-				console.log(data);
 				client.unconnecting();
 				client.showSuccess();
 				
@@ -123,7 +119,6 @@
 			});
 		
 			linccer.on('error', function(error) {
-				console.log(error);
 				
 				if (error.code == 3) {
 					$("#coordinates").text(LOCATION_ERROR);

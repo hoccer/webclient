@@ -157,9 +157,7 @@ var WebClient = function(map) {
     $(this).css({"z-index": 0});
     
     var filename = "";
-    console.log(file.name.length);
     if(file.name.length > 38) {
-      console.log("concatinating");
       filename = file.name.substring(0, 17) + "..." + file.name.substring(file.name.length - 17);
     } else {
       filename = file.name;
