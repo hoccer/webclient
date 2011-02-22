@@ -140,7 +140,7 @@ var WebClient = function(map) {
 	
 	$("#show_map > a").click(function() { 
 	  var map_div =  $('#map_container');
-	  if ( map_div.is(':hidden') || map_div.css('margin-top') == "-1000px" ) {
+	  if ( map_div.is(':hidden') || map_div.css('margin-top') == "-1200px" ) {
 	    map_div
   	    .css({ 'position': 'static','display': 'none', 'margin': '0px' })
   	    .slideDown(500, function() { 
@@ -154,9 +154,10 @@ var WebClient = function(map) {
 	
 	$("#fileInputField").change(function() {
     var file = document.getElementById('fileInputField').files[0];
+    var filename = "";
+        
     $(this).css({"z-index": 0});
     
-    var filename = "";
     if(file.name.length > 38) {
       filename = file.name.substring(0, 17) + "..." + file.name.substring(file.name.length - 17);
     } else {
