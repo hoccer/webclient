@@ -103,6 +103,8 @@ var WebClient = function(map) {
 	  $("#send_mode_button").css({'background': "url('images/send_blau.png') no-repeat"});
 	  
 	  $("#help").html(SEND_HELP);
+	  
+	  return false;
 	});
 	
 	$("#receive_mode_button").click(function() {
@@ -112,11 +114,13 @@ var WebClient = function(map) {
 	  $("#send_mode_button").css({'background': "url('images/send_gray.png') no-repeat"});
 	  
 	  $("#help").html(RECEIVE_HELP);
+	  
+	  return false;
 	});
 	
 	$("#transfer_button").click(function() {
 	  if (!active) {
-	    return;
+	    return false;
 	  }
 	  
 	  if (mode === "sendMode") {
@@ -124,7 +128,8 @@ var WebClient = function(map) {
 	  } else {
 	    that.fire('receive')
 	  }
-	});		
+	  return false;
+	});
 	
 	$('#textcontent').bind('focus', function() {
     showTextMode();
@@ -150,6 +155,8 @@ var WebClient = function(map) {
 	  } else {
 	    map_div.slideUp();
 	  }
+	  
+	  return false;
 	});
 	
 	$("#fileInputField").change(function() {
