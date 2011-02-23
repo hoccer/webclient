@@ -72,6 +72,18 @@
 				}
 			}
 			
+			var addYoutube = function(uri) {
+				console.log('<iframe title="YouTube video player" width="853" height="510" src=' + uri + '&rel=0" frameborder="0" allowfullscreen></iframe>');
+				var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="' + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
+				
+								var div = $("<div></div").
+								append(iframe).
+								attr('class', 'image').
+								appendTo('body');
+
+				positionElement(div);
+			}
+			
 			var watch = function() {
 				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 20000 } );
 			}
@@ -92,6 +104,10 @@
 				
 				if (firstContent.type.match(/^image\/*/)) {
 					addImage(firstContent.uri);
+				} else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
+					var uri = firstContent.content.replace("watch?v=", "embed/");
+					
+					addYoutube(uri);
 				}
 				
 				watch();
@@ -106,6 +122,7 @@
 					watch();
 				} else {
 					console.log(error);
+					watch();
 				}
 			});
 			
@@ -144,6 +161,10 @@
 			background: black url('images/bg_main.jpg') repeat-x;
 			height: 100%;
 			width: 100%;
+		}
+		
+		#logo {
+			padding: 20px;
 		}
 		
 		#info_button {
@@ -192,7 +213,7 @@
 	</style>
 	<body>
 		<div id="wall">
-			<img src="images/logo.png" width="256" height="64" alt="Logo">
+			<img src="images/logo.png" id="logo" width="256" height="64" alt="Logo">
 			<a id="info_button" href="#"><img src="images/i.png" width="46" height="46" alt="info"></a>
 		</div>
 		
