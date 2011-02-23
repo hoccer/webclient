@@ -107,11 +107,14 @@
 				}
 			});
 			
+			linccer.on('updated_environment', function(data) {
+				map.setCenter(data.gps.latitude, data.gps.longitude)
+			});
+			
 			map.on('position_changed', function() {
 				console.log('position changed');
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
 			});
-			
 		});
 
 	</script>
