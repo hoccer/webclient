@@ -40,8 +40,10 @@
 			}
 			
 			var positionElement = function(element) {
-				var doc = $(document);
-				var top = doc.height() / 2 - element.height()/ 2;
+				var doc = $(window);
+				
+				console.log(doc.height(), doc.width());
+				var top = doc.height() / 2 - element.height() / 2;
 				var left = doc.width() / 2 - element.width() / 2;
 				
 				element.css({ 'top': top + 'px', 'left': left+'px' });
@@ -126,6 +128,7 @@
 			
 			$("#done").click(function() {
 				$("#settings").hide();
+				return false;
 			});
 		});
 
