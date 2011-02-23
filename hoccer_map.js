@@ -82,6 +82,10 @@ var HoccerMap = function(id, addressFieldId) {
 			that.setCenter(result[0].geometry.location.lat(), result[0].geometry.location.lng());
 			that.fire('position_changed');
 		});
+	};
+	
+	that.map = function() {
+	  return map;
 	}
 
 	return that;
