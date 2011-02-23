@@ -117,17 +117,16 @@
 			});
 			
 			$("#info_button").click(function() {
- 	 	 		$("#settings").toggle();
+ 	 	 		$("#settings").show();
 				google.maps.event.trigger(map, 'resize');
 				map.show();
 				
 				return false;
 			});
 			
-			
-			
-			
-			
+			$("#done").click(function() {
+				$("#settings").hide();
+			});
 		});
 
 	</script>
@@ -166,7 +165,7 @@
 			height: 100%;
 			z-index	: 1;
 			
-			padding: 20px 20px 0;
+			padding: 0 20px;
 			
 			background: url('images/bg_settings.jpg');
 			color: white;
@@ -175,12 +174,17 @@
 			display: none;
 		}
 		
+		#done {
+			bottom: 20px;
+			right: 20px;
+			position: absolute;
+		}
+		
 		#map_canvas {
 			margin: 0 auto;
 			width : 486px;
 			height: 350px;
 		}
-		
 		
 	</style>
 	<body>
@@ -195,6 +199,7 @@
 			
 			<input id="address_field" type="text" value="" />
 			
+			<a id="done" href="#"><img src="images/done.png" width="130" height="52" alt="Done"></a>
 		</div>
 		
 	</body>
