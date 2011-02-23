@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Hoccer Webapp</title>
+	<title>Hoccer Wall</title>
 	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Robert Palmer">
 	<!-- Date: 2010-12-15 -->
@@ -12,8 +12,7 @@
 	<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-
-	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
+	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
 			var MAX_SIZE = $(document).height() - 200,
@@ -23,9 +22,9 @@
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 			
-			var fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', server: 'beta' });
-			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', server: 'beta' });
-			
+			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' , server: 'beta' });
+			var map = HoccerMap("map_canvas", "address_field");
+			map.show();
 			var images = [];
 			
 			var scaleImage = function(img) {
@@ -68,7 +67,6 @@
 					if (images.length > MAX_ELEMENTS) {
 						$(images.shift()).remove();
 					}
-					
 				}
 			}
 			
@@ -108,12 +106,27 @@
 					console.log(error);
 				}
 			});
+			
+			map.on('position_changed', function() {
+				console.log('position changed');
+				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
+			});
+			
 		});
 
 	</script>
 	
 	<style type="text/css" media="screen">
-		body { background-color: black;}
+		html, body {
+			padding 0; margin: 0;
+			height: 100%;
+		}
+
+		#wall { 
+			background-color: black;
+			height: 100%;
+			width: 70%;
+		}
 		
 		.image { 
 			position: absolute;
@@ -122,8 +135,39 @@
 			
 			padding: 10px;
 		}
+		
+		#settings {
+			position: absolute;
+			top: 0; right: 0;
+			
+			width: 560px;
+			height: 100%;
+			z-index	: 1;
+			
+			padding: 20px 20px 0;
+			
+			background: gray;
+		}
+		
+		#map_canvas {
+			width : 560px;
+			height: 350px;
+		}
+		
+		
 	</style>
 	<body>
+		<div id="wall">
+		</div>
+		
+		<div id="settings">
+			<h1>Settings</h1>
+			
+			<div id="map_canvas"></div>
+			
+			<input id="address_field" type="text" value="" />
+			
+		</div>
 		
 	</body>
 
