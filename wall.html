@@ -28,6 +28,7 @@
 			    map = HoccerMap("map_canvas", "address_field");
 			
 			map.show();
+			linccer.bssids = ["12:34:56", "123:456:ab", "1234567"];
 			
 			var scaleImage = function(img) {
 				if (img.width > img.height) {
@@ -44,7 +45,6 @@
 			var positionElement = function(element) {
 				var doc = $(window);
 				
-				console.log(doc.height(), doc.width());
 				var top = doc.height() / 2 - element.height() / 2;
 				var left = doc.width() / 2 - element.width() / 2;
 				
@@ -91,16 +91,13 @@
 			}
 			
 			var watch = function() {
-				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 30000 } );
+				console.log('watch');
+				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 120000 } );
 			}
 			
 			linccer.on('ready', function() {
 				watch();
 			})
-			
-			linccer.on('updated_environment', function(data) {
-				console.log('updated environment');
-			});
 			
 			linccer.on('received', function(data) {
 				console.log(data);
