@@ -117,12 +117,12 @@
 				watch();
 			});
 		
-			linccer.on('error', function(error) {				
+			linccer.on('error', function(error) {
 				if (error.code == 3) {
 				} else if (error.message === 'request_timeout') {
-					watch();
+					setTimeout( function() { watch(); }, 100);							
 				} else {
-					watch();
+					setTimeout( function() { watch(); }, 500);
 				}
 			});
 			
