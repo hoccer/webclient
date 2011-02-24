@@ -39,9 +39,8 @@ var HoccerMap = function(id, addressFieldId) {
 	if (addressFieldId !== undefined) {
 	  var field = document.getElementById(addressFieldId);
 	  field.addEventListener('change', function() {
-	    that.setAddress(field.value);
-	    
-	  })
+	    that.setAddress(field.value);  
+	  }, true);
 	}
 	
 	that.visible = false;

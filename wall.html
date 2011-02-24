@@ -29,6 +29,7 @@
 			
 			map.show();
 			linccer.bssids = ["12:34:56", "123:456:ab", "1234567"];
+			linccer.setEnvironmentCoordinates(52.5167780325, 13.409039925, 200);
 			
 			var scaleImage = function(img) {
 				if (img.width > img.height) {
@@ -91,7 +92,7 @@
 			}
 			
 			var watch = function() {
-				console.log('watch');
+				// console.log('watch');
 				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 120000 } );
 			}
 			
@@ -100,7 +101,7 @@
 			})
 			
 			linccer.on('received', function(data) {
-				console.log(data);
+				// console.log(data);
 				
 				var firstContent = data[0]['data'][0];
 				
@@ -205,6 +206,10 @@
 			margin: 0 auto;
 			width : 486px;
 			height: 350px;
+		}
+		
+		a img, a:active img {
+			border: 0;
 		}
 		
 	</style>
