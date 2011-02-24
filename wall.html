@@ -16,16 +16,18 @@
 	<script type="text/javascript" charset="utf-8">	
 		$(document).ready(function() {
 			var MAX_SIZE = $(document).height() - 200,
-			    MAX_ROTATION = 15
+			    MAX_ROTATION = 15,
 					MAX_ELEMENTS = 6;
 			
-			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
-			var TIMEOUT_ERROR = 'No transfer partner found';
+			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
+					TIMEOUT_ERROR = 'No transfer partner found';
 			
-			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0'});
-			var map = HoccerMap("map_canvas", "address_field");
+			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' , server: 'sandbox' });
+			var images = [],
+			    iframeDiv,
+			    map = HoccerMap("map_canvas", "address_field");
+			
 			map.show();
-			var images = [];
 			
 			var scaleImage = function(img) {
 				if (img.width > img.height) {
@@ -55,13 +57,18 @@
 						
 				img.src = uri;
 				img.onload = function() {
+					if (iframeDiv !== undefined) {
+						$(iframeDiv).remove();
+						iframeDiv = undefined;
+					}
+					
 					scaleImage(img);
 					var div = $("<div></div").
 									append(img).
 									attr('class', 'image').
 									css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' }).
 									css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
-									appendTo('body');
+									appendTo('#wall');
 
 					positionElement(div);
 					
@@ -72,12 +79,22 @@
 				}
 			}
 			
+			var addYoutube = function(uri) {
+				var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="' + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
+				
+				iframeDiv = $("<div></div").
+						append(iframe).
+						attr('class', 'image').
+						appendTo('#wall');
+
+				positionElement(iframeDiv);
+			}
+			
 			var watch = function() {
-				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 20000 } );
+				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 30000 } );
 			}
 			
 			linccer.on('ready', function() {
-				console.log('ready');
 				watch();
 			})
 			
@@ -92,20 +109,21 @@
 				
 				if (firstContent.type.match(/^image\/*/)) {
 					addImage(firstContent.uri);
+				} else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
+					var uri = firstContent.content.replace("watch?v=", "embed/");
+					
+					addYoutube(uri);
 				}
 				
 				watch();
 			});
 		
-			linccer.on('error', function(error) {
-				console.log(error);
-				
+			linccer.on('error', function(error) {				
 				if (error.code == 3) {
-					console.log('position error');
 				} else if (error.message === 'request_timeout') {
 					watch();
 				} else {
-					console.log(error);
+					watch();
 				}
 			});
 			
@@ -114,7 +132,6 @@
 			});
 			
 			map.on('position_changed', function() {
-				console.log('position changed');
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
 			});
 			
@@ -146,6 +163,10 @@
 			width: 100%;
 		}
 		
+		#logo {
+			padding: 20px;
+		}
+		
 		#info_button {
 			position: absolute;
 			bottom: 10px;
@@ -172,7 +193,7 @@
 			
 			background: url('images/bg_settings.jpg');
 			color: white;
-			font: 75% "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+			font: 75% "Trebuchet MS", Verdana, sans-serif;
 			
 			display: none;
 		}
@@ -192,6 +213,7 @@
 	</style>
 	<body>
 		<div id="wall">
+			<img src="images/logo.png" id="logo" width="256" height="64" alt="Logo">
 			<a id="info_button" href="#"><img src="images/i.png" width="46" height="46" alt="info"></a>
 		</div>
 		
