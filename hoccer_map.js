@@ -3,7 +3,7 @@ var HoccerMap = function(id, addressFieldId) {
 	HC.observable(that)
 	
 	var geocoder = new google.maps.Geocoder();
-  var berlin = new google.maps.LatLng(52.520816, 13.410186);
+  var berlin = new google.maps.LatLng(52.5167780325, 13.409039925);
 	var myOptions = {
     zoom: 15,
     center: berlin,
