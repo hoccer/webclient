@@ -1,235 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Hoccer Wall</title>
-	<meta name="generator" content="TextMate http://macromates.com/">
-	<meta name="author" content="Robert Palmer">
-	<!-- Date: 2010-12-15 -->
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-	<script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Hoccer Wall</title>
+  <meta name="generator" content="TextMate http://macromates.com/">
+  <meta name="author" content="Robert Palmer">
+  <!-- Date: 2010-12-15 -->
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  <script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
+  <script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
+  <script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8"> 
+    $(document).ready(function() {
+      var MAX_SIZE = $(document).height() - 200,
+          MAX_ROTATION = 15,
+          MAX_ELEMENTS = 6;
+      
+      var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
+          TIMEOUT_ERROR = 'No transfer partner found';
+      
+      var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server": "beta" });
+      var images = [],
+          iframeDiv,
+          map = HoccerMap("map_canvas", "address_field");
+      
+      map.show();
+      linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 20000);
+      
+      var scaleImage = function(img) {
+        if (img.width > img.height) {
+          if (img.width > MAX_SIZE) {
+            img.width = MAX_SIZE;
+          }
+        } else {
+          if (img.height > MAX_SIZE) {
+            img.height = MAX_SIZE;
+          } 
+        }
+      }
+      
+      var positionElement = function(element) {
+        var doc = $(window);
+        
+        var top = doc.height() / 2 - element.height() / 2;
+        var left = doc.width() / 2 - element.width() / 2;
+        
+        element.css({ 'top': top + 'px', 'left': left+'px' });
+      }
+      
+      var addImage = function(uri) {
+        var img = new Image(),
+            rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
+            
+        img.src = uri;
+        img.onload = function() {
+          if (iframeDiv !== undefined) {
+            $(iframeDiv).remove();
+            iframeDiv = undefined;
+          }
+          
+          scaleImage(img);
+          var div = $("<div></div").
+                  append(img).
+                  attr('class', 'image').
+                  css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' }).
+                  css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
+                  appendTo('#wall');
 
-	<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" charset="utf-8">	
-		$(document).ready(function() {
-			var MAX_SIZE = $(document).height() - 200,
-			    MAX_ROTATION = 15,
-					MAX_ELEMENTS = 6;
-			
-			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
-					TIMEOUT_ERROR = 'No transfer partner found';
-			
-			var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' });
-			var images = [],
-			    iframeDiv,
-			    map = HoccerMap("map_canvas", "address_field");
-			
-			map.show();
-			linccer.bssids = ["00:24:fe:a7:cd:a5","00:24:36:a5:6b:3d","00:24:01:c1:e6:50","00:03:7f:bf:1e:04","00:27:19:fc:8a:38","00:18:84:19:3d:39","00:18:84:d0:12:a1","00:22:b0:f5:1f:f1"];
-			linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 20000);
-			
-			var scaleImage = function(img) {
-				if (img.width > img.height) {
-					if (img.width > MAX_SIZE) {
-						img.width = MAX_SIZE;
-					}
-				} else {
-					if (img.height > MAX_SIZE) {
-						img.height = MAX_SIZE;
-					}	
-				}
-			}
-			
-			var positionElement = function(element) {
-				var doc = $(window);
-				
-				var top = doc.height() / 2 - element.height() / 2;
-				var left = doc.width() / 2 - element.width() / 2;
-				
-				element.css({ 'top': top + 'px', 'left': left+'px' });
-			}
-			
-			var addImage = function(uri) {
-				var img = new Image(),
-						rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
-						
-				img.src = uri;
-				img.onload = function() {
-					if (iframeDiv !== undefined) {
-						$(iframeDiv).remove();
-						iframeDiv = undefined;
-					}
-					
-					scaleImage(img);
-					var div = $("<div></div").
-									append(img).
-									attr('class', 'image').
-									css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' }).
-									css({ '-moz-transform': 'rotate(' + rotation + 'deg)' }).
-									appendTo('#wall');
+          positionElement(div);
+          
+          images.push(div);
+          if (images.length > MAX_ELEMENTS) {
+            $(images.shift()).remove();
+          }
+        }
+      }
+      
+      var addYoutube = function(uri) {
+        var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="' + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
+        
+        iframeDiv = $("<div></div").
+            append(iframe).
+            attr('class', 'image').
+            appendTo('#wall');
 
-					positionElement(div);
-					
-					images.push(div);
-					if (images.length > MAX_ELEMENTS) {
-						$(images.shift()).remove();
-					}
-				}
-			}
-			
-			var addYoutube = function(uri) {
-				var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="' + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
-				
-				iframeDiv = $("<div></div").
-						append(iframe).
-						attr('class', 'image').
-						appendTo('#wall');
+        positionElement(iframeDiv);
+      }
+      
+      var watch = function() {
+        // console.log('watch');
+        linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
+      }
+      
+      linccer.on('ready', function() {
+        watch();
+      })
+      
+      linccer.on('received', function(data) {
+        // console.log(data);
+        
+        var firstContent = data[0]['data'][0];
+        
+        if (firstContent.type.match(/^image\/*/)) {
+          addImage(firstContent.uri);
+        } else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
 
-				positionElement(iframeDiv);
-			}
-			
-			var watch = function() {
-				// console.log('watch');
-				linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
-			}
-			
-			linccer.on('ready', function() {
-				watch();
-			})
-			
-			linccer.on('received', function(data) {
-				// console.log(data);
-				
-				var firstContent = data[0]['data'][0];
-				
-				if (firstContent.type.match(/^image\/*/)) {
-					addImage(firstContent.uri);
-				} else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
-					var uri = firstContent.content.replace("watch?v=", "embed/");
-					
-					addYoutube(uri);
-				}
-				
-				watch();
-			});
-		
-			linccer.on('error', function(error) {
-				if (error.code == 3) {
-				} else if (error.message === 'request_timeout') {
-					setTimeout( function() { watch(); }, 100);							
-				} else {
-					// setTimeout( function() { watch(); }, 500);
-				}
-			});
-			
-			linccer.on('updated_environment', function(data) {
-				map.setCenter(data.gps.latitude, data.gps.longitude)
-			});
-			
-			map.on('position_changed', function() {
-				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
-			});
-			
-			$("#info_button").click(function() {
- 	 	 		$("#settings").show();
-				google.maps.event.trigger(map, 'resize');
-				map.show();
-				
-				return false;
-			});
-			
-			$("#done").click(function() {
-				$("#settings").hide();
-				return false;
-			});
-		});
 
-	</script>
-	
-	<style type="text/css" media="screen">
-		html, body {
-			padding 0; margin: 0;
-			height: 100%;
-		}
 
-		#wall { 
-			background: black url('images/bg_main.jpg') repeat-x;
-			height: 100%;
-			width: 100%;
-		}
-		
-		#logo {
-			padding: 20px;
-		}
-		
-		#info_button {
-			position: absolute;
-			bottom: 10px;
-			right: 10px;
-		}
-		
-		.image { 
-			position: absolute;
-			margin: auto;
-			background-color: white; 
-			
-			padding: 10px;
-		}
-		
-		#settings {
-			position: absolute;
-			top: 0; right: 0;
-			
-			width: 506px;
-			height: 100%;
-			z-index	: 1;
-			
-			padding: 0 20px;
-			
-			background: url('images/bg_settings.jpg');
-			color: white;
-			font: 75% "Trebuchet MS", Verdana, sans-serif;
-			
-			display: none;
-		}
-		
-		#done {
-			bottom: 20px;
-			right: 20px;
-			position: absolute;
-		}
-		
-		#map_canvas {
-			margin: 0 auto;
-			width : 486px;
-			height: 350px;
-		}
-		
-		a img, a:active img {
-			border: 0;
-		}
-		
-	</style>
-	<body>
-		<div id="wall">
-			<img src="images/logo.png" id="logo" width="256" height="64" alt="Logo">
-			<a id="info_button" href="#"><img src="images/i.png" width="46" height="46" alt="info"></a>
-		</div>
-		
-		<div id="settings">
-			<h1>Settings</h1>
-			
-			<div id="map_canvas"></div>
-			
-			<input id="address_field" type="text" value="" />
-			
-			<a id="done" href="#"><img src="images/done.png" width="130" height="52" alt="Done"></a>
-		</div>
-		
-	</body>
+var uri = firstContent.content.replace("watch?v=", "embed/");
+          addYoutube(uri);
+        }
+        
+        watch();
+      });
+    
+      linccer.on('error', function(error) {
+        if (error.code == 3) {
+        } else if (error.message === 'request_timeout') {
+          setTimeout( function() { watch(); }, 100);              
+        } else {
+          // setTimeout( function() { watch(); }, 500);
+        }
+      });
+      
+      linccer.on('updated_environment', function(data) {
+        map.setCenter(data.gps.latitude, data.gps.longitude)
+      });
+      
+      map.on('position_changed', function() {
+        linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
+      });
+      
+      $("#info_button").click(function() {
+        $("#settings").show();
+        google.maps.event.trigger(map, 'resize');
+        map.show();
+        
+        return false;
+      });
+      
+      $("#done").click(function() {
+        $("#settings").hide();
+        return false;
+      });
+    });
+
+  </script>
+  
+  <style type="text/css" media="screen">
+    html, body {
+      padding 0; margin: 0;
+      height: 100%;
+    }
+
+    #wall { 
+      background: black url('images/bg_main.jpg') repeat-x;
+      height: 100%;
+      width: 100%;
+    }
+    
+    #logo {
+      padding: 20px;
+    }
+    
+    #info_button {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+    }
+    
+    .image { 
+      position: absolute;
+      margin: auto;
+      background-color: white; 
+      
+      padding: 10px;
+    }
+    
+    #settings {
+      position: absolute;
+      top: 0; right: 0;
+      
+      width: 506px;
+      height: 100%;
+      z-index : 1;
+      
+      padding: 0 20px;
+      
+      background: url('images/bg_settings.jpg');
+      color: white;
+      font: 75% "Trebuchet MS", Verdana, sans-serif;
+      
+      display: none;
+    }
+    
+    #done {
+      bottom: 20px;
+      right: 20px;
+      position: absolute;
+    }
+    
+    #map_canvas {
+      margin: 0 auto;
+      width : 486px;
+      height: 350px;
+    }
+    
+    a img, a:active img {
+      border: 0;
+    }
+    
+  </style>
+  <body>
+    <div id="wall">
+      <img src="images/logo.png" id="logo" width="256" height="64" alt="Logo">
+      <a id="info_button" href="#"><img src="images/i.png" width="46" height="46" alt="info"></a>
+    </div>
+    
+    <div id="settings">
+      <h1>Settings</h1>
+      
+      <div id="map_canvas"></div>
+      
+      <input id="address_field" type="text" value="" />
+      
+      <a id="done" href="#"><img src="images/done.png" width="130" height="52" alt="Done"></a>
+    </div>
+    
+  </body>
 
 </html>
