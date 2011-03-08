@@ -1,0 +1,11 @@
+h1. Hoccer Webclient
+
+This repository contains the Hoccer Web App (http://webapp.hoccer.com) and Hoccer Wall (http://wall.hoccer.com) to demonstrate our "javascript-api":https://github.com/hoccer/javascript-api.
+
+h2. Contributing
+
+Feel free to fork this code and improve the functionality as you like. To host your own variants of the Wall and/or Web App, you need to sign up for an API Key at "developer.hoccer.com":https://developer.hoccer.com and change the code accordingly.
+
+h2. Licensing
+
+This code is dual licensed (commercial and GPL v3). See LICENSE file for more informations about the GPL. Alternative licensing without the obligations of the GPL is available upon request.
