@@ -110,8 +110,6 @@
           addImage(firstContent.uri);
         } else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
 
-
-
         var uri = firstContent.content.replace("watch?v=", "embed/");
           addYoutube(uri);
         };
@@ -156,6 +154,9 @@
     html, body {
       padding 0; margin: 0;
       height: 100%;
+      
+      color: white;
+      font: 75% "Helvetica", "Lucida Grande", sans-serif;
     }
 
     #wall {
@@ -180,7 +181,17 @@
 
       padding: 10px;
     }
-
+    
+    #manual {
+      float: right;
+      padding: 30px 50px;
+      width: 350px;
+      font-size: 2.3em;
+      
+      text-shadow: #000 2px 2px 2px;
+      color: #ececec;
+    }
+    
     #settings {
       position: absolute;
       top: 0; right: 0;
@@ -191,9 +202,6 @@
       
       padding: 0 25px;
       
-      color: white;
-      font: 75% "Trebuchet MS", Verdana, sans-serif;
-
       display: none;
     }
 
@@ -224,17 +232,15 @@
     }
     
     input#address_field {
-      
       font-size: 15pt;
     }
-    
   </style>
   <body>
     <div id="wall">
       <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
+      <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
       <img src="http://hoccer.com/webapp/images/bg_main.jpg" id="scalable_image">
-
     </div>
 
     <div id="settings">
