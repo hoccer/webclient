@@ -146,6 +146,11 @@
         $("#settings").hide();
         return false;
       });
+      
+      $("#legal_notice").click(function() {
+        $("#legal").toggle();
+        return false;
+      });
     });
 
   </script>
@@ -156,7 +161,7 @@
       height: 100%;
       
       color: white;
-      font: 75% "Helvetica", "Lucida Grande", sans-serif;
+      font: 80% "Helvetica", "Lucida Grande", sans-serif;
     }
 
     #wall {
@@ -173,7 +178,13 @@
       bottom: 10px;
       right: 10px;
     }
-
+    
+    #legal_notice {
+      position: absolute;
+      bottom: 30px;
+      right: 70px;      
+    }
+    
     .image {
       position: absolute;
       margin: auto;
@@ -186,7 +197,7 @@
       float: right;
       padding: 30px 50px;
       width: 350px;
-      font-size: 2.3em;
+      font-size: 2em;
       
       text-shadow: #000 2px 2px 2px;
       color: #ececec;
@@ -217,7 +228,8 @@
       height: 350px;
     }
 
-    a img, a:active img {
+    a img, a:active img, a:visited {
+      color: #fff;
       border: 0;
     }
 
@@ -234,12 +246,53 @@
     input#address_field {
       font-size: 15pt;
     }
+    
+    #legal {
+      position: absolute;
+      right: 100px;
+      bottom: 120px;
+
+      font-size: 1.5em;
+      color: #000;
+
+      width: 360px;
+      height: 370px;
+      padding: 30px;
+      
+      background: white;
+      
+      display: none;
+    }
+    
   </style>
   <body>
+    <div id="legal">
+      Legal notice:
+
+      Hoccer Wall is a product by Hoccer GmbH, Berlin. Use at your own risk. This
+      website may contain explicit or offensive content by third-party websites or
+      users that might offend sensibilities. These contents do NOT constitute any
+      endorsement of the content of these websites or users and are intended only
+      to facilitate the usage of the Hoccer Wall for visitors of this website.
+      Hoccer GmbH does NOT OWN OR CONTROL the pusblished content and assumes no
+      liability for their content or information. The administrators of content
+      are solely responsible for their content and the usage of these contents is
+      at the visitor's own risk. Should you notice that our website shows content
+      which is against the law, please notify us immediately
+      (mailto:info@hoccer.com). We will try to remove these contents from our
+      website. Anyhow, Hoccer GmbH can NOT provide any support for the content
+      made available for download, nor take any responsibility for offended
+      sensibilities. Furthermore, Hoccer GmbH takes NO legal liability for any
+      possible damage that is caused by the usage of the provided website.
+    
+    </div>
+    
     <div id="wall">
       <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
       <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
+      <a href="#" id="legal_notice">Legal Notice</a>
+      
       <img src="http://hoccer.com/webapp/images/bg_main.jpg" id="scalable_image">
     </div>
 
@@ -251,6 +304,8 @@
       <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
       <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
     </div>
+    
+
     
     <!-- Piwik --> 
     <script type="text/javascript">
