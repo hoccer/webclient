@@ -9,7 +9,8 @@
   <script src="http://hoccer.com/webapp/lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+  <!-- // <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script> -->
+  <script src="../lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
@@ -93,7 +94,6 @@
       };
 
       var watch = function() {
-        // console.log('watch');
         linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
       };
 
@@ -120,11 +120,11 @@
       });
 
       linccer.on('error', function(error) {
-        if (error.code == 3) {
+        if (error.code == 3 || error.code == 1) {
+          $("#settings").show();
+          map.show();
         } else if (error.message === 'request_timeout') {
           setTimeout( function() { watch(); }, 100);
-        } else {
-          // setTimeout( function() { watch(); }, 500);
         }
       });
 
