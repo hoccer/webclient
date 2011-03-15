@@ -143,6 +143,14 @@
       });
 
       $("#done").click(function() {
+        var bssids = $("#bssid_field").val().split(",");
+        
+        var cleanedIds = [];
+        for (var i = 0; i < bssids.length; i++) {
+          cleanedIds.push(bssids[i].trim());
+        }
+        linccer.setBssids( cleanedIds );
+        
         $("#settings").hide();
         return false;
       });
