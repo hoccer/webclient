@@ -161,7 +161,7 @@
       height: 100%;
       
       color: white;
-      font: 80% "Helvetica", "Lucida Grande", sans-serif;
+      font: 100% "Helvetica", "Lucida Grande", sans-serif;
     }
 
     #wall {
@@ -182,7 +182,8 @@
     #legal_notice {
       position: absolute;
       bottom: 30px;
-      right: 70px;      
+      right: 70px; 
+      font-size: 0.7em;     
     }
     
     .image {
@@ -197,7 +198,7 @@
       float: right;
       padding: 30px 50px;
       width: 350px;
-      font-size: 2em;
+      font-size: 1.3em;
       
       text-shadow: #000 2px 2px 2px;
       color: #ececec;
@@ -243,8 +244,20 @@
       z-index: -1;
     }
     
-    input#address_field {
+    input {
       font-size: 15pt;
+    }
+    
+    #bssid {
+      position: absolute;
+      bottom: 28px;
+      
+      font-size: 0.85em;
+      width: 350px;
+    }
+    
+    #bssid_field {
+      width: 320px;
     }
     
     #legal {
@@ -252,7 +265,7 @@
       right: 100px;
       bottom: 120px;
 
-      font-size: 1.5em;
+      font-size: 0.95em;
       color: #000;
 
       width: 360px;
@@ -284,7 +297,6 @@
       made available for download, nor take any responsibility for offended
       sensibilities. Furthermore, Hoccer GmbH takes NO legal liability for any
       possible damage that is caused by the usage of the provided website.
-    
     </div>
     
     <div id="wall">
@@ -299,13 +311,17 @@
     <div id="settings">
       <h1>Settings</h1>
       <div id="map_canvas"></div>
-      <input id="address_field" type="text" value="" />
+      <input id="address_field" type="text" value="" placeholder="Enter address"/>
 
       <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
+      
+      <div id="bssid">
+        <p>Enter BSSIDs of nearby hotspots to enhance the connection between mobiles and this image wall.</p>
+        <input id="bssid_field" type="text" value="" placeholder="00:00:00:00:00:00, 00:00:00:00:00"/>
+      </div>
+      
       <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
     </div>
-    
-
     
     <!-- Piwik --> 
     <script type="text/javascript">
