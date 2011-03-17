@@ -1,6 +1,6 @@
 h1. Hoccer Webclient
 
-This repository contains the Hoccer Web App (http://webapp.hoccer.com) and Hoccer Wall (http://wall.hoccer.com) to demonstrate our "javascript-api":https://github.com/hoccer/javascript-api.
+This repository contains the Hoccer Web App (http://webapp.hoccer.com) plus Hoccer Wall (http://wall.hoccer.com) and demonstrates an advanced usage of our "javascript-api":https://github.com/hoccer/javascript-api.
 
 h2. Contributing
 
