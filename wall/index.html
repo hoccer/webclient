@@ -10,9 +10,10 @@
   <script src="http://hoccer.com/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-  <!-- // <script src="../lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script> -->
   <script src="http://hoccer.com/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/jquery.iphone-switch.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/jquery.iCheckbox.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" charset="utf-8">
@@ -204,7 +205,15 @@
         return false;
       });
       
-      
+      $('#lock_wall').iCheckbox("off", {switch_speed: 50 });
+		  $('#lock_wall').change(function(e){
+			  if ( $('#lock_wall').attr('checked') == true ) {
+			  	console.log('lock_wall checked: '+$(e.target).attr('checked'));
+			  } else {
+			  	console.log('lock-wall checked: '+$(e.target).attr('checked'));
+        }
+		  });
+
     });
 
   </script>
@@ -273,6 +282,14 @@
       display: none;
     }
 
+    .settings_option {
+      margin-left: 4px;
+      margin-bottom: 20px;
+      font-size: 1.3em;
+      height:30px;
+      width: 488px;
+    }
+
     #done {
       bottom: 20px;
       right: 20px;
@@ -283,6 +300,12 @@
       margin: 10px auto;
       width : 488px;
       height: 350px;
+    }
+
+    #address_field {
+      width: 485px;
+      margin: 0px;
+      margin-bottom: 20px;
     }
 
     a, a img, a:active img, a:visited {
@@ -346,6 +369,29 @@
       color: blue;
     }
     
+    .iCheckbox_container {
+		height:27px;
+		width:94px;
+		position: relative;
+		overflow: hidden;
+    float:right;
+	}
+
+	.iCheckbox_switch {
+		height:27px;
+		width:94px;
+		background-image:url(images/iphone_switch.png); /* your actual slider image */
+		background-repeat:none;
+		background-position:0px;
+	  float:right;
+	}
+
+  .iCheckbox_checkbox { 
+     visibility:hidden; 
+     width:0px;
+     margin:0px;
+     display:none;
+	}
   </style>
   <body>
     <div id="legal">
@@ -378,8 +424,14 @@
 
     <div id="settings">
       <h1>Settings</h1>
-      <div id="map_canvas"></div>
-      <input id="address_field" type="text" value="" placeholder="Enter address"/>
+        <div id="map_canvas"></div>
+      <div class="settings_option">
+        <input id="address_field" type="text" value="" placeholder="Manually enter address"/><br>
+      </div>
+      <div class="settings_option"></div>
+      <div class="settings_option">
+        <input type="checkbox" id="lock_wall" />Only accept content from last thrower
+      </div>
 
       <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
       
