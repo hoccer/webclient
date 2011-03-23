@@ -31,8 +31,8 @@
           iframeDiv,
           map = HoccerMap("map_canvas", "address_field");
 
-      var last_sender = "";
-      var allowed_sender = "";
+      var last_sender = "",
+          allowed_sender = "";
 
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
@@ -73,23 +73,15 @@
         return { 'top': top + 'px', 'left': left+'px' };
       };
 
-      var addImage = function(uri) {
-        var img = new Image(),
-            rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
-
-        img.src = uri;
-        img.onload = function() {
-          if (iframeDiv !== undefined) {
-            $(iframeDiv).remove();
-            iframeDiv = undefined;
-          }
-          
+      var addImage = function(uri, preview) {        
+        var div,
+            rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1),
+        dropImage = function( img ) {
           setTimeout(function() {
             audio.play();
-          }, 300)
-
-          scaleImage(img);
-          var div = $("<div></div")
+          }, 300);
+                      
+          div = $("<div></div")
                   .append(img)
                   .attr('class', 'image')
                   .css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
@@ -99,22 +91,53 @@
                   .appendTo('#wall');
 
           var position = positionForElement($(img));
-                  
+
           div
             .css({ '-webkit-transition-property': 'opacity, top, left, width, height' })
             .css({ '-webkit-transition-duration': '0.3s' })
             .css({ 'width': img.width, 'height': img.height})
             .css({ 'opacity': '1'})
             .css(position);
-          
+
           $(img).css({ 'width': '100%', 'height': '100%'});
-          
           
           images.push(div);
           if (images.length > MAX_ELEMENTS) {
             $(images.shift()).remove();
           }
         }
+        
+        if (preview !== undefined) {
+          var previewImg = new Image();
+          previewImg.src = preview[0].uri;
+          previewImg.onload = function() {
+            if (div === undefined) {
+              scaleImage(previewImg);
+              dropImage(previewImg);
+            }
+          };
+        }
+        
+        var img = new Image();
+        img.src = uri;
+        img.onload = function() {
+          scaleImage(img);
+          
+          if (div === undefined) {
+            dropImage(img);
+          } else {
+            div.html("")
+               .css('-webkit-transition-property', 'opacity' )
+               .css({ 'width': img.width, 'height': img.height})
+               .append(img);
+               
+            div.css(positionForElement($(img)));
+          };
+          
+        };
+        
+
+        return div;
       };
 
       var addYoutube = function(uri) {
@@ -128,8 +151,6 @@
         
         var position = positionForElement(iframe);
         iframeDiv.css(position);
-        console.log(position);
-
       };
 
       var watch = function() {
@@ -141,19 +162,22 @@
       });
 
       linccer.on('received', function(data) {
-
-        // console.log(data);
         last_sender = data[0]['sender']['client-id']
-        //console.log("last sender: " + last_sender + " allowed is: " + allowed_sender);
         if (allowed_sender != last_sender && allowed_sender != ""){
           watch();
           return;
         }
 
-        var firstContent = data[0]['data'][0];
-
+        if (iframeDiv !== undefined) {
+          $(iframeDiv).remove();
+          iframeDiv = undefined;
+        }
+        
+        var firstContent = data[0]['data'][0],
+            preview = firstContent.preview;
+        
         if (firstContent.type.match(/^image\/*/)) {
-          addImage(firstContent.uri);
+          addImage(firstContent.uri, preview);
         } else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
 
         var uri = firstContent.content.replace("watch?v=", "embed/");
