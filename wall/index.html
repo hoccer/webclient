@@ -67,8 +67,8 @@
       var positionForElement = function(element) {
         var doc = $(window);
 
-        var top = doc.height() / 2 - element.height / 2;
-        var left = doc.width() / 2 - element.width / 2;
+        var top = doc.height() / 2 - element.height() / 2;
+        var left = doc.width() / 2 - element.width() / 2;
 
         return { 'top': top + 'px', 'left': left+'px' };
       };
@@ -98,7 +98,7 @@
                   .css({ 'opacity': '0'})
                   .appendTo('#wall');
 
-          var position = positionForElement(img);
+          var position = positionForElement($(img));
                   
           div
             .css({ '-webkit-transition-property': 'opacity, top, left, width, height' })
@@ -125,8 +125,11 @@
             append(iframe).
             attr('class', 'image').
             appendTo('#wall');
+        
+        var position = positionForElement(iframe);
+        iframeDiv.css(position);
+        console.log(position);
 
-        positionElement(iframeDiv);
       };
 
       var watch = function() {
