@@ -31,6 +31,9 @@
           iframeDiv,
           map = HoccerMap("map_canvas", "address_field");
 
+      var last_sender = "";
+      var allowed_sender = "";
+
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
 
@@ -135,7 +138,14 @@
       });
 
       linccer.on('received', function(data) {
+
         // console.log(data);
+        last_sender = data[0]['sender']['client-id']
+        //console.log("last sender: " + last_sender + " allowed is: " + allowed_sender);
+        if (allowed_sender != last_sender && allowed_sender != ""){
+          watch();
+          return;
+        }
 
         var firstContent = data[0]['data'][0];
 
@@ -208,9 +218,9 @@
       $('#lock_wall').iCheckbox("off", {switch_speed: 50 });
 		  $('#lock_wall').change(function(e){
 			  if ( $('#lock_wall').attr('checked') == true ) {
-			  	console.log('lock_wall checked: '+$(e.target).attr('checked'));
+			  	allowed_sender = last_sender;
 			  } else {
-			  	console.log('lock-wall checked: '+$(e.target).attr('checked'));
+			  	allowed_sender = "";
         }
 		  });
 
@@ -430,7 +440,7 @@
       </div>
       <div class="settings_option"></div>
       <div class="settings_option">
-        <input type="checkbox" id="lock_wall" />Only accept content from last thrower
+        <input type="checkbox" id="lock_wall" />Restrict to last thrower
       </div>
 
       <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
