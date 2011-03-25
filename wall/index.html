@@ -87,7 +87,7 @@
                   .css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
                   .css({ '-moz-transform': 'rotate(' + rotation + 'deg)' })
                   .css({ 'height': '2000px', 'width': '2000px'})
-                  .css({ 'opacity': '0'})
+                  .css({ 'opacity': '0', 'overflow': 'none' })
                   .appendTo('#wall');
 
           var position = positionForElement($(img));
@@ -126,12 +126,33 @@
           if (div === undefined) {
             dropImage(img);
           } else {
-            div.html("")
-               .css('-webkit-transition-property', 'opacity' )
-               .css({ 'width': img.width, 'height': img.height})
+            var oldImage = $(div).children()[0],
+                left     = ($(oldImage).width() - img.width) / 2 + 10,
+                duration = '0.5s';
+                
+            $(img).css({'position': 'absolute', 'left': left+'px', 'top': '10px', 'opacity': '0'});
+
+            div.css({ 'width': img.width, 'height': img.height})
+               .css({ '-webkit-transition-property': 'opacity, left, width, height' })
+               .css({ '-webkit-transition-duration': duration })
                .append(img);
                
-            div.css(positionForElement($(img)));
+            div
+            .css({ '-webkit-transition-property': 'opacity, top, left, width, height' })
+            .css({ '-webkit-transition-duration': duration })            
+            .css(positionForElement($(img)));
+            
+            $(img)
+              .css({ '-webkit-transition-property': 'opacity, left' })
+              .css({ '-webkit-transition-duration': duration })
+              .css({ 'opacity': '1', 'left': '10px'} );
+              
+                
+            $(oldImage)
+            .css({ '-webkit-transition-property': 'opacity' })
+            .css({ '-webkit-transition-duration': duration })
+            .css('opacity', '0');
+            
           };
           
         };
