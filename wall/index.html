@@ -134,6 +134,8 @@
 
             div.css({ '-webkit-transition-property': 'left, width, height' })
                .css({ '-webkit-transition-duration': transformDuration })
+               .css({ '-moz-transition-property': 'left, width, height' })
+               .css({ '-moz-transition-duration': transformDuration })
                .css({ 'width': img.width, 'height': img.height})
                .append(img);
                
@@ -142,13 +144,19 @@
             $(img)
               .css({ '-webkit-transition-property': 'opacity, left' })
               .css({ '-webkit-transition-duration': fadeDuration +', ' + transformDuration })
+              .css({ '-moz-transition-property': 'opacity, left' })
+              .css({ '-moz-transition-duration': fadeDuration +', ' + transformDuration })
               .css({ 'opacity': '1', 'left': '10px'} );
+              
               
                 
             $(oldImage)
               .css({ '-webkit-transition-property': 'opacity' })
               .css({ '-webkit-transition-duration': fadeDuration })
               .css({ '-webkit-transition-timing-function': 'ease-in' })
+              .css({ '-moz-transition-property': 'opacity' })
+              .css({ '-moz-transition-duration': fadeDuration })
+              .css({ '-moz-transition-timing-function': 'ease-in' })
               .css('opacity', '0');
           };
           
