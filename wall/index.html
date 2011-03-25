@@ -128,31 +128,28 @@
           } else {
             var oldImage = $(div).children()[0],
                 left     = ($(oldImage).width() - img.width) / 2 + 10,
-                duration = '0.5s';
+                fadeDuration = '1s', transformDuration = '0.2s';
                 
             $(img).css({'position': 'absolute', 'left': left+'px', 'top': '10px', 'opacity': '0'});
 
-            div.css({ 'width': img.width, 'height': img.height})
-               .css({ '-webkit-transition-property': 'opacity, left, width, height' })
-               .css({ '-webkit-transition-duration': duration })
+            div.css({ '-webkit-transition-property': 'left, width, height' })
+               .css({ '-webkit-transition-duration': transformDuration })
+               .css({ 'width': img.width, 'height': img.height})
                .append(img);
                
-            div
-            .css({ '-webkit-transition-property': 'opacity, top, left, width, height' })
-            .css({ '-webkit-transition-duration': duration })            
-            .css(positionForElement($(img)));
+            div.css(positionForElement($(img)));
             
             $(img)
               .css({ '-webkit-transition-property': 'opacity, left' })
-              .css({ '-webkit-transition-duration': duration })
+              .css({ '-webkit-transition-duration': fadeDuration +', ' + transformDuration })
               .css({ 'opacity': '1', 'left': '10px'} );
               
                 
             $(oldImage)
-            .css({ '-webkit-transition-property': 'opacity' })
-            .css({ '-webkit-transition-duration': duration })
-            .css('opacity', '0');
-            
+              .css({ '-webkit-transition-property': 'opacity' })
+              .css({ '-webkit-transition-duration': fadeDuration })
+              .css({ '-webkit-transition-timing-function': 'ease-in' })
+              .css('opacity', '0');
           };
           
         };
