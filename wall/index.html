@@ -6,12 +6,12 @@
   <meta name="generator" content="TextMate http://macromates.com/">
   <meta name="author" content="Robert Palmer">
   <!-- Date: 2010-12-15 -->
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/jquery.iphone-switch.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/jquery.iCheckbox.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
@@ -26,7 +26,9 @@
       var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
           TIMEOUT_ERROR = 'No transfer partner found';
 
-      var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0" });
+      var name = $("#client_name").val();
+
+      var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server" : "experimental" });
       var images = [],
           iframeDiv,
           map = HoccerMap("map_canvas", "address_field");
@@ -36,6 +38,7 @@
 
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
+      linccer.updateName(name);
 
       var audio = new Audio();
       audio.src = "image-hitting-the-wall.wav";
@@ -248,7 +251,9 @@
           cleanedIds.push(bssids[i].trim());
         }
         linccer.setBssids( cleanedIds );
-        
+
+        linccer.updateName( $("#client_name").val() );
+
         $("#settings").hide();
         return false;
       });
@@ -373,6 +378,12 @@
       margin-bottom: 20px;
     }
 
+    #client_name {
+      width: 485px;
+      margin: 0px;
+      margin-bottom: 20px;
+    }
+
     a, a img, a:active img, a:visited {
       color: #fff;
       border: 0;
@@ -489,6 +500,10 @@
 
     <div id="settings">
       <h1>Settings</h1>
+      <div class="settings_option">
+        <input type="text" id="client_name" value="<MyWall>" placeholder="Enter wallname here"/><br>
+      </div>
+
         <div id="map_canvas"></div>
       <div class="settings_option">
         <input id="address_field" type="text" value="" placeholder="Manually enter address"/><br>
