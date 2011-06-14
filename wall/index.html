@@ -17,6 +17,9 @@
   <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
   <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
   <script type="text/javascript" charset="utf-8">
+
+    var name = "";
+
     $(document).ready(function() {
       var MAX_HEIGHT = $(document).height() - 200,
           MAX_WIDTH = $(document).width() - 300,
@@ -25,8 +28,6 @@
 
       var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
           TIMEOUT_ERROR = 'No transfer partner found';
-
-      var name = $("#client_name").val();
 
       var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server" : "experimental" });
       var images = [],
@@ -220,11 +221,13 @@
       
       group = [];
       a = 0;
+      
+      console.log(name);
 
       for( i = 0; i < data.group.length; i++)
       {
         if ( data.group[i].name != name && data.group[i].name != "" ) {
-        
+          console.log("condition: " +  data.group[i].name + " " + i);
           group[a] = new Object();
           group[a]["id"] =  data.group[i].id;
           group[a]["name"] = data.group[i].name;
@@ -327,7 +330,9 @@
         }
         linccer.setBssids( cleanedIds );
 
-        linccer.updateName( $("#client_name").val() );
+        name = $("#client_name").val();
+        linccer.updateName(name);
+        linccer.peek();
 
         $("#settings").hide();
 
