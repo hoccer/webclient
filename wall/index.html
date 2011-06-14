@@ -31,7 +31,8 @@
       var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server" : "experimental" });
       var images = [],
           iframeDiv,
-          map = HoccerMap("map_canvas", "address_field");
+          map = HoccerMap("map_canvas", "address_field"),
+          group = new Array();
 
       var last_sender = "",
           allowed_sender = "";
@@ -39,7 +40,8 @@
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
       linccer.updateName(name);
-
+      linccer.peek();
+           
       var audio = new Audio();
       audio.src = "image-hitting-the-wall.wav";
       
@@ -67,7 +69,7 @@
 
       };
 
-      var positionForElement = function(element) {
+        var positionForElement = function(element) {
         var doc = $(window);
 
         var top = doc.height() / 2 - element.height() / 2;
@@ -75,7 +77,7 @@
 
         return { 'top': top + 'px', 'left': left+'px' };
       };
-
+        
       var addImage = function(uri, preview) {        
         var div,
             rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1),
@@ -175,7 +177,7 @@
         var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="'
                           + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
 
-        iframeDiv = $("<div></div").
+        iframeDiv = $("<div></div>").
             append(iframe).
             attr('class', 'image').
             appendTo('#wall');
@@ -186,6 +188,7 @@
 
       var watch = function() {
         linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
+        linccer.peek();
       };
 
       linccer.on('ready', function() {
@@ -193,11 +196,6 @@
       });
 
       linccer.on('received', function(data) {
-        last_sender = data[0]['sender']['client-id']
-        if (allowed_sender != last_sender && allowed_sender != ""){
-          watch();
-          return;
-        }
 
         if (iframeDiv !== undefined) {
           $(iframeDiv).remove();
@@ -218,6 +216,35 @@
         watch();
       });
 
+      linccer.on('peeked', function(data) {
+      
+      group = [];
+      a = 0;
+
+      for( i = 0; i < data.group.length; i++)
+      {
+        if ( data.group[i].name != name && data.group[i].name != "" ) {
+        
+          group[a] = new Object();
+          group[a]["id"] =  data.group[i].id;
+          group[a]["name"] = data.group[i].name;
+          a += 1;
+        }
+      }
+
+      link = document.getElementById("group_button");
+      
+      if ( selected_clients.length == 0 ) {
+        link.innerHTML = group.length;
+        link.style.right = "25px";
+      } else {
+        link.style.right = "20px";
+        link.innerHTML = selected_clients.length + "<span style='font-face:Arial;font-size:80%;color:#aaa;'>&#8730;</span>";
+      }
+
+
+      });
+
       linccer.on('error', function(error) {
         if (error.code == 3 || error.code == 1) {
           $("#settings").show();
@@ -229,6 +256,7 @@
 
       linccer.on('updated_environment', function(data) {
         map.setCenter(data.gps.latitude, data.gps.longitude)
+        linccer.peek();
       });
 
       map.on('position_changed', function() {
@@ -243,6 +271,53 @@
         return false;
       });
 
+      $("#group_button").click(function() {
+        linccer.peek();
+        group_write();
+
+        $("#group").show();
+
+        return false;
+      });
+
+      var group_write = function () {
+        var groupdiv = document.getElementById("group");
+        var groupul = groupdiv.getElementsByTagName("ul")[0];
+        var groupli = groupul.getElementsByTagName("li");
+
+        for ( i = 0; i = groupli.length; i++) {
+          var groupitem = document.getElementsByTagName("ul")[0].firstChild;
+          document.getElementsByTagName("ul")[0].removeChild(groupitem);
+        }
+
+
+        for( i = 0; i < group.length; i++)
+        {
+            var item = document.createElement('li');
+            var box = document.createElement('input');
+            box.setAttribute('type','checkbox');
+            box.setAttribute('value', group[i].id );
+            box.setAttribute('id', 'group_box');
+            box.setAttribute('name', 'group_box_' + i);
+            box.setAttribute('onClick', 'trustsender(this)');
+            if ( selected_clients.indexOf(group[i].id) != -1 ) {
+              box.checked = true;
+            }
+            
+            if ( group[i].name.indexOf("<") != -1 || group[i].name.indexOf(">") != -1 ) {
+              item.innerHTML = escape(group[i].name);
+            } else {
+              item.innerHTML = group[i].name;
+            }
+
+            groupul.appendChild(item);
+            item.appendChild(box);
+
+        }
+
+      };
+      
+
       $("#done").click(function() {
         var bssids = $("#bssid_field").val().split(",");
         
@@ -255,6 +330,15 @@
         linccer.updateName( $("#client_name").val() );
 
         $("#settings").hide();
+
+        return false;
+      });
+
+      $("#done_group").click(function() {
+
+        $("#group").hide();
+        linccer.setClients(selected_clients);
+        linccer.peek();
         return false;
       });
       
@@ -275,16 +359,19 @@
         return false;
       });
       
-      $('#lock_wall').iCheckbox("off", {switch_speed: 50 });
-		  $('#lock_wall').change(function(e){
-			  if ( $('#lock_wall').attr('checked') == true ) {
-			  	allowed_sender = last_sender;
-			  } else {
-			  	allowed_sender = "";
-        }
-		  });
-
     });
+    
+    var selected_clients = [];
+
+    var trustsender = function (box) {
+      if ( box.checked ) {
+        selected_clients.push(box.value);
+      } else {
+        var idx = selected_clients.indexOf(box.value);
+        selected_clients.splice(idx,1);
+      }
+    }
+
 
   </script>
 
@@ -312,6 +399,27 @@
       position: absolute;
       bottom: 10px;
       right: 10px;
+    }
+
+     #group_button {
+      position: absolute;
+      bottom: 60px;
+      right: 25px;
+      font-size: 2em;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #group ul li {
+      width: 100%;
+      float: left;
+      list-style: none;
+      font-size: 1.5em;
+      padding-bottom: 0.5em;
+    }
+
+    input#group_box {
+      float: right;
     }
     
     #legal_notice {
@@ -352,6 +460,20 @@
       display: none;
     }
 
+    #group {
+      position: absolute;
+      top: 0; right: 0;
+      
+      width: 496px;
+      height: 100%;
+      z-index : 1;
+      
+      padding: 0 25px;
+      
+      display: none;
+    }
+
+
     .settings_option {
       margin-left: 4px;
       margin-bottom: 20px;
@@ -360,7 +482,7 @@
       width: 488px;
     }
 
-    #done {
+    #done, #done_group {
       bottom: 20px;
       right: 20px;
       position: absolute;
@@ -494,6 +616,7 @@
     <div id="wall">
       <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
       <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
+      <a id="group_button" href="#"></a>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
       <a href="#" id="legal_notice">Legal Notice</a>
     </div>
@@ -509,9 +632,6 @@
         <input id="address_field" type="text" value="" placeholder="Manually enter address"/><br>
       </div>
       <div class="settings_option"></div>
-      <div class="settings_option">
-        <input type="checkbox" id="lock_wall" />Restrict to last thrower
-      </div>
 
       <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
       
@@ -524,6 +644,15 @@
       </div>
       
       <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
+    </div>
+
+    <div id="group">
+      <h1>Clients</h1>
+      <ul>
+      </ul>
+      <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
+      <a id="done_group" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
+
     </div>
     
     <!-- Piwik --> 
