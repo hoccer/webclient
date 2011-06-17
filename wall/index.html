@@ -25,6 +25,7 @@
           MAX_WIDTH = $(document).width() - 300,
           MAX_ROTATION = 15,
           MAX_ELEMENTS = 6;
+          id = 0;
 
       var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
           TIMEOUT_ERROR = 'No transfer partner found';
@@ -40,8 +41,8 @@
 
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
-      linccer.updateName(name);
-      linccer.peek();
+      name = $("#client_name").val();
+      linccer.setName(name);
            
       var audio = new Audio();
       audio.src = "image-hitting-the-wall.wav";
@@ -189,7 +190,6 @@
 
       var watch = function() {
         linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
-        linccer.peek();
       };
 
       linccer.on('ready', function() {
@@ -222,12 +222,10 @@
       group = [];
       a = 0;
       
-      console.log(name);
 
       for( i = 0; i < data.group.length; i++)
       {
         if ( data.group[i].name != name && data.group[i].name != "" ) {
-          console.log("condition: " +  data.group[i].name + " " + i);
           group[a] = new Object();
           group[a]["id"] =  data.group[i].id;
           group[a]["name"] = data.group[i].name;
@@ -235,14 +233,17 @@
         }
       }
 
-      link = document.getElementById("group_button");
+      var check = document.getElementById("group_check");
+      var link = document.getElementById("group_button");
       
       if ( selected_clients.length == 0 ) {
         link.innerHTML = group.length;
-        link.style.right = "25px";
+        //link.style.right = "25px";
+        check.style.display="none";
       } else {
-        link.style.right = "20px";
-        link.innerHTML = selected_clients.length + "<span style='font-face:Arial;font-size:80%;color:#aaa;'>&#8730;</span>";
+        //link.style.right = "20px";
+        link.innerHTML = selected_clients.length;
+        check.style.display="block";
       }
 
 
@@ -259,7 +260,6 @@
 
       linccer.on('updated_environment', function(data) {
         map.setCenter(data.gps.latitude, data.gps.longitude)
-        linccer.peek();
       });
 
       map.on('position_changed', function() {
@@ -306,16 +306,13 @@
             if ( selected_clients.indexOf(group[i].id) != -1 ) {
               box.checked = true;
             }
-            
-            if ( group[i].name.indexOf("<") != -1 || group[i].name.indexOf(">") != -1 ) {
-              item.innerHTML = escape(group[i].name);
-            } else {
-              item.innerHTML = group[i].name;
-            }
+              
+            var cname = group[i].name.replace(/</g,"");
+            cname = cname.replace(/>/g,"");
+            item.innerHTML = cname;
 
             groupul.appendChild(item);
             item.appendChild(box);
-
         }
 
       };
@@ -331,11 +328,9 @@
         linccer.setBssids( cleanedIds );
 
         name = $("#client_name").val();
-        linccer.updateName(name);
-        linccer.peek();
+        linccer.setName(name);
 
         $("#settings").hide();
-
         return false;
       });
 
@@ -348,6 +343,7 @@
       });
       
       $("#legal_notice").click(function() {
+
         $("#legal").toggle();
         return false;
       });
@@ -376,7 +372,6 @@
         selected_clients.splice(idx,1);
       }
     }
-
 
   </script>
 
@@ -407,20 +402,23 @@
     }
 
      #group_button {
-      position: absolute;
-      bottom: 60px;
-      right: 25px;
       font-size: 2em;
       font-weight: bold;
       text-decoration: none;
+      width: 30px;
+      float: left;
+      text-align: right;
+      text-shadow: #000 2px 2px 2px;
+      color: #ececec;
     }
 
     #group ul li {
       width: 100%;
       float: left;
       list-style: none;
-      font-size: 1.5em;
-      padding-bottom: 0.5em;
+      font-size: 1.2em;
+      margin-bottom: 0.5em;
+      border-bottom: 1px solid #aaa;
     }
 
     input#group_box {
@@ -478,6 +476,23 @@
       display: none;
     }
 
+    #gbdiv {
+      display: block;
+      width: 46px;
+      height: 46px;
+      position: absolute;
+      bottom: 50px;
+      right: 10px;
+    }
+
+    #group_check {
+      position: absolute;
+      width: 30px;
+      display: none;
+      margin: 0;
+      right: -10px;
+      top: -5px;
+    }
 
     .settings_option {
       margin-left: 4px;
@@ -550,7 +565,6 @@
       position: absolute;
       left: 80px;
       bottom: 120px;
-
       font-size: 0.90em;
       color: #000;
 
@@ -621,7 +635,7 @@
     <div id="wall">
       <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
       <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
-      <a id="group_button" href="#"></a>
+      <div id="gbdiv"><a id="group_button" href="#"></a><img src="http://localhost/webapp/images/check.png" id="group_check" alt="clients selected"></div>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
       <a href="#" id="legal_notice">Legal Notice</a>
     </div>
