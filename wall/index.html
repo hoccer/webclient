@@ -43,7 +43,9 @@
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
       name = $("#client_name").val();
       linccer.setName(name);
-           
+
+      var myid = linccer.getID();
+
       var audio = new Audio();
       audio.src = "image-hitting-the-wall.wav";
       
@@ -225,7 +227,7 @@
 
       for( i = 0; i < data.group.length; i++)
       {
-        if ( data.group[i].name != name && data.group[i].name != "" ) {
+        if ( data.group[i].id != myid && data.group[i].name != "" ) {
           group[a] = new Object();
           group[a]["id"] =  data.group[i].id;
           group[a]["name"] = data.group[i].name;
@@ -238,10 +240,8 @@
       
       if ( selected_clients.length == 0 ) {
         link.innerHTML = group.length;
-        //link.style.right = "25px";
         check.style.display="none";
       } else {
-        //link.style.right = "20px";
         link.innerHTML = selected_clients.length;
         check.style.display="block";
       }
@@ -635,7 +635,7 @@
     <div id="wall">
       <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
       <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
-      <div id="gbdiv"><a id="group_button" href="#"></a><img src="http://localhost/webapp/images/check.png" id="group_check" alt="clients selected"></div>
+      <div id="gbdiv"><a id="group_button" href="#"></a><img src="http://hoccer.com/webapp/images/check.png" id="group_check" alt="clients selected"></div>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
       <a href="#" id="legal_notice">Legal Notice</a>
     </div>
