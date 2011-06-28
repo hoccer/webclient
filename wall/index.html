@@ -45,6 +45,7 @@
       linccer.setName(name);
 
       linccer.peek();
+      group_write();
 
       var myid = linccer.getID();
 
@@ -283,6 +284,7 @@
 
       $("#group_button").click(function() {
         linccer.peek();
+        group_write();
 
         $("#group").show();
 
@@ -345,6 +347,7 @@
         $("#group").hide();
         linccer.setClients(selected_clients);
         linccer.peek();
+        group_write();
         return false;
       
       });
