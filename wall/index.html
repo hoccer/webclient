@@ -194,6 +194,7 @@
 
       var watch = function() {
         linccer.peek();
+        group_write();
         linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
       };
 
@@ -253,7 +254,6 @@
         check.style.display="block";
       }
 
-
       });
 
       linccer.on('error', function(error) {
@@ -283,7 +283,6 @@
 
       $("#group_button").click(function() {
         linccer.peek();
-        group_write();
 
         $("#group").show();
 
@@ -674,6 +673,7 @@
 
     <div id="group">
       <h1>Clients</h1>
+      <p style="margin-left: 5px;">Restrict your wall to one or more clients in your area by clicking the checkbox related to the clientname. Uncheck all clients to free your wall.</p>
       <ul>
       </ul>
       <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
