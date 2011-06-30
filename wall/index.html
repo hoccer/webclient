@@ -36,15 +36,14 @@
           map = HoccerMap("map_canvas", "address_field"),
           group = new Array();
 
-      var last_sender = "",
-          allowed_sender = "";
+      var groupid = "";
 
       map.show();
       linccer.setEnvironmentCoordinates(52.51666009426117, 13.40919971466064, 2000);
       name = $("#client_name").val();
       linccer.setName(name);
 
-      linccer.peek();
+      linccer.peek(groupid);
 
       var myid = linccer.getID();
 
@@ -193,8 +192,6 @@
       };
 
       var watch = function() {
-        linccer.peek();
-        group_write();
         linccer.receive( 'one-to-many', { 'waiting': 'true', 'timeout': 15000 } );
       };
 
@@ -225,6 +222,10 @@
 
       linccer.on('peeked', function(data) {
       
+      groupid = data.group_id;
+
+      console.log(groupid);
+
       group = [];
       a = 0;
       
@@ -253,6 +254,10 @@
         link.innerHTML = selected_clients.length;
         check.style.display="block";
       }
+      
+      group_write();
+
+      linccer.peek(groupid);
 
       });
 
@@ -282,7 +287,6 @@
       });
 
       $("#group_button").click(function() {
-        linccer.peek();
         group_write();
 
         $("#group").show();
@@ -345,7 +349,6 @@
 
         $("#group").hide();
         linccer.setClients(selected_clients);
-        linccer.peek();
         group_write();
         return false;
       
