@@ -13,54 +13,56 @@ var WebClient = function(map) {
 	var content;
 	var active = true;
 	var mode = "receiveMode";
+
+  that.mode = function () {
+    return mode;
+  }
+
+	that.sendmode = function() {
+		
+    that.fire('send');
+
+    return false;
+	};
 	
-	$("#send_mode_button").click(function() {
-    mode = "sendMode"
-    $("#content_select").slideDown();
-    
-    $("#receive_mode_button").css({'background': "url('images/receive_gray.png') no-repeat"});
-	  $("#send_mode_button").css({'background': "url('images/send_blau.png') no-repeat"});
-	  
-	  $("#help").html(SEND_HELP);
-	  
-	  return false;
-	});
-	
-	$("#receive_mode_button").click(function() {
-	  mode = "receiveMode"
+	that.receivemode = function() {
+	  if ( active ) {
+    mode = "receiveMode"
 	  $("#content_select").slideUp();
-	  $("#receive_mode_button").css({'background': "url('images/receive_blau.png') no-repeat"});
-	  $("#send_mode_button").css({'background': "url('images/send_gray.png') no-repeat"});
 	  
+    $("#modeinfo").html("- READY TO RECIEVE");
 	  $("#help").html(RECEIVE_HELP);
 	  
-	  return false;
-	});
-	
-	$("#transfer_button").click(function() {
-	  if (!active) {
-	    return false;
-	  }
-	  
-	  if (mode === "sendMode") {
-	    that.fire('send');
-	  } else {
-	    that.fire('receive')
-	  }
-	  return false;
-	});
-	
-	$('#textcontent').bind('focus', function() {
-    showTextMode();
-	});
-	
-	$('#textcontent').focusout( function() {
-    if ($(this).val() == "") {
-      showBothModesFromTextMode();
-    } else {
-      content = { 'type': "text/plain", 'content': $(this).val() }
+    that.fire('receive')
     }
-	});
+	  return false;
+	};
+
+  $("#change_client").click( function() {
+      $("#group").css({"display" : "block"});
+      $("#webclient").css({"display" : "none"});
+      client.setInactive();
+  });
+
+  $('#cancel_text').click(function() {
+    hideTextMode();
+  })
+
+  $('#send_text').click(function() {
+    content = { 'type': "text/plain", 'content': $('#textcontent').val() }
+    that.sendmode();
+  });
+
+  $("#transfer_text").click(function() {
+    mode = "sendMode"
+      showTextMode();
+
+    $("#modeinfo").html("- READY TO SEND");
+
+    $("#content_select").slideDown();
+    
+	  $("#help").html(SEND_HELP);
+  });
 	
 	$("#show_map > a").click(function() { 
 	  var map_div =  $('#map_container');
@@ -79,6 +81,11 @@ var WebClient = function(map) {
 	});
 	
 	$("#fileInputField").change(function() {
+
+    $("#modeinfo").html("- READY TO SEND");
+
+    hideTextMode();
+
     var file = document.getElementById('fileInputField').files[0];
     var filename = "";
         
@@ -89,16 +96,13 @@ var WebClient = function(map) {
     } else {
       filename = file.name;
     }
+
     
     $("#filename").html(filename + ' <a href="" id="cancelFile">(cancel)</a>');
-    showFileMode();
-    
+
     $("#cancelFile").click(function(event) {
-      $("#filename").html("Select File");
+      $("#filename").html("No file selected.");
       $("#fileInputField").css({"z-index": 2});
-      
-      showBothModesFromFileMode();
-  	  event.stopPropagation();
   	  
   	  that.fire('file_canceled');
   	  return false;	  
@@ -114,36 +118,21 @@ var WebClient = function(map) {
 	});
 	
 	var showTextMode = function() {
-    $("#fileinput").css({'display': 'none' });
     $("#content_select > section > span").css({'display': 'none'});
     $("#textcontent").animate({'width': "490px"});
 	}
-	
-	var showBothModesFromTextMode = function() {
-    $("#textcontent").animate({'width': "210px"}, function() {
-      $("#fileinput").css({'display': 'block' });
-      $("#content_select > section > span").css({'display': 'inline'});
-    });
-	}
-	
-	var showBothModesFromFileMode = function() {
-    $("#fileinput").css({'width': "230px"});
-    $("#textinput").css({'display': 'block'});
-    $("#content_select > section > span").css({'display': 'inline'});
-	}
-	
-	var showFileMode = function() {
-	  $("#textinput").css({'display': 'none' });
-    $("#content_select > section > span").css({'display': 'none'});
-    $("#fileinput").css({'width': "605px"});
-	}
 
+  var hideTextMode = function() {
+    $("#content_select").css({'display': 'none'});
+  }
+	
 	that.content = function() {
 	  return content;
 	}
-	
+
 	that.setContent = function(newContent) {
 	  content = newContent;
+    that.sendmode();
 	};
 
   that.connecting = function() {
@@ -171,7 +160,6 @@ var WebClient = function(map) {
 		}
 	
 	that.showSuccess= function() {
-	  // $("#transfer_button").css({'background': "url('images/transfer_successful.png') no-repeat" });
     $("#connecting_info")
 	            .css({"visibiliy": "visible"})
 	            .text("Transfer successful");
@@ -179,12 +167,10 @@ var WebClient = function(map) {
 
   that.setInactive = function() {
 	  active = false;
-	  $("#transfer_button").css({'background': "url('images/inactive_transfer.png') no-repeat", 'cursor': 'default' });
 	}
 	
 	that.setActive = function() {
 	  active = true;
-	  $("#transfer_button").css({'background': "url('images/start_transfer.png') no-repeat", 'cursor': 'pointer' });
 	}
 
 	return that;
