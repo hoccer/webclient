@@ -31,7 +31,7 @@
 			var TIMEOUT_ERROR = 'No transfer partner found';
 			
 			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0' });
-			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental' });
+			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' });
 
 			var map = HoccerMap('map_canvas');
 			client = WebClient(map);
@@ -105,7 +105,8 @@
       var watch = function() {
 
         client.receivemode();
-        linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 15000 } );
+        linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 50000 } );
+
       };
 
 		  map.on('position_changed', function() {
@@ -125,8 +126,6 @@
 			
 			client.on('receive', function() {
 				client.connecting();
-
-        watch();
 			});
 			
 			client.on('file_selected', function(file) {
@@ -156,7 +155,7 @@
 
 			linccer.on('updated_environment', function(data) {
 				map.setCenter(data.gps.latitude, data.gps.longitude)
-			});
+      });
 			
 			linccer.on('sent', function(data) {
 				client.unconnecting();
@@ -165,7 +164,9 @@
         $("#filename").html("No file selected.");
         $("#fileInputField").css({"z-index": 2});
   	  
-  	    client.fire('file_canceled');
+        client.fire('file_canceled');
+
+        client.receivemode();
 
         watch();
       });
@@ -289,7 +290,7 @@
 				} else {
 					client.showError(TIMEOUT_ERROR);
         }
-        watch();
+        if ( client.mode() == "receiveMode" ) { watch(); }
 
       });
   
