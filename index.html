@@ -31,7 +31,7 @@
 			var TIMEOUT_ERROR = 'No transfer partner found';
 			
 			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0' });
-			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' });
+			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental' });
 
 			var map = HoccerMap('map_canvas');
 			client = WebClient(map);
@@ -102,6 +102,11 @@
 
       });
 
+      var watch = function() {
+
+        client.receivemode();
+        linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 15000 } );
+      };
 
 		  map.on('position_changed', function() {
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
@@ -115,15 +120,13 @@
 				client.connecting();
 				var data = { 'client' : 'webclient', 'data': [ client.content() ] };
         linccer.send("one-to-one", data);
+
 			});
 			
 			client.on('receive', function() {
 				client.connecting();
 
-        linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 15000 } );
-
-        if ( client.mode == "receiveMode" ) { client.receivemode(); }
-
+        watch();
 			});
 			
 			client.on('file_selected', function(file) {
@@ -132,7 +135,6 @@
       });
 
 			client.on('file_canceled', function() {
-				client.receivemode();	
       });
 
 			
@@ -148,8 +150,10 @@
 			linccer.on('ready', function() {
         client.displayLocation();
         $("#group").css({"display" : "block"});
+
+        watch();
 			})
-			
+
 			linccer.on('updated_environment', function(data) {
 				map.setCenter(data.gps.latitude, data.gps.longitude)
 			});
@@ -158,7 +162,12 @@
 				client.unconnecting();
         client.showSuccess();
 
-        client.receivemode();
+        $("#filename").html("No file selected.");
+        $("#fileInputField").css({"z-index": 2});
+  	  
+  	    client.fire('file_canceled');
+
+        watch();
       });
 
 			linccer.on('received', function(data) {
@@ -177,7 +186,7 @@
 					showDownload(firstContent.uri)
 				}
 
-        if ( client.mode == "receiveMode" ) { client.receivemode(); }
+        watch();
 			});
 
       linccer.on('peeked', function(data) {
@@ -280,8 +289,7 @@
 				} else {
 					client.showError(TIMEOUT_ERROR);
         }
-
-        if ( client.mode == "receiveMode" ) { client.receivemode(); }
+        watch();
 
       });
   
@@ -311,7 +319,6 @@
       $("#webclient").css({"display" : "block"});
       client.setActive();
 
-      client.receivemode();
     }
 
 
@@ -398,7 +405,6 @@
 		}
 
     #transfer_text {
-     // background: url('images/webapp_icon_inputtext.png') no-repeat;
       float : right;
       margin-right: 10px;
       height : 50px;

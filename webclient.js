@@ -33,7 +33,7 @@ var WebClient = function(map) {
     $("#modeinfo").html("- READY TO RECIEVE");
 	  $("#help").html(RECEIVE_HELP);
 	  
-    that.fire('receive')
+    //^that.fire('receive')
     }
 	  return false;
 	};
