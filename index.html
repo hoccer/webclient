@@ -21,7 +21,7 @@
 	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">	
 
-    var fileCache, linccer, client, group, myname;
+    var fileCache, linccer, client, group, myname, payload;
 
     var selected_clients = [];
     var selected_name = "";
@@ -44,6 +44,7 @@
       myname = "<WebApp>";
 
       linccer.setName(myname);
+
       myname = myname.replace(/</g,"");
       myname = myname.replace(/>/g,"");
 
@@ -52,7 +53,10 @@
       actname.innerHTML = '<b>App Name: </b>' + myname; 
 
       linccer.peek(groupid);
-      
+
+      setInterval( "watch()" , 5000 );
+      setInterval( "poke()" , 5000 );
+
       var myid = linccer.getID();
 
 			var showImage = function(uri) {
@@ -102,13 +106,6 @@
 
       });
 
-      var watch = function() {
-
-        client.receivemode();
-        linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 50000 } );
-
-      };
-
 		  map.on('position_changed', function() {
 				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
 			});
@@ -118,10 +115,7 @@
 			})
 		
 		  client.on('send', function() {
-				client.connecting();
-				var data = { 'client' : 'webclient', 'data': [ client.content() ] };
-        linccer.send("one-to-one", data);
-
+        client.connecting();
 			});
 			
 			client.on('receive', function() {
@@ -130,12 +124,13 @@
 			
 			client.on('file_selected', function(file) {
 				content = fileCache.upload(file);
-				client.setContent(content);	
+        client.setContent(content);	
+        client.sendmode();
       });
 
 			client.on('file_canceled', function() {
+        client.receivemode();
       });
-
 			
 			fileCache.on('started', function(url) {
 			});
@@ -150,27 +145,19 @@
         client.displayLocation();
         $("#group").css({"display" : "block"});
 
-        watch();
       })
 
 			linccer.on('updated_environment', function(data) {
-				map.setCenter(data.gps.latitude, data.gps.longitude)
+				map.setCenter(data.gps.latitude, data.gps.longitude);
+
+  
       });
 			
 			linccer.on('sent', function(data) {
-				client.unconnecting();
         client.showSuccess();
-
-        $("#filename").html("No file selected.");
-        $("#fileInputField").css({"z-index": 2});
-  	  
-        client.fire('file_canceled');
-
-        watch();
      });
 
 			linccer.on('received', function(data) {
-				client.unconnecting();
 				client.showSuccess();
 
 				var firstContent = data[0]['data'][0];
@@ -185,7 +172,6 @@
 					showDownload(firstContent.uri)
 				}
 
-        watch();
 			});
 
       linccer.on('peeked', function(data) {
@@ -226,11 +212,11 @@
             groupul.appendChild(item);
         }
 
+
+
         write_group();
         
         test_for_client();
-
-        watch(); 
 
         linccer.peek(groupid);
 
@@ -283,15 +269,12 @@
       }
 
 			linccer.on('error', function(error) {
-				
+			  
 				if (error.code == 3) {
 					$("#coordinates").text(LOCATION_ERROR);
 					client.displayLocation();
-				} else if (error.message === 'request_timeout') {
-           client.showError(TIMEOUT_ERROR);
-           setTimeout( function() { watch(); }, 100);
         } else {
-          client.showError(TIMEOUT_ERROR);
+          client.showError(error.message);
         }
 
       });
@@ -321,6 +304,26 @@
       $("#group").css({"display" : "none"});
       $("#webclient").css({"display" : "block"});
       client.setActive();
+      client.receivemode();
+
+    }
+
+    var watch = function() {
+
+        if ( client.active() && client.mode() == "receiveMode" ) {
+          client.showwaiting();
+          linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 5000 } );
+        }
+
+    }
+
+    var poke = function() {
+        var payload = { 'client' : 'webclient', 'data': [ client.content() ] };
+
+        if ( client.active() && client.mode() == "sendMode" ) {
+          client.showwaiting();
+          linccer.send("one-to-one", payload);
+        }
 
     }
 
@@ -346,7 +349,7 @@
     #info { margin-top : 10px; }
     .info_box p { margin-bottom : 10px; }
     .info_box { margin-bottom: 10px; padding-bottom : 10px;}
-    .info_box section { border: 0; }
+    .info_box section { border: 0; margin-top : 10px;}
 
 		#map_canvas { height: 450px; padding-top: 6px;}
 		#map_container { position: absolute; width: 520px; padding: 10px; margin-top: -1200px;}
@@ -386,7 +389,12 @@
       padding : 0;
       height : 0;
       border : none;
-		}
+    }
+
+    #help_section {
+      clear : both;
+      display: none;
+    }
 		
 		#transfer h1 			{ padding: 0 15px 10px; }
 		#transfer h1 span { vertical-align: middle; }
@@ -416,7 +424,6 @@
 
 		
 		#connecting_info {
-			visibility: hidden;
       width: 100%;
       text-align: center;
       font-weight: bold;
@@ -424,6 +431,13 @@
       border-top : 1px solid #666;
       padding-top: 5px;
     }
+
+		#mode_info {
+      text-align: center;
+      border-top : 1px solid #666;
+      padding: 20px;
+    }
+
 
 		
 		#addressForm {
@@ -486,23 +500,6 @@
       width: 150px;
 
       margin-bottom : 20px;
-		}
-		
-	
-		#send_mode_button img, #receive_mode_button img { 
-			visibility: hidden;
-		}
-		
-		#send_mode_button {
-			background: #DDD url('images/send_gray.png') no-repeat;
-		}
-		
-		#receive_mode_button {
-			background: #DDD url('images/receive_blau.png') no-repeat;
-		}
-		
-		.info_box #send_mode_button {
-			border-width: 0px;
 		}
 		
 		textarea {
@@ -615,6 +612,7 @@
           </p>
           
           <p>
+            <div id="mode_info"></div>
             <div id="connecting_info">Connecting..</div>
             <span id="filename" style="margin-left : 20px;">No file selected.</span>
           </p>
@@ -629,49 +627,47 @@
             <section>
 							<div id="textinput">
                 <textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
-                <a href="#" id="send_text">Send Text</a>
-                <a href="#" id="cancel_text">Cancel</a>
+                <a href="#" id="set_text">Send Text</a>
               </div>
               </section>
         </div><!--content_select-->
 
         <div class="grid_7 info_box" id="transfer">
-						<section><p>
-							<h1>
-								<img src="images/webapp_icon_transfer.png" width="27" height="25" alt="Icon Transfer" />
-                <span>Transfer Data</span>
-                <span id="modeinfo"></span>
-              </h1>
-              
+						<section>
  							<div id="fileinput" class="fileinputs">
 								<input type="file" class="file" id="fileInputField" />
 								<div class="fakefile">
-									<img style="float:left"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
+									<img style="float:left;margin-top:5px;"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
 									<span class="transfer_button_info">Select File</span>
 								</div>
 							</div>
               <div id="transfer_text">
-                <img style="float:left;" src="images/webapp_icon_inputtext.png" alt="logo" />
+                <img style="float:left;margin-top:5px;" src="images/webapp_icon_inputtext.png" alt="logo" />
                 <span  class="transfer_button_info">Input Text</span>
               </div>
-
-              <div style="clear:both;padding-top:20px;">
-                <img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
-							  <div id="transfer_action">
-								  <ol id="help">
-									  <li>Select content in Hoccer on your mobile</li>
-									  <li>Swipe it out of your mobile's screen</li>
-									  <li>Hit "Start Transfer" Button above</li>
-								  </ol>
-                </div>
-              </div>
-							<br style="clear: both" />
-						</p></section>
+              <br style="clear: both" />
+						</section>
 				</div><!--transfer-->
+
+        <div class="grid_7 info_box" id="help_section">
+					</section>
+  				<h1>HELP</h1>
+          <img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+					<div id="transfer_action">
+					  <ol id="help">
+						  <li>Select content in Hoccer on your mobile</li>
+						  <li>Swipe it out of your mobile's screen</li>
+							<li>Hit "Start Transfer" Button above</li>
+						</ol>
+          </div>
+          <br style="clear: both" />
+					</section>
+        </div>
       </div><!--webclient-->
 
       <div data-role="footer" id="app_footer">
           <ul>
+            <li><a id="help_link" href="#">Help</a></li>
             <li><a href="http://wall.hoccer.com/">Hoccer Wall</a></li>
             <li><a href="http://hoccer.com/support/">Support</a></li>
             <li><a href="http://hoccer.com/developer/">Developer</a></li>

@@ -12,15 +12,22 @@ var WebClient = function(map) {
 	
 	var content;
 	var active = true;
-	var mode = "receiveMode";
+	var mode = ""
 
   that.mode = function () {
     return mode;
   }
 
+  that.active = function () {
+    return active;
+  }
+
+
 	that.sendmode = function() {
-		
-    that.fire('send');
+
+    $("#mode_info").html("SENDMODE - YOU CAN RECEIVE CONTENT ON THE SELECTED DEVICE");
+
+    mode = "sendMode";
 
     return false;
 	};
@@ -30,13 +37,25 @@ var WebClient = function(map) {
     mode = "receiveMode"
 	  $("#content_select").slideUp();
 	  
-    $("#modeinfo").html("- READY TO RECIEVE");
-	  $("#help").html(RECEIVE_HELP);
+    $("#mode_info").text("RECEIVEMODE - YOU CAN RECEIVE CONTENT FROM THE SELECTED DEVICE");
+
+
+    $("#help").html(RECEIVE_HELP);
 	  
-    //^that.fire('receive')
     }
 	  return false;
 	};
+
+  $("#help_link").click( function() {
+    if ( active ) {
+      that.setInactive();
+      //$("#help_section").css({ 'display' : 'block' });
+      $("#help_section").slideDown();
+    } else if ( !active ) {
+      that.setActive();
+      $("#help_section").slideUp();
+    }
+  });
 
   $("#change_client").click( function() {
       $("#group").css({"display" : "block"});
@@ -44,20 +63,28 @@ var WebClient = function(map) {
       client.setInactive();
   });
 
-  $('#cancel_text').click(function() {
-    hideTextMode();
-  })
+  $('#set_text').click(function() {
 
-  $('#send_text').click(function() {
     content = { 'type': "text/plain", 'content': $('#textcontent').val() }
+    
+    var filename = "";
+        
+    filename = $('#textcontent').val();
+    console.log(filename);
+    $("#filename").html(filename + ' <a href="" id="cancelText">(cancel)</a>');
+
+    $("#cancelText").click(function(event) {
+      $("#filename").html("Nothing selected.");
+      
+      that.fire("file_canceled");
+    });
+
     that.sendmode();
+
   });
 
   $("#transfer_text").click(function() {
-    mode = "sendMode"
       showTextMode();
-
-    $("#modeinfo").html("- READY TO SEND");
 
     $("#content_select").slideDown();
     
@@ -82,8 +109,6 @@ var WebClient = function(map) {
 	
 	$("#fileInputField").change(function() {
 
-    $("#modeinfo").html("- READY TO SEND");
-
     hideTextMode();
 
     var file = document.getElementById('fileInputField').files[0];
@@ -101,10 +126,12 @@ var WebClient = function(map) {
     $("#filename").html(filename + ' <a href="" id="cancelFile">(cancel)</a>');
 
     $("#cancelFile").click(function(event) {
-      $("#filename").html("No file selected.");
+      
+      $("#filename").html("Nothing selected.");
       $("#fileInputField").css({"z-index": 2});
   	  
-  	  that.fire('file_canceled');
+      that.fire("file_canceled");
+
   	  return false;	  
   	});
   	
@@ -132,19 +159,27 @@ var WebClient = function(map) {
 
 	that.setContent = function(newContent) {
 	  content = newContent;
-    that.sendmode();
 	};
 
   that.connecting = function() {
-    that.setInactive();
     $("#connecting_info")
               .text("Connecting...")
               .css({"visibility": "visible"});
   };
 
+  that.showwaiting = function() {
+    if ( mode == "receiveMode" ) {
+      $("#connecting_info")
+              .text("Waiting for sender...")
+    } else {
+      $("#connecting_info")
+              .text("Sending content...")
+    }
+  };
+
+
   that.unconnecting = function() {
-    that.setActive();
-    $("#connecting_info").css({"visibility": "hidden"});
+    //$("#connecting_info").css({"visibility": "hidden"});
   };
   
 	that.displayLocation = function(location) {
@@ -155,13 +190,11 @@ var WebClient = function(map) {
 	that.showError = function(message) {
 	  that.setActive();
 	  $("#connecting_info")
-	            .css({"visibiliy": "visible"})
-	            .text(message);
+	            .text('ERROR: ' + message);
 		}
 	
 	that.showSuccess= function() {
     $("#connecting_info")
-	            .css({"visibiliy": "visible"})
 	            .text("Transfer successful");
 	}
 
