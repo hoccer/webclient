@@ -151,7 +151,7 @@
         $("#group").css({"display" : "block"});
 
         watch();
-			})
+      })
 
 			linccer.on('updated_environment', function(data) {
 				map.setCenter(data.gps.latitude, data.gps.longitude)
@@ -166,10 +166,8 @@
   	  
         client.fire('file_canceled');
 
-        client.receivemode();
-
         watch();
-      });
+     });
 
 			linccer.on('received', function(data) {
 				client.unconnecting();
@@ -232,6 +230,8 @@
         
         test_for_client();
 
+        watch(); 
+
         linccer.peek(groupid);
 
       });
@@ -287,10 +287,12 @@
 				if (error.code == 3) {
 					$("#coordinates").text(LOCATION_ERROR);
 					client.displayLocation();
-				} else {
-					client.showError(TIMEOUT_ERROR);
+				} else if (error.message === 'request_timeout') {
+           client.showError(TIMEOUT_ERROR);
+           setTimeout( function() { watch(); }, 100);
+        } else {
+          client.showError(TIMEOUT_ERROR);
         }
-        if ( client.mode() == "receiveMode" ) { watch(); }
 
       });
   
