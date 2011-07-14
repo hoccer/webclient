@@ -48,19 +48,14 @@ var WebClient = function(map) {
 
   $("#close_help").click( function() {
     that.hideHelp();
+    that.setActive();
   });
 
   $("#help_link").click( function() {
     
-    
-    if ( active ) {
-      that.setInactive();
-      //$("#help_section").css({ 'display' : 'block' });
-      $("#help_section").slideDown();
-    } else if ( !active ) {
-      that.setActive();
-      $("#help_section").slideUp();
-    }
+    that.showHelp();
+
+    that.setInactive();
   });
 
   $("#change_client").click( function() {

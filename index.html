@@ -18,8 +18,9 @@
 	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
 	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-	<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" charset="utf-8">	
+  <script src="mobile.js" type="text/javascript" charset="utf-8"></script>
+  <script src="webclient.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">	
 
     var fileCache, linccer, client, group, myname, payload;
 
@@ -27,6 +28,8 @@
     var selected_name = "";
 
     $(document).ready(function() {
+
+      if ( DetectIphoneOrIpod() ) { $("#wrapper").css({ "width" : "100%" }); }
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 
@@ -38,7 +41,6 @@
 		 	client.setInactive();
 		
       client.showHelp();
-      //setTimeout("client.hideHelp()",2000);
       
       var content;
 
@@ -236,13 +238,13 @@
         }
 
         if ( !isthere ) { 
-          info.style.color = "#aaa"; 
+          info.style.color = "#fff"; 
 
           info.innerHTML = "<b>Connected to: </b>" + selected_name + " (not connected)";
          
         } else {
 
-          info.style.color = "#666";
+          info.style.color = "#fff";
           
           info.innerHTML = "<b>Connected to: </b>" + selected_name;
         }
@@ -345,6 +347,8 @@
 
     body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color : #ddd; }
     h1 { margin : 10px; }
+    a { font-weight : bold; }
+    a, h1, h2, p, div { text-shadow: black 1px 1px 1px; }
     #wrapper, #help_wrapper { margin : 50px auto; min-height: 100%; width: 550px; 
       padding: 20px;
       //background: #333;
@@ -385,7 +389,7 @@
 		#location img, #content_select img, .centered img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
 		#content_select, .centered { font-size: 15pt; }
 		
-		#receive_mode_button, #send_mode_button, #transfer_button, #fileInputField { cursor: pointer }
+		#transfer_button, #fileInputField { cursor: pointer }
 
     #textinput {
       vertical-align: center;
@@ -469,30 +473,6 @@
 			margin: 10px 0;
 		}
 		
-		.button { 
-			font-size: 14pt;
-			width: 250px;
-      height: 36px;
-      margin-bottom : 5px;
-			
-			color: #fff;
-		  background-repeat: no-repeat;
-		  -moz-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
-		  -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
-		  box-shadow: 0 0 8px rgba(0, 0, 0, 0.20);
-		  -moz-border-radius: 5px;
-		  -webkit-border-radius: 5px;
-		}
-		
-		.button img, .button span {
-			vertical-align: middle;
-			margin: 4px 5px;
-		}
-		
-		.button img {
-			padding: 4px 15px 4px 35px;
-		}
-		
 		div.fileinputs {
 			position: relative;
 		}
@@ -546,10 +526,6 @@
 			padding: 0;
 		}
 		
-		#sb-body {
-			background-color: #fbfbfb;
-		}
-		
 		.box {
 			margin: 20px;
 		}
@@ -592,7 +568,6 @@
     h2.help { clear : both; font-size : 1.2em; color : #ddd; margin-bottom : 10px; }
     div.help { margin-bottom : 20px; }
     ol.help { list-style-type : none; font-size : 1em; }
-    ol.help li { margin-bottom : 8px; }
     img.help { float : left; margin-right : 10px; margin-bottom : 10px; }
     div.help ul li { float : right; list-style-type : none; padding : 5px; font-weight : bold; }
 	</style>
