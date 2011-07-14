@@ -46,7 +46,13 @@ var WebClient = function(map) {
 	  return false;
 	};
 
+  $("#close_help").click( function() {
+    that.hideHelp();
+  });
+
   $("#help_link").click( function() {
+    
+    
     if ( active ) {
       that.setInactive();
       //$("#help_section").css({ 'display' : 'block' });
@@ -186,7 +192,20 @@ var WebClient = function(map) {
 		$("#waiting").css("display", "none");
 		$("#coordinates").css("display", "inline");
 	};
-	
+
+  that.showHelp = function() {
+    $("#help_wrapper").css({"display" : "block"});
+    $("#map_container").css({"visibility" : "hidden"});
+    $("#wrapper").css({"display" : "none"});
+  }
+
+  that.hideHelp = function() {
+    $("#help_wrapper").css({"display" : "none"});
+    $("#map_container").css({"visibility" : "visible"});
+    $("#wrapper").css({"display" : "block"});
+  }
+
+
 	that.showError = function(message) {
 	  that.setActive();
 	  $("#connecting_info")

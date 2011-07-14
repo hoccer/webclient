@@ -29,7 +29,7 @@
     $(document).ready(function() {
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
-			
+
 			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0' });
 			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' });
 
@@ -37,6 +37,9 @@
 			client = WebClient(map);
 		 	client.setInactive();
 		
+      client.showHelp();
+      //setTimeout("client.hideHelp()",2000);
+      
       var content;
 
       var groupid = "";
@@ -340,15 +343,37 @@
   <link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/style.css" />
 	<style type="text/css" media="screen">
 
+    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color : #ddd; }
     h1 { margin : 10px; }
-    #wrapper { margin : 0 auto; min-height: 100%; width: 550px; }
+    #wrapper, #help_wrapper { margin : 50px auto; min-height: 100%; width: 550px; 
+      padding: 20px;
+      //background: #333;
+    }
+
+    #help_wrapper { 
+      min-height : 0; 
+      display : none;
+      border: 5px solid white;
+      -moz-border-radius: 24px;
+      -webkit-border-radius: 24px;
+      -moz-box-shadow: 0 0 8px black;
+      -webkit-box-shadow: 0 0 8px black;
+      box-shadow: 0 0 8px black;
+    }
+
     #location  { clear : both; margin : 0 auto; width : 540px; }
     #coordinates { display: none; }
     #webclient { margin: 0 auto; display : none;}
     #group { margin: 10px auto; display : none;}
     #info { margin-top : 10px; }
     .info_box p { margin-bottom : 10px; }
-    .info_box { margin-bottom: 10px; padding-bottom : 10px;}
+    .info_box { margin-bottom: 10px; padding-bottom : 10px; background-color : transparent;
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      -moz-box-shadow: 0 0 8px black;
+      -webkit-box-shadow: 0 0 8px black;
+      box-shadow: 0 0 8px black;
+    }
     .info_box section { border: 0; margin-top : 10px;}
 
 		#map_canvas { height: 450px; padding-top: 6px;}
@@ -562,6 +587,14 @@
       line-height : 35px;
       margin-left : 5px;
     }
+
+    h1.help { width : 100%; text-align : center; font-size : 1.5em; margin-bottom : 40px;}
+    h2.help { clear : both; font-size : 1.2em; color : #ddd; margin-bottom : 10px; }
+    div.help { margin-bottom : 20px; }
+    ol.help { list-style-type : none; font-size : 1em; }
+    ol.help li { margin-bottom : 8px; }
+    img.help { float : left; margin-right : 10px; margin-bottom : 10px; }
+    div.help ul li { float : right; list-style-type : none; padding : 5px; font-weight : bold; }
 	</style>
 	
 </head>
@@ -572,10 +605,65 @@
 <!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
 <!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
+  <div data-role="page" id="help_wrapper">
+      <div data-role="header" id="title">
+        <a href="/">
+          <img src="images/logo_webapp.png" alt="logo" /></a>
+      </div>
+
+      <div data-role="content">
+          <h1 class="help">Welcome to Hoccer Webapp</h1>
+
+          <h2 class="help">How to receive</h2>
+
+          <div class="help" id="receive_help">
+            <img class="help" id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+					  <ol class="help" id="help">
+						  <li>Select one Hoccer Client nearby</li>
+						  <li>Wait for some incoming images or text. Content has to be swiped out of mobile apps.</li>
+							<li>To receive from another client just change the selected client.</li>
+						</ol>
+          </div>
+
+          <h2 class="help">How to send text</h2>
+
+          <div class="help" id="send_text_help">
+            <img class="help" id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+					  <ol class="help" id="help">
+              <li>Select one Hoccer Client nearby</li>
+              <li>Open Inpu Form by clicking "Input Text" in the lower right of the app.</li>
+						  <li>Input the Text you want to send and click "Send Text" below the input field.</li>
+              <li>You are now sending permanently.</li>
+              <li>To stop sending text, just click "cancel" in the info section.</li>
+						</ol>
+          </div>
+
+          <h2 class="help">How to send images</h2>
+
+          <div class="help" class="help" id="send_text_help">
+            <img class="help" id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
+					  <ol class="help"  id="help">
+              <li>Select one Hoccer Client nearby</li>
+              <li>Open file selection dialog by clicking "Select File" in the lower left of the app.</li>
+						  <li>Choose the image file you want.</li>
+              <li>You are now sending permanently.</li>
+              <li>To stop sending text, just click "cancel" in the info section.</li>
+						</ol>
+          </div>
+
+      </div>
+      
+      <div class="help" data-role="footer">
+        <ul>
+          <li><a href="#" id="close_help">Close Help</a><li>
+        </ul>
+      </div>
+      <div style="clear:both;"></div>
+  </div>
   <div data-role="page" id="wrapper">
       <div data-role="header" id="title">
         <a href="/">
-          <img src="images/logo_webapp.jpg" alt="logo" /></a>
+          <img src="images/logo_webapp.png" alt="logo" /></a>
       </div>
 
       <div id="location" class="grid_7 info_box" >
