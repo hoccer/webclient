@@ -3,8 +3,10 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Hoccer Webapp</title>
-	<meta name="generator" content="TextMate http://macromates.com/">
-	<meta name="author" content="Robert Palmer">
+	<meta name="generator" content="MacVim">
+  <meta name="author" content="Martin Delius">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+  
 	<!-- Date: 2010-12-15 -->
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	<script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
@@ -29,7 +31,6 @@
 
     $(document).ready(function() {
 
-      if ( DetectIphoneOrIpod() ) { $("#wrapper").css({ "width" : "100%" }); }
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 
@@ -341,21 +342,27 @@
   </script>
 
 	<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/defaults.css" />
+  <!--	<link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/defaults.css" />-->
   <link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/style.css" />
 	<style type="text/css" media="screen">
 
-    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color : #ddd; }
-    h1 { margin : 10px; }
-    a { font-weight : bold; }
-    a, h1, h2, p, div { text-shadow: black 1px 1px 1px; }
-    #wrapper, #help_wrapper { margin : 50px auto; min-height: 100%; width: 550px; 
-      padding: 20px;
-      //background: #333;
+    @media only screen and (max-device-width: 480px) {
+      #wrapper, #help_wrapper { 
+        max-width : 100%; 
+      }
+      #title { padding:0; }
     }
 
-    #help_wrapper { 
-      min-height : 0; 
+    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color: rgba(255,255,255,0.66); }
+    h1 { 
+      padding: 5px;
+      font-size: 18px;
+    }
+    a { font-weight : bold; }
+    html { text-shadow: 0px -1px #000; -webkit-font-smoothing: antialiased; }
+    #wrapper, #help_wrapper { margin : 0 auto; min-height: 100%; width: 600px; }
+
+    #help_wrapper {
       display : none;
       border: 5px solid white;
       -moz-border-radius: 24px;
@@ -365,23 +372,76 @@
       box-shadow: 0 0 8px black;
     }
 
-    #location  { clear : both; margin : 0 auto; width : 540px; }
+    #location  { clear : both; }
     #coordinates { display: none; }
     #webclient { margin: 0 auto; display : none;}
-    #group { margin: 10px auto; display : none;}
+    #group { display : none;}
     #info { margin-top : 10px; }
-    .info_box p { margin-bottom : 10px; }
-    .info_box { margin-bottom: 10px; padding-bottom : 10px; background-color : transparent;
+    .box { 
+      margin : 10px 10px;
+      border-top : 1px inset rgba(0,0,0,0.5);
+      border-bottom : 1px inset rgba(0,0,0,0.5);
+      border-right : 1px inset rgba(0,0,0,0.25);
+      border-left : 1px inset rgba(0,0,0,0.25);
+      margin-bottom: 10px; 
+      padding-bottom : 10px; 
+      background-color : rgba(0,0,0,0.2);
       -moz-border-radius: 8px;
       -webkit-border-radius: 8px;
-      -moz-box-shadow: 0 0 8px black;
-      -webkit-box-shadow: 0 0 8px black;
-      box-shadow: 0 0 8px black;
+      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
+      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
     }
-    .info_box section { border: 0; margin-top : 10px;}
+
+    .box section { margin-top : 10px;}
+
+    .box section p {
+      margin-top: 18px;
+      margin-bottom : 10px;
+    }
+
+    .box ul {
+      margin-left : 0px;
+      padding-left : 20px;
+      padding-right : 20px;
+    }
+
+    .box ul li {
+      padding-left: 0px;
+      padding-right: 0px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      list-style-type: none;
+    }
+
+    .box ul li:last-child {
+      border: none;
+    }
+
+    .box ul li br {
+      display: none;
+    }
+
+    .box ul li p {
+      margin-top: 10px;
+    }
+
+    .box ul li img {
+      float: left;
+      margin-right: 20px;
+      border: 1px solid #bdbdbd;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+    }
+
+    .box p {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
 
 		#map_canvas { height: 450px; padding-top: 6px;}
-		#map_container { position: absolute; width: 520px; padding: 10px; margin-top: -1200px;}
+		#map_container { position: absolute; padding: 10px; margin-top: -1200px;}
 		#map_container { font-size: 15pt;}
 		#location #show_map {float: right;}
 		
@@ -438,12 +498,6 @@
 		  -webkit-border-radius: 5px;
 		}
 		
-		#transfer_action { float: right; width: 300px;}
-		#transfer_action ol { 
-			list-style-position: inside;
-			margin: 0;
-		}
-
     #transfer_text {
       float : right;
       margin-right: 10px;
@@ -457,13 +511,19 @@
       text-align: center;
       font-weight: bold;
       letter-spacing: 1px;
-      border-top : 1px solid #666;
+      border-top: 1px solid rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
       padding-top: 5px;
     }
 
 		#mode_info {
       text-align: center;
-      border-top : 1px solid #666;
+      border-top: 1px solid rgba(0, 0, 0, 0.5);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
       padding: 20px;
     }
 
@@ -516,18 +576,12 @@
 		}
 		
 		hr {
-			background-color: #F0F0F0;
-			
 			display: block;
 			height: 1px;
 			border: 0;
-			border-top: 1px solid #CCC;
+			border-top: 1px inset rgba(0,0,0,0.5);
 			margin: 0;
 			padding: 0;
-		}
-		
-		.box {
-			margin: 20px;
 		}
 		
 		.box h2 {
@@ -550,7 +604,7 @@
 
     #app_footer { padding : 0; width: 100%; }
 
-    #app_footer ul { margin : 10px; }
+    #app_footer ul { margin : 0 }
     #app_footer ul li {
       float : left;
       list-style-type : none;
@@ -641,7 +695,7 @@
           <img src="images/logo_webapp.png" alt="logo" /></a>
       </div>
 
-      <div id="location" class="grid_7 info_box" >
+      <div id="location" class="box" >
             <h1>Here You Are</h1>
 						<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
 							<span id="waiting">locating...</span>
@@ -655,15 +709,15 @@
 						</p></section>
 				</div>
 
-      <div class="grid_7 info_box" id="group">
-        <h1>Select A Partner</h1>
-        <p>To Send and Receive File and Text from another Hoccer-Client select one of the Clients nearby.</p>
-        <ul>
-        </ul>
-      </div>
+        <div class="box" id="group">
+          <h1>Select A Partner</h1>
+          <p>To Send and Receive File and Text from another Hoccer-Client select one of the Clients nearby.</p>
+          <ul>
+          </ul>
+        </div>
 
-      <div data-role="content" class="grid_7" id="webclient">
-        <div class="info_box clientinfo">
+      <div data-role="content" id="webclient">
+        <div class="box clientinfo">
           <h1>Thats Your Status</h1>
           <p>
             <span id="info"></span>
@@ -681,12 +735,12 @@
           </p>
         </div><!--.clientinfo-->
 
-        <div class="grid_7 info_box" id="name_select">
+        <div class="box" id="name_select">
           <h1>Name Your WebApp</h1>
           <input type="text" id="client_name" value="" placeholder="Enter AppName here...">
           <a id="set_name" href="#">Set Name</a>
         </div><!--name_select-->
-			  <div class="grid_7 info_box" id="content_select">
+			  <div class="box" id="content_select">
             <section>
 							<div id="textinput">
                 <textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
@@ -695,7 +749,7 @@
               </section>
         </div><!--content_select-->
 
-        <div class="grid_7 info_box" id="transfer">
+        <div class="box" id="transfer">
 						<section>
  							<div id="fileinput" class="fileinputs">
 								<input type="file" class="file" id="fileInputField" />
@@ -712,20 +766,6 @@
 						</section>
 				</div><!--transfer-->
 
-        <div class="grid_7 info_box" id="help_section">
-					</section>
-  				<h1>HELP</h1>
-          <img id="drag" src="images/drag.jpg" width="200" height="126" alt="Drag">
-					<div id="transfer_action">
-					  <ol id="help">
-						  <li>Select content in Hoccer on your mobile</li>
-						  <li>Swipe it out of your mobile's screen</li>
-							<li>Hit "Start Transfer" Button above</li>
-						</ol>
-          </div>
-          <br style="clear: both" />
-					</section>
-        </div>
       </div><!--webclient-->
 
       <div data-role="footer" id="app_footer">

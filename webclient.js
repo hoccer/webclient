@@ -144,7 +144,32 @@ var WebClient = function(map) {
 			event.stopPropagation();
 			return false;
 	});
-	
+
+  var readCookie = function() {
+      var name = "help_shown=";
+      var bool = "";
+      var ca = document.cookie.split(';');
+    	for(var i=0;i < ca.length;i++) {
+	    	var c = ca[i];
+		    while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		    if (c.indexOf(name) == 0) { bool = c.substring(name.length,c.length); }
+ 	    }
+      console.log(bool);
+
+      if ( bool = "TRUE" ) { 
+        return true; 
+      } else {
+        return false;
+      }
+  }
+
+  var setCookie = function() {
+      document.cookie = "help_shown=TRUE";
+      
+      return;
+  }
+
+
 	var showTextMode = function() {
     $("#content_select > section > span").css({'display': 'none'});
     $("#textcontent").animate({'width': "490px"});
@@ -189,9 +214,14 @@ var WebClient = function(map) {
 	};
 
   that.showHelp = function() {
-    $("#help_wrapper").css({"display" : "block"});
-    $("#map_container").css({"visibility" : "hidden"});
-    $("#wrapper").css({"display" : "none"});
+
+    if ( !readCookie() ) {
+      setCookie();
+
+      $("#help_wrapper").css({"display" : "block"});
+      $("#map_container").css({"visibility" : "hidden"});
+      $("#wrapper").css({"display" : "none"});
+    }
   }
 
   that.hideHelp = function() {
