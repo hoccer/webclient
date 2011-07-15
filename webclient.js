@@ -64,6 +64,10 @@ var WebClient = function(map) {
       client.setInactive();
   });
 
+  $('#close_text').click(function() {
+      hideTextMode();
+  });
+
   $('#set_text').click(function() {
 
     content = { 'type': "text/plain", 'content': $('#textcontent').val() }
@@ -75,11 +79,14 @@ var WebClient = function(map) {
 
     $("#cancelText").click(function(event) {
       $("#filename").html("Nothing selected.");
+      $("#start_sending").css({ "display" : "none" });
+      $("#stop_sending").css({ "display" : "none" });
       
       that.fire("file_canceled");
     });
 
     that.sendmode();
+    $("#stop_sending").css({ "display" : "block" });
 
   });
 
@@ -106,7 +113,19 @@ var WebClient = function(map) {
 	  
 	  return false;
 	});
-	
+
+  $("#start_sending").click(function() {
+    that.sendmode();
+    $("#start_sending").css({ "display" : "none" });
+    $("#stop_sending").css({ "display" : "block" });
+  });  
+
+  $("#stop_sending").click(function() { 
+    that.receivemode();
+    $("#start_sending").css({ "display" : "block" });
+    $("#stop_sending").css({ "display" : "none" });
+  });
+
 	$("#fileInputField").change(function() {
 
     hideTextMode();
@@ -129,12 +148,17 @@ var WebClient = function(map) {
       
       $("#filename").html("Nothing selected.");
       $("#fileInputField").css({"z-index": 2});
+      $("#start_sending").css({ "display" : "none" });
+      $("#stop_sending").css({ "display" : "none" });
+
   	  
       that.fire("file_canceled");
 
   	  return false;	  
   	});
-  	
+
+    $("#start_sending").css({ "display" : "block" });
+    
   	that.fire('file_selected', file);
 	});
 	

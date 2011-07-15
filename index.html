@@ -131,7 +131,7 @@
 			client.on('file_selected', function(file) {
 				content = fileCache.upload(file);
         client.setContent(content);	
-        client.sendmode();
+        //client.sendmode();
       });
 
 			client.on('file_canceled', function() {
@@ -239,13 +239,13 @@
         }
 
         if ( !isthere ) { 
-          info.style.color = "#fff"; 
+          info.style.color = "#666"; 
 
           info.innerHTML = "<b>Connected to: </b>" + selected_name + " (not connected)";
          
         } else {
 
-          info.style.color = "#fff";
+          info.style.color = "#888";
           
           info.innerHTML = "<b>Connected to: </b>" + selected_name;
         }
@@ -342,297 +342,7 @@
   </script>
 
 	<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/style.css" />
-	<style type="text/css" media="screen">
-
-    @media only screen and (max-device-width: 480px) {
-      #wrapper, #help_wrapper { 
-        max-width : 100%; 
-      }
-      #title { padding:0; }
-    }
-
-    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color: #888;
-      padding: 5px;
-      font-size: 15px;
-    }
-    a { font-weight : bold; }
-    h1 { 
-      font-size: 20px;
-      margin-left: 10px;
-    }      
-    html { text-shadow: 0px -1px #000; -webkit-font-smoothing: antialiased; }
-    #wrapper, #help_wrapper { margin : 0 auto; width: 600px; }
-
-    #help_wrapper {
-      display : none;
-      border-top : 1px solid rgba(0,0,0,0.5);
-      border-bottom : 1px solid rgba(0,0,0,0.5);
-      border-right : 1px solid rgba(0,0,0,0.25);
-      border-left : 1px solid rgba(0,0,0,0.25);
-      margin-bottom: 10px; 
-      padding-bottom : 10px;
-      background-color : rgba(0,0,0,0.2);
-      -moz-border-radius: 8px;
-      -webkit-border-radius: 8px;
-      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-    }
-
-    #location  { clear : both; }
-    #coordinates { display: none; }
-    #webclient { margin: 0 auto; display : none;}
-    #group { display : none;}
-    #info { margin-top : 10px; }
-    .box { 
-      margin : 10px 10px;
-      border-top : 1px solid rgba(0,0,0,0.5);
-      border-bottom : 1px solid rgba(0,0,0,0.5);
-      border-right : 1px solid rgba(0,0,0,0.25);
-      border-left : 1px solid rgba(0,0,0,0.25);
-      margin-bottom: 10px; 
-      padding-bottom : 10px; 
-      background-color : rgba(0,0,0,0.2);
-      -moz-border-radius: 8px;
-      -webkit-border-radius: 8px;
-      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-    }
-
-    .box section { margin-top : 10px;}
-
-    .box section p {
-      margin-top: 18px;
-      margin-bottom : 10px;
-    }
-
-    .box ul {
-      margin-left : 0px;
-      padding-left : 20px;
-      padding-right : 20px;
-    }
-
-    .box ul li {
-      padding-left: 0px;
-      padding-right: 0px;
-      padding-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-      list-style-type: none;
-    }
-
-    .box ul li:last-child {
-      border: none;
-    }
-
-    .box ul li br {
-      display: none;
-    }
-
-    .box ul li p {
-      margin-top: 10px;
-    }
-
-    .box ul li img {
-      float: left;
-      margin-right: 20px;
-      border: 1px solid #bdbdbd;
-      -moz-border-radius: 5px;
-      -webkit-border-radius: 5px;
-    }
-
-    .box p {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-		#map_canvas { height: 450px; padding-top: 6px;}
-		#map_container { position: absolute; padding: 10px; margin-top: -1200px;}
-		#map_container { font-size: 15pt;}
-		#location #show_map {float: right;}
-		
-		#location span, #content_select span, .centered span { vertical-align: middle; }
-		#location img, #content_select img, .centered img { margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
-		#content_select, .centered { font-size: 15pt; }
-		
-		#transfer_button, #fileInputField { cursor: pointer }
-
-    #textinput {
-      vertical-align: center;
-      float:right;
-      padding:20px;
-    }
-
-    #textinput a {
-      float : left;
-      margin-right : 30px;
-    }
-		
-		#fileinput {
-			float: left;
-			width: 230px;
-		}
-
-    #name_select {
-      display : none;
-    }
-		#content_select {
-			text-align: center;
-      display: none;
-      clear : both;
-      margin: 0;
-      padding : 0;
-      height : 0;
-      border : none;
-    }
-
-    #help_section {
-      clear : both;
-      display: none;
-    }
-		
-		#transfer h1 			{ padding: 0 15px 10px; }
-		#transfer h1 span { vertical-align: middle; }
-		#transfer h1 img 	{ margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
-	
-		#transfer img#drag { 
-      clear : both;
-      float: left; 
-			margin-left: 15px; 
-			border: 1px solid #bdbdbd;
-		  -moz-border-radius: 5px;
-		  -webkit-border-radius: 5px;
-		}
-		
-    #transfer_text {
-      float : right;
-      margin-right: 10px;
-      height : 50px;
-      width : 230px;
-    }
-
-		
-		#connecting_info {
-      width: 100%;
-      text-align: center;
-      font-weight: bold;
-      letter-spacing: 1px;
-      border-top: 1px solid rgba(0, 0, 0, 0.5);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      padding-top: 5px;
-    }
-
-		#mode_info {
-      text-align: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.5);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      padding: 20px;
-    }
-
-
-		
-		#addressForm {
-			margin: 10px 0;
-		}
-		
-		div.fileinputs {
-			position: relative;
-		}
-
-		div.fakefile {
-			position: absolute;
-			top: 0;
-			left: 20px;
-			z-index: 1;
-    }
-
-		div.textpic {
-			float: right;
-      padding-right: 20px;
-      z-index: 1;
-		}
-
-
-		input.file {
-      position: absolute;
-      left: 10px;
-			
-			text-align: right;
-			-moz-opacity:0 ;
-			filter:alpha(opacity: 0);
-			opacity: 0;
-			z-index: 2;
-			
-			height: 45px;	
-      width: 150px;
-
-      margin-bottom : 20px;
-		}
-		
-		textarea {
-			width: 210px;
-			-moz-border-radius: 5px;
-		  -webkit-border-radius: 5px;
-		  
-			background: #F6F6F6;
-		}
-		
-		hr {
-			display: block;
-			height: 1px;
-			border: 0;
-			border-top: 1px inset rgba(0,0,0,0.5);
-			margin: 0;
-			padding: 0;
-		}
-		
-		.box h2 {
-			padding-bottom: 15px;
-		}
-		
-		.box textarea {
-			width: 450px;
-			height: 210px;
-		}
-
-    #title { width : 315px; display : block; margin: 0 auto; padding: 20px 0 20px 0; }
-    #change_client, #change_name { float : right; }
-
-    #client_name { margin-left : 20px; }
-
-    .clientinfo {
-      margin-top : 10px;
-    }
-
-    #app_footer { padding : 0; width: 100%; }
-
-    #app_footer ul { margin : 0 }
-    #app_footer ul li {
-      float : left;
-      list-style-type : none;
-      margin-left : 10px;
-    }
-
-    .transfer_button_info { 
-      float : left;
-      font-size : 15pt;
-      line-height : 35px;
-      margin-left : 5px;
-    }
-
-    h1.help { width : 100%; text-align : center; font-size : 1.5em; margin-bottom : 40px;}
-    h2.help { clear : both; font-size : 1.2em; color : #ddd; margin-bottom : 10px; }
-    div.help { margin-bottom : 20px; }
-    ol.help { list-style-type : none; font-size : 1em; }
-    img.help { float : left; margin-right : 10px; margin-bottom : 10px; }
-    div.help ul li { float : right; list-style-type : none; padding : 5px; font-weight : bold; }
-	</style>
+  <link rel="stylesheet" href="css/style.css" />
 	
 </head>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
@@ -704,7 +414,7 @@
       </div>
 
       <div id="location" class="box" >
-            <h1>Here You Are</h1>
+            <h1>Your Location</h1>
 						<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
 							<span id="waiting">locating...</span>
 							<span id="coordinates"></span>
@@ -726,7 +436,7 @@
 
       <div data-role="content" id="webclient">
         <div class="box clientinfo">
-          <h1>Thats Your Status</h1>
+          <h1>Your Status</h1>
           <p>
             <span id="info"></span>
             <a id="change_client" href="#">Change</a>
@@ -739,7 +449,10 @@
           <p>
             <div id="mode_info"></div>
             <div id="connecting_info">Connecting..</div>
-            <span id="filename" style="margin-left : 20px;">No file selected.</span>
+            <div id="sending_info">
+              <span id="filename" style="margin-left : 20px;">No file selected.</span>
+              <a href="#" class="send_button" id="start_sending">Start Sending</a>
+              <a href="#" class="send_button" id="stop_sending">Stop Sending</a>
           </p>
         </div><!--.clientinfo-->
 
@@ -752,23 +465,25 @@
             <section>
 							<div id="textinput">
                 <textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+                <a href="#" id="close_text">Close</a>
                 <a href="#" id="set_text">Send Text</a>
               </div>
               </section>
         </div><!--content_select-->
 
         <div class="box" id="transfer">
-						<section>
+            <h1>Send</h1>
+            <section>
  							<div id="fileinput" class="fileinputs">
 								<input type="file" class="file" id="fileInputField" />
 								<div class="fakefile">
 									<img style="float:left;margin-top:5px;"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
-									<span class="transfer_button_info">Select File</span>
+									<span class="transfer_button_info">File</span>
 								</div>
 							</div>
               <div id="transfer_text">
                 <img style="float:left;margin-top:5px;" src="images/webapp_icon_inputtext.png" alt="logo" />
-                <span  class="transfer_button_info">Input Text</span>
+                <span  class="transfer_button_info">Text</span>
               </div>
               <br style="clear: both" />
 						</section>
