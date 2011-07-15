@@ -1,13 +1,7 @@
 var WebClient = function(map) {
 	var that = {};
 	
-	var SEND_HELP = '<li>Open Hoccer App on your mobile</li>' + 
-	                '<li>Hit "Start Transfer" Button above</li>' +
-	                '<li>Swipe over Hoccer canvas on your mobile</li>';
-	var RECEIVE_HELP= '<li>Select content in Hoccer on your mobile</li>' + 
-	                  '<li>Swipe it out of your mobile\'s screen</li>' +
-	                  '<li>Hit "Start Transfer" Button above</li>'
-	                  	
+                  	
 	HC.observable(that);
 	
 	var content;
@@ -40,7 +34,6 @@ var WebClient = function(map) {
     $("#mode_info").text("RECEIVEMODE - YOU CAN RECEIVE CONTENT FROM THE SELECTED DEVICE");
 
 
-    $("#help").html(RECEIVE_HELP);
 	  
     }
 	  return false;
