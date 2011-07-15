@@ -56,7 +56,7 @@
 
       var actname = document.getElementById('my_name');
 
-      actname.innerHTML = '<b>App Name: </b>' + myname; 
+      actname.innerHTML = '<b>Webapp Name: </b>' + myname; 
 
       linccer.peek(groupid);
 
@@ -106,7 +106,7 @@
         myname = myname.replace(/</g,"");
         myname = myname.replace(/>/g,"");
 
-        actname.innerHTML =  '<b>App Name: </b>' + myname;
+        actname.innerHTML =  '<b>Webapp Name: </b>' + myname;
 
         $('#name_select').slideUp();
 
@@ -280,7 +280,7 @@
 					$("#coordinates").text(LOCATION_ERROR);
 					client.displayLocation();
         } else {
-          client.showError(error.message);
+          //client.showError(error.message);
         }
 
       });
@@ -315,7 +315,6 @@
     }
 
     var watch = function() {
-
         if ( client.active() && client.mode() == "receiveMode" ) {
           client.showwaiting();
           linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 5000 } );

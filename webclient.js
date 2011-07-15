@@ -29,11 +29,9 @@ var WebClient = function(map) {
 	that.receivemode = function() {
 	  if ( active ) {
     mode = "receiveMode"
-	  $("#content_select").slideUp();
+	  //$("#content_select").slideUp();
 	  
     $("#mode_info").text("RECEIVEMODE - YOU CAN RECEIVE CONTENT FROM THE SELECTED DEVICE");
-
-
 	  
     }
 	  return false;
@@ -68,6 +66,11 @@ var WebClient = function(map) {
     var filename = "";
         
     filename = $('#textcontent').val();
+
+    if( filename.length > 38) {
+      filename = filename.substring(0, 17) + "..." + filename.substring(filename.length - 17);
+    } 
+
     $("#filename").html(filename + ' <a href="" id="cancelText">(cancel)</a>');
 
     $("#cancelText").click(function(event) {
@@ -77,10 +80,10 @@ var WebClient = function(map) {
       
       that.fire("file_canceled");
     });
-
+    hideTextMode();
     that.sendmode();
     $("#stop_sending").css({ "display" : "block" });
-
+    $("#start_sending").css({ "display" : "none" });
   });
 
   $("#transfer_text").click(function() {
@@ -88,7 +91,6 @@ var WebClient = function(map) {
 
     $("#content_select").slideDown();
     
-	  $("#help").html(SEND_HELP);
   });
 	
 	$("#show_map > a").click(function() { 
@@ -114,7 +116,12 @@ var WebClient = function(map) {
   });  
 
   $("#stop_sending").click(function() { 
-    that.receivemode();
+    that.receivemode(); 
+
+    if ( content.type == "text/plain" ) { 
+      showTextMode(); $("#content_select").slideDown();
+    } 
+
     $("#start_sending").css({ "display" : "block" });
     $("#stop_sending").css({ "display" : "none" });
   });
@@ -216,7 +223,6 @@ var WebClient = function(map) {
 
 
   that.unconnecting = function() {
-    //$("#connecting_info").css({"visibility": "hidden"});
   };
   
 	that.displayLocation = function(location) {
