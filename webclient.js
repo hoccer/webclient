@@ -62,7 +62,7 @@ var WebClient = function(map) {
     filename = $('#textcontent').val();
 
     if( filename.length > 38) {
-      filename = filename.substring(0, 17) + "..." + filename.substring(filename.length - 17);
+      filename = filename.substring(0, 17) + "...";
     } 
 
     $("#filename").html(filename + ' <a href="" id="cancelText">(cancel)</a>');
