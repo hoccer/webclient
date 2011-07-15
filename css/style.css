@@ -252,7 +252,7 @@ img.alignleft {
       display: none;
     }
 		
-#transfer h1 			{ width : 100%; text-align : center; }
+#transfer h1 			{ width : 100%; text-align : center; margin-left: 0;}
 		#transfer h1 span { vertical-align: middle; }
 		#transfer h1 img 	{ margin: 0 5px 0 0; padding: 0; vertical-align: middle;}
 	
@@ -283,17 +283,6 @@ img.alignleft {
       -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
       padding-top: 5px;
     }
-
-		#mode_info {
-      text-align: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.5);
-      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      padding: 20px;
-    }
-
-
 		
 		#addressForm {
 			margin: 10px 0;
@@ -397,3 +386,4 @@ p.help { padding : 0 10px; }
 #stop_sending { display : none; }
 #start_sending { display : none; }
 
+#close_name { margin-left : 20px; }

@@ -19,8 +19,6 @@ var WebClient = function(map) {
 
 	that.sendmode = function() {
 
-    $("#mode_info").html("SENDMODE - YOU CAN RECEIVE CONTENT ON THE SELECTED DEVICE");
-
     mode = "sendMode";
 
     return false;
@@ -29,10 +27,6 @@ var WebClient = function(map) {
 	that.receivemode = function() {
 	  if ( active ) {
     mode = "receiveMode"
-	  //$("#content_select").slideUp();
-	  
-    $("#mode_info").text("RECEIVEMODE - YOU CAN RECEIVE CONTENT FROM THE SELECTED DEVICE");
-	  
     }
 	  return false;
 	};
@@ -129,6 +123,7 @@ var WebClient = function(map) {
 	$("#fileInputField").change(function() {
 
     hideTextMode();
+    that.receivemode();
 
     var file = document.getElementById('fileInputField').files[0];
     var filename = "";
@@ -158,6 +153,8 @@ var WebClient = function(map) {
   	});
 
     $("#start_sending").css({ "display" : "block" });
+    $("#stop_sending").css({ "display" : "none" });
+
     
   	that.fire('file_selected', file);
 	});

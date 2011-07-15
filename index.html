@@ -96,6 +96,10 @@
         $('#name_select').slideDown();
       });
 
+      $("#close_name").click( function() {
+        $('#name_select').slideUp();
+      });
+
       $("#set_name").click( function() {
         var inputname = document.getElementById('client_name');
 
@@ -358,8 +362,6 @@
       </div>
 
       <div data-role="content">
-          <h1 class="help">Welcome to Hoccer Webapp</h1>
-
           <h2 class="help">General</h2>
           <p class="help">
             To work properly, the WebApp needs your location, so allow it to locate you. If autolocation fails, you can input your location manually.
@@ -457,7 +459,6 @@
           </p>
           
           <p>
-            <div id="mode_info"></div>
             <div id="connecting_info">Connecting..</div>
             <div id="sending_info">
               <span id="filename" style="margin-left : 20px;">No file selected.</span>
@@ -470,6 +471,7 @@
           <h1>Name Your WebApp</h1>
           <input type="text" id="client_name" value="" placeholder="Enter AppName here...">
           <a id="set_name" href="#">Set Name</a>
+          <a id="close_name" href="#">Cancel</a>
         </div><!--name_select-->
 			  <div class="box" id="content_select">
             <section>
