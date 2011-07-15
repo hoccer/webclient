@@ -5,7 +5,7 @@
 	<title>Hoccer Webapp</title>
 	<meta name="generator" content="MacVim">
   <meta name="author" content="Martin Delius">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
   
 	<!-- Date: 2010-12-15 -->
 	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
@@ -342,7 +342,6 @@
   </script>
 
 	<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <!--	<link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/defaults.css" />-->
   <link rel="stylesheet" href="http://hoccer.com/wp-content/themes/hoccer/css/style.css" />
 	<style type="text/css" media="screen">
 
@@ -353,23 +352,32 @@
       #title { padding:0; }
     }
 
-    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color: rgba(255,255,255,0.66); }
-    h1 { 
+    body { background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x; color: #888;
       padding: 5px;
-      font-size: 18px;
+      font-size: 15px;
     }
     a { font-weight : bold; }
+    h1 { 
+      font-size: 20px;
+      margin-left: 10px;
+    }      
     html { text-shadow: 0px -1px #000; -webkit-font-smoothing: antialiased; }
-    #wrapper, #help_wrapper { margin : 0 auto; min-height: 100%; width: 600px; }
+    #wrapper, #help_wrapper { margin : 0 auto; width: 600px; }
 
     #help_wrapper {
       display : none;
-      border: 5px solid white;
-      -moz-border-radius: 24px;
-      -webkit-border-radius: 24px;
-      -moz-box-shadow: 0 0 8px black;
-      -webkit-box-shadow: 0 0 8px black;
-      box-shadow: 0 0 8px black;
+      border-top : 1px solid rgba(0,0,0,0.5);
+      border-bottom : 1px solid rgba(0,0,0,0.5);
+      border-right : 1px solid rgba(0,0,0,0.25);
+      border-left : 1px solid rgba(0,0,0,0.25);
+      margin-bottom: 10px; 
+      padding-bottom : 10px;
+      background-color : rgba(0,0,0,0.2);
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
+      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
     }
 
     #location  { clear : both; }
@@ -379,10 +387,10 @@
     #info { margin-top : 10px; }
     .box { 
       margin : 10px 10px;
-      border-top : 1px inset rgba(0,0,0,0.5);
-      border-bottom : 1px inset rgba(0,0,0,0.5);
-      border-right : 1px inset rgba(0,0,0,0.25);
-      border-left : 1px inset rgba(0,0,0,0.25);
+      border-top : 1px solid rgba(0,0,0,0.5);
+      border-bottom : 1px solid rgba(0,0,0,0.5);
+      border-right : 1px solid rgba(0,0,0,0.25);
+      border-left : 1px solid rgba(0,0,0,0.25);
       margin-bottom: 10px; 
       padding-bottom : 10px; 
       background-color : rgba(0,0,0,0.2);

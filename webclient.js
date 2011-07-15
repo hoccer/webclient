@@ -53,7 +53,7 @@ var WebClient = function(map) {
 
   $("#help_link").click( function() {
     
-    that.showHelp();
+    that.showHelp("force");
 
     that.setInactive();
   });
@@ -71,7 +71,6 @@ var WebClient = function(map) {
     var filename = "";
         
     filename = $('#textcontent').val();
-    console.log(filename);
     $("#filename").html(filename + ' <a href="" id="cancelText">(cancel)</a>');
 
     $("#cancelText").click(function(event) {
@@ -147,20 +146,15 @@ var WebClient = function(map) {
 
   var readCookie = function() {
       var name = "help_shown=";
-      var bool = "";
+      var bool = false;
       var ca = document.cookie.split(';');
     	for(var i=0;i < ca.length;i++) {
 	    	var c = ca[i];
 		    while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		    if (c.indexOf(name) == 0) { bool = c.substring(name.length,c.length); }
+		    if (c.indexOf("TRUE") != -1 ) { bool=true; }
  	    }
-      console.log(bool);
 
-      if ( bool = "TRUE" ) { 
-        return true; 
-      } else {
-        return false;
-      }
+      return bool;
   }
 
   var setCookie = function() {
@@ -213,11 +207,15 @@ var WebClient = function(map) {
 		$("#coordinates").css("display", "inline");
 	};
 
-  that.showHelp = function() {
-
+  that.showHelp = function(_param) {
+    
     if ( !readCookie() ) {
       setCookie();
 
+      $("#help_wrapper").css({"display" : "block"});
+      $("#map_container").css({"visibility" : "hidden"});
+      $("#wrapper").css({"display" : "none"});
+    } else if ( readCookie() && _param == "force" ) {
       $("#help_wrapper").css({"display" : "block"});
       $("#map_container").css({"visibility" : "hidden"});
       $("#wrapper").css({"display" : "none"});
