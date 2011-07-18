@@ -14,5 +14,5 @@
 
       #transfer_text { clear : both; }
 
-      .box textarea { width : auto; }
+      .box textarea { width : 300px; height: 100px }
       
