@@ -13,3 +13,6 @@
       input.file { }
 
       #transfer_text { clear : both; }
+
+      .box textarea { width : auto; }
+      
