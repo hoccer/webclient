@@ -266,7 +266,6 @@ img.alignleft {
 
 		
 		#connecting_info {
-      /*width: 100%;*/
       text-align: left;
       font-weight: bold;
       letter-spacing: 1px;
@@ -360,6 +359,8 @@ img.alignleft {
       list-style-type : none;
       margin-left : 10px;
     }
+    #app_footer ul li:first-child { margin-left : 0; }
+
 
     .transfer_button_info { 
       float : left;
@@ -382,4 +383,4 @@ p.help { padding : 0 10px; }
 #start_sending { display : none; }
 
 #close_name { margin-left : 20px; }
-#connecting_animation { margin-right : 20px; float : right; }
+#connecting_animation { margin-right : 20px; float : right; padding-top : 2px}

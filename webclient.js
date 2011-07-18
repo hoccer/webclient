@@ -204,7 +204,7 @@ var WebClient = function(map) {
 
   that.connecting = function() {
     $("#connecting_info")
-              .text("Connecting...")
+              .text("Connecting... <img id='connecting_animation' src='images/loading.gif'/>")
               .css({"visibility": "visible"});
   };
 
