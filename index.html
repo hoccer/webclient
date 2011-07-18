@@ -345,8 +345,9 @@
   </script>
 
 	<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="css/style.css" />
-	
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+  <link rel="stylesheet" href="css/iphone.css"  type="text/css" media="only screen and (max-device-width: 480px)" title="no title" charset="utf-8">
+
 </head>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 
@@ -355,12 +356,7 @@
 <!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
 <!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
-<!--  <div data-role="page" >
-      <div data-role="header" id="title">
-        <a href="/">
-          <img src="images/logo_webapp.png" alt="logo" /></a>
-      </div>
-    </div>-->
+
   <div data-role="page"> 
       <div data-role="header" id="title">
         <a href="#">
@@ -457,7 +453,7 @@
           </p>
           
           <p>
-            <div id="connecting_info">Connecting..</div>
+            <div id="connecting_info">Connecting...<img id="connecting_animation" src="images/loading.gif"/></div>
             <div id="sending_info">
               <span id="filename" style="margin-left : 20px;">No file selected.</span>
               <a href="#" class="send_button" id="start_sending">Start Sending</a>

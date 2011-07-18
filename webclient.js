@@ -211,10 +211,10 @@ var WebClient = function(map) {
   that.showwaiting = function() {
     if ( mode == "receiveMode" ) {
       $("#connecting_info")
-              .text("Waiting for sender...")
+              .html("Waiting for sender... <img id='connecting_animation' src='images/loading.gif'/> ")
     } else {
       $("#connecting_info")
-              .text("Sending content...")
+              .html("Sending content... <img id='connecting_animation' src='images/loading.gif'/> ")
     }
   };
 

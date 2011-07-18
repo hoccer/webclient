@@ -1,0 +1,11 @@
+      #wrapper, #help_wrapper { 
+        max-width : 100%;
+      }
+      
+      #help_wrapper img {
+        width : 30%;
+        margin-right : 10px;
+        height : auto;
+      }
+
+      #title { padding:0; }
