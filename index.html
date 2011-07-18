@@ -355,13 +355,19 @@
 <!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
 <!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
-  <div data-role="page" id="help_wrapper">
+<!--  <div data-role="page" >
       <div data-role="header" id="title">
         <a href="/">
           <img src="images/logo_webapp.png" alt="logo" /></a>
       </div>
+    </div>-->
+  <div data-role="page"> 
+      <div data-role="header" id="title">
+        <a href="#">
+          <img src="images/logo_webapp.png" alt="logo" /></a>
+      </div>
 
-      <div data-role="content">
+      <div data-role="content" id="help_wrapper">
           <h2 class="help">General</h2>
           <p class="help">
             To work properly, the WebApp needs your location, so allow it to locate you. If autolocation fails, you can input your location manually. You can give the WebApp a custom name by pushing the „Change“-Button beside the name.
@@ -408,22 +414,14 @@
               <li>Drag the text into your device by making a sliding gesture from the border to the center of your device</li>
               <li>If everything went successful, the text should appear on your device</li>
 						</ol>
+            <ul>
+              <li><a href="#" id="close_help">Close Help</a><li>
+            </ul>
           </div>
+        <div style="clear:both;"></div>
+      </div><!--help_wrapper-->
 
-      </div>
-      
-      <div class="help" data-role="footer">
-        <ul>
-          <li><a href="#" id="close_help">Close Help</a><li>
-        </ul>
-      </div>
-      <div style="clear:both;"></div>
-  </div>
-  <div data-role="page" id="wrapper">
-      <div data-role="header" id="title">
-        <a href="/">
-          <img src="images/logo_webapp.png" alt="logo" /></a>
-      </div>
+      <div id="wrapper" data-role="content">
 
       <div id="location" class="box" >
             <h1>Your Location</h1>
@@ -446,7 +444,7 @@
           </ul>
         </div>
 
-      <div data-role="content" id="webclient">
+      <div id="webclient">
         <div class="box clientinfo">
           <h1>Your Status</h1>
           <p>
@@ -501,6 +499,7 @@
 				</div><!--transfer-->
 
       </div><!--webclient-->
+      </div><!--wrapper-->
 
       <div data-role="footer" id="app_footer">
           <ul>
@@ -519,7 +518,7 @@
     </div><!--webclient-->
 
 
-	</div><!--wrapper-->
+	</div><!--page-->
 
 	<!-- Piwik --> 
 	<script type="text/javascript">
