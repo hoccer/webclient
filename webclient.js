@@ -187,7 +187,7 @@ var WebClient = function(map) {
 
 	var showTextMode = function() {
     $("#content_select > section > span").css({'display': 'none'});
-    $("#textcontent").animate({'width': "490px"});
+    //$("#textcontent").animate({'width': "490px"});
 	}
 
   var hideTextMode = function() {
