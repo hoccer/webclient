@@ -10,6 +10,6 @@
 
       #title { padding:0; }
 
-      input.file { width : 50%; margin : 0; }
+      input.file { }
 
-      #transfer_text { width : 50%; margin : 0; }
+      #transfer_text { clear : both; }
