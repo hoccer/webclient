@@ -36,6 +36,12 @@ var WebClient = function(map) {
     that.setActive();
   });
 
+  $("#close_help2").click( function() {
+    that.hideHelp();
+    that.setActive();
+  });
+
+
   $("#help_link").click( function() {
     
     that.showHelp("force");
