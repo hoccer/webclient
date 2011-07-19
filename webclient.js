@@ -83,7 +83,8 @@ var WebClient = function(map) {
   $("#transfer_text").click(function() {
       showTextMode();
 
-    $("#content_select").slideDown();
+      $("#content_select").css({ "display" : "block" });
+    //$("#content_select").slideDown();
     
   });
 	
@@ -113,7 +114,8 @@ var WebClient = function(map) {
     that.receivemode(); 
 
     if ( content.type == "text/plain" ) { 
-      showTextMode(); $("#content_select").slideDown();
+      showTextMode(); $("#content_select").css({ "display" : "block" });
+      //$("#content_select").slideDown();
     } 
 
     $("#start_sending").css({ "display" : "block" });
@@ -187,7 +189,6 @@ var WebClient = function(map) {
 
 	var showTextMode = function() {
     $("#content_select > section > span").css({'display': 'none'});
-    //$("#textcontent").animate({'width': "490px"});
 	}
 
   var hideTextMode = function() {
