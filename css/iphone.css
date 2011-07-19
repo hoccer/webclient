@@ -10,8 +10,8 @@
 
       #title { padding:0; }
 
-      #transfer_text { margin-right : 0; }
+      #transfer_text { margin-right : 10px; }
 
       .box textarea { width : 200px; height: 100px }
       
-      #fileinput { margin-left : 10px; }
+      #fileinput { margin-left : 0; }
