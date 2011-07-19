@@ -114,7 +114,7 @@ var WebClient = function(map) {
     that.receivemode(); 
 
     if ( content.type == "text/plain" ) { 
-      showTextMode(); $("#content_select").css({ "display" : "block" });
+      showTextMode(); 
       //$("#content_select").slideDown();
     } 
 
@@ -189,6 +189,8 @@ var WebClient = function(map) {
 
 	var showTextMode = function() {
     $("#content_select > section > span").css({'display': 'none'});
+    $("#content_select").css({ "display" : "block" });
+    $("#textcontent").focus();
 	}
 
   var hideTextMode = function() {
