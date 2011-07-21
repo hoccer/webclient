@@ -97,6 +97,7 @@ var WebClient = function(map) {
 	$("#show_map > a").click(function() { 
 	  var map_div =  $('#map_container');
 	  if ( map_div.is(':hidden') || map_div.css('margin-top') == "-1200px" ) {
+      $("#show_map > a").text("Close");
 	    map_div
   	    .css({ 'position': 'static','display': 'none', 'margin': '0px' })
   	    .slideDown(500, function() { 
@@ -105,6 +106,7 @@ var WebClient = function(map) {
   	    });
 	  } else {
 	    map_div.slideUp();
+      $("#show_map > a").text("Change");
 	  }
 	  
 	  return false;
