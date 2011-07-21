@@ -81,12 +81,18 @@
 				Shadowbox.open({
 					content:  "<div class=\"box\">" +
 									  "<h2>Received Text</h2>" +
-										"<textarea class='received_text'>" + text + "</textarea>" +
+                    "<p>" + text + "</p>" +
 										"</div>",
 
 					player : "html"
 				});
       }
+
+      $("#drag").click( function() {
+          var uri = $("#drag").val();
+
+        console.log(uri);
+      });
 
       $("#change_name").click( function() {
         var inputname = document.getElementById('client_name');
@@ -175,7 +181,7 @@
 				client.showSuccess();
 
 				var firstContent = data[0]['data'][0];
-				
+				console.log(firstContent.uri);
 				if (firstContent.type == "text/plain") {
 					showText(firstContent.content);
 				} else if (firstContent.type == "image/jpeg") {
@@ -383,7 +389,7 @@
           <h2 class="help">Send Content to the WebApp</h2>
 
           <div class="help" id="receive_help">
-            <img class="help" id="drag" src="images/drag_single.jpg" width="200" height="126" alt="Drag">
+            <img class="help" onclick="Shadowbox.open({ content: 'images/drag_single.jpg', player : 'img' });" id="drag" src="images/drag_single.jpg" width="200" height="126" alt="Drag">
 					  <ol class="help" id="help">
               <li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
 						  <li>Select your device in the WebApp</li>
