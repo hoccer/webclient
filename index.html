@@ -255,13 +255,13 @@
         if ( !isthere ) { 
           info.style.color = "#666"; 
 
-          info.innerHTML = "<b>Connected to: </b>" + selected_name + " (not connected)";
+          info.innerHTML = "<b>Selected Client: </b>" + selected_name + " (not connected)";
          
         } else {
 
           info.style.color = "#888";
           
-          info.innerHTML = "<b>Connected to: </b>" + selected_name;
+          info.innerHTML = "<b>Selected Client: </b>" + selected_name;
         }
       }
         
@@ -312,7 +312,7 @@
           selected_name = group[i].name;
         }
       }
-      infodiv.innerHTML = "<b>Connected to: </b>" + selected_name;
+      infodiv.innerHTML = "<b>Selected Client: </b>" + selected_name;
       infodiv.style.color = "#666";
       
     }
