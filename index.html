@@ -181,7 +181,6 @@
 				client.showSuccess();
 
 				var firstContent = data[0]['data'][0];
-				console.log(firstContent.uri);
 				if (firstContent.type == "text/plain") {
 					showText(firstContent.content);
 				} else if (firstContent.type == "image/jpeg") {
