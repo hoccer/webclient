@@ -120,8 +120,8 @@
             $(images.shift()).remove();
           }
         }
-        
-        if (preview !== undefined) {
+/*        
+       if (preview !== undefined) {
           var previewImg = new Image();
           previewImg.src = preview[0].uri;
           previewImg.onload = function() {
@@ -131,7 +131,7 @@
             }
           };
         }
-        
+*/        
         var img = new Image();
         img.src = uri;
         img.onload = function() {
@@ -236,6 +236,7 @@
       });
 
       linccer.on('received', function(data) {
+        $('#manual').css({"display" : "none" });
 
         if (iframeDiv !== undefined) {
           $(iframeDiv).remove();
@@ -503,10 +504,10 @@
     
     #legal_notice {
       position: absolute;
-      bottom: 30px;
-      left: 30px; 
-      font-size: 0.7em;     
-    }
+      bottom: 28px;
+      left: 120px;
+      font-size: 0.85em;
+}
     
     .image {
       position: absolute;
@@ -713,7 +714,6 @@
       <div id="manual">Throw images on this wall by using Hoccer for iPhone or Android</div>
       <div id="gbdiv"><a id="group_button" href="#"></a><img src="http://hoccer.com/webapp/images/check.png" id="group_check" alt="clients selected"></div>
       <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
-      <a href="#" id="legal_notice">Legal Notice</a>
     </div>
 
     <div id="settings">
@@ -737,6 +737,7 @@
           <p>Enter BSSIDs of nearby hotspots to enhance the connection between mobiles and this image wall.</p>
         </div>
       </div>
+      <a href="" id="legal_notice">Legal Notice</a>
       
       <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
     </div>
