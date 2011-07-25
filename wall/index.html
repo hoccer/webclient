@@ -7,11 +7,13 @@
   <meta name="author" content="Robert Palmer">
   <!-- Date: 2010-12-15 -->
   <script src="http://hoccer.com/webapp/lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://hoccer.com/webapp/shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/jquery_textfill-0.1.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/jquery.iphone-switch.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/jquery.iCheckbox.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
@@ -22,7 +24,7 @@
 
     $(document).ready(function() {
       var MAX_HEIGHT = $(document).height() - 200,
-          MAX_WIDTH = $(document).width() - 300,
+      MAX_WIDTH = $(document).width() - 300,
           MAX_ROTATION = 15,
           MAX_ELEMENTS = 6;
           id = 0;
@@ -91,7 +93,7 @@
             audio.play();
           }, 300);
                       
-          div = $("<div></div")
+          div = $("<div></div>")
                   .append(img)
                   .attr('class', 'image')
                   .css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
@@ -178,6 +180,40 @@
         return div;
       };
 
+      var showText = function(text) {
+
+        var div;
+        var rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
+        var lines = [];
+        var txt = "";
+
+        lines = text.split('\n');
+
+        console.log(lines[0]);
+
+        for( i = 0; i < lines.length; i++)
+        {
+          txt += lines[i] + "<br />";
+        }
+        div = $("<div></div>")
+                  .html("<span>" + txt + "</span>")
+                  .attr('class', 'text')
+                  .css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
+                  .css({ '-moz-transform': 'rotate(' + rotation + 'deg)' })
+                  .css({ 'position' : 'absolute' })
+                  .css({ 'height': '70%', 'width': '70%'})
+                  .css({ 'margin' : '0 auto' })
+                  .css({ 'opacity': '1', 'overflow': 'none' })
+                  .appendTo('#wall');
+
+          var position = positionForElement($(div));
+
+          div.css(position);
+          div.textfill({ maxFontPixels: 700 });
+        return div;
+        
+      };
+
       var addYoutube = function(uri) {
         var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="'
                           + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
@@ -208,8 +244,9 @@
         
         var firstContent = data[0]['data'][0],
             preview = firstContent.preview;
-        
-        if (firstContent.type.match(/^image\/*/)) {
+        if (firstContent.type.match(/^text\/*/)) {
+					showText(firstContent.content);
+        } else if (firstContent.type.match(/^image\/*/)) {
           addImage(firstContent.uri, preview);
         } else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
 
@@ -383,6 +420,11 @@
     }
 
   </script>
+	<script type="text/javascript">
+    Shadowbox.init(
+    {players: ["html", "iframe", "img"]}
+    );
+  </script>
 
   <style type="text/css" media="screen">
     html, body {
@@ -394,6 +436,13 @@
       overflow: hidden;
     }
 
+    pre {
+      padding : 0;
+      margin : 0;
+      font: 100% "Helvetica", "Lucida Grande", sans-serif;
+      color: #ECECEC;
+    }
+
     #wall {
       background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x;
       height: 100%;
@@ -402,6 +451,24 @@
 
     #logo {
       padding: 20px;
+    }
+    
+    .text { 
+      padding : 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+      border-right: 1px solid rgba(0, 0, 0, 0.25);
+      border-left: 1px solid rgba(0, 0, 0, 0.25);
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      background-color: rgba(0, 0, 0, 0.9);
+      -moz-border-radius: 8px;
+      -webkit-border-radius: 8px;
+      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
+      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+      text-shadow: black 2px 2px 2px;
+      color: #ECECEC;
     }
 
     #info_button {
