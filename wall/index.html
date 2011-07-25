@@ -245,14 +245,16 @@
         
         var firstContent = data[0]['data'][0],
             preview = firstContent.preview;
-        if (firstContent.type.match(/^text\/*/)) {
+        if (firstContent.type.match(/^text\/*/) && !firstContent.content.match(/www\.youtube\.com/) ) {
 					showText(firstContent.content);
         } else if (firstContent.type.match(/^image\/*/)) {
           addImage(firstContent.uri, preview);
         } else if (firstContent.type === 'text/uri-list' && firstContent.content.match(/www\.youtube\.com/)) {
 
         var uri = firstContent.content.replace("watch?v=", "embed/");
-          addYoutube(uri);
+        var uris= uri.split("&");
+
+        addYoutube(uris[0]);
         };
 
         watch();
