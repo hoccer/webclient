@@ -72,7 +72,15 @@
 				});
 				
 			}
-		
+
+      var savevcard = function(text) {
+        text = text.replace(/VCARD/g,"");
+        text = text.replace(/BEGIN:/g,"");
+        text = text.replace(/END:/g,"");
+        text = text.replace(/;.+=(\w+):/g," ($1): ");
+        showText("<pre>" + text + "</pre>" );
+      }
+      
 			var showDownload = function(uri) {
 				window.location = uri;
 			}
@@ -178,10 +186,12 @@
      });
 
 			linccer.on('received', function(data) {
-				client.showSuccess();
-
+        client.showSuccess();
+ 
 				var firstContent = data[0]['data'][0];
-				if (firstContent.type == "text/plain") {
+				if (firstContent.type == "text/x-vcard") {
+					savevcard(firstContent.content);
+				} else if (firstContent.type == "text/plain") {
 					showText(firstContent.content);
 				} else if (firstContent.type == "image/jpeg") {
 					showImage(firstContent.uri);
