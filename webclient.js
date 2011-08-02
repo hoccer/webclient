@@ -175,24 +175,48 @@ var WebClient = function(map) {
 			return false;
 	});
 
-  var readCookie = function() {
-      var name = "help_shown=";
-      var bool = false;
-      var ca = document.cookie.split(';');
-    	for(var i=0;i < ca.length;i++) {
-	    	var c = ca[i];
-		    while (c.charAt(0)==' ') c = c.substring(1,c.length);
-		    if (c.indexOf("TRUE") != -1 ) { bool=true; }
- 	    }
+  that.readCookie = function(reason) {
+      if ( reason == "help_shown" ) {
+        var name = "help_shown=";
+        var bool = false;
+        var ca = document.cookie.split(';');
+    	  for(var i=0;i < ca.length;i++) {
+	    	  var c = ca[i];
+		      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		      if (c.indexOf("TRUE") != -1 ) { bool=true; }
+ 	      }
 
-      return bool;
+        return bool;
+      } else if ( reason == "app_name" ) {
+        var name = "app_name=";
+        var ca = document.cookie.split(';');
+    	  for(var i=0;i < ca.length;i++) {
+	    	  var c = ca[i];
+		      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		      if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+ 	      }
+      } else { return false; }
+
   }
 
-  var setCookie = function() {
-      document.cookie = "help_shown=TRUE";
+  that.setCookie = function(property,value) {
+      
+      var today = new Date();
+      today.setTime( today.getTime() );
+
+      var x = 356;
+      var exp = x * 1000 * 60 * 60 * 24;
+      var exp_date = new Date( today.getTime() + (exp) );
+
+      document.cookie = property + "=" + value + ";expires=" + exp_date.toGMTString();
       
       return;
   }
+
+  that.deleteCookie = function(property) {
+    if ( that.readCookie(property) ) document.cookie = property + "=" + ";expires=Thu, 01-Jan-2000 00:00:01 GMT";
+  }
+  
 
 
 	var showTextMode = function() {
@@ -240,13 +264,13 @@ var WebClient = function(map) {
 
   that.showHelp = function(_param) {
     
-    if ( !readCookie() ) {
-      setCookie();
+    if ( !that.readCookie("help_shown") ) {
+      that.setCookie("help_shown","TRUE");
 
       $("#help_wrapper").css({"display" : "block"});
       $("#map_container").css({"visibility" : "hidden"});
       $("#wrapper").css({"display" : "none"});
-    } else if ( readCookie() && _param == "force" ) {
+    } else if ( that.readCookie("help_shown") && _param == "force" ) {
       $("#help_wrapper").css({"display" : "block"});
       $("#map_container").css({"visibility" : "hidden"});
       $("#wrapper").css({"display" : "none"});

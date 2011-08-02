@@ -34,8 +34,8 @@
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 
-			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0' });
-			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0' });
+			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental'  });
+			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental' });
 
 			var map = HoccerMap('map_canvas');
 			client = WebClient(map);
@@ -46,8 +46,15 @@
       var content;
 
       var groupid = "";
-
-      myname = "<WebApp>";
+      if ( !client.readCookie("app_name") ) {
+        myname = "<WebApp>";
+        var check = document.getElementById('check_name');
+        check.checked = false;
+      } else { 
+        myname = client.readCookie("app_name"); 
+        var check = document.getElementById('check_name');
+        check.checked = true;
+      }
 
       linccer.setName(myname);
 
@@ -124,6 +131,14 @@
 
         linccer.setName(myname);
 
+        var check = document.getElementById('check_name');
+
+        if ( check.checked ) { 
+          client.setCookie("app_name",myname); 
+        } else if ( !check.checked ) {
+          client.deleteCookie("app_name");
+        }
+
         myname = myname.replace(/</g,"");
         myname = myname.replace(/>/g,"");
 
@@ -187,8 +202,10 @@
 
 			linccer.on('received', function(data) {
         client.showSuccess();
- 
-				var firstContent = data[0]['data'][0];
+        var firstContent = data[0]['data'][0];
+
+        if (firstContent.encryption == "AES" ) { alert("The content you want to recieve ist encrypted with AES by the sender.") };
+
 				if (firstContent.type == "text/x-vcard") {
 					savevcard(firstContent.content);
 				} else if (firstContent.type == "text/plain") {
@@ -490,6 +507,10 @@
           <input type="text" id="client_name" value="" placeholder="Enter AppName here...">
           <a id="set_name" href="#">Set Name</a>
           <a id="close_name" href="#">Cancel</a>
+          <div class="check_name">
+            <span class="check_name">save name: </span>
+            <input type="checkbox" class="check_name" id="check_name"  name="check_name" value="check_name">
+          </div>
         </div><!--name_select-->
 			  <div class="box" id="content_select">
             <section>
