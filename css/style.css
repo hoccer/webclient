@@ -344,7 +344,8 @@ img.alignleft {
 		}
 
     #title { width : 315px; display : block; margin: 0 auto; padding: 20px 0 20px 0; }
-    #change_client, #change_name { float : right; }
+#change_client, #change_name, #change_crypto { float : right; }
+
 
     #client_name { margin-left : 20px; }
 
@@ -388,4 +389,5 @@ p.help { padding : 0 10px; }
 
 span.check_name { margin : 0 10px; }
 div.check_name { margin-left : 10px; margin-right: 10px; margin-top: 10px; }
-
+div.textinput span { font-size: 80%; float: right; margin-right: 20px;}
+input#check_encryption { margin-right: 10px; float :right; margin-left: 10px; }

@@ -8,7 +8,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
   
 	<!-- Date: 2010-12-15 -->
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  <script type="text/javascript" src="2.3.0-crypto-sha256.js"></script>
+  <script type="text/javascript" src="2.4.0-crypto-sha1-hmac-pbkdf2-blockmodes-aes.js"></script>
 	<script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
@@ -22,6 +24,9 @@
 	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
   <script src="mobile.js" type="text/javascript" charset="utf-8"></script>
   <script src="webclient.js" type="text/javascript" charset="utf-8"></script>
+  <script src="hex.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" src="2.3.0-crypto-min.js"></script>
+  <script src="base64.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">	
 
     var fileCache, linccer, client, group, myname, payload;
@@ -64,6 +69,11 @@
       var actname = document.getElementById('my_name');
 
       actname.innerHTML = '<b>Webapp Name: </b>' + myname; 
+
+      var crypto = document.getElementById('crypto');
+
+      crypto.innerHTML = '<b>cryptography:</b> AES (random PSK)';
+
 
       linccer.peek(groupid);
 
@@ -204,19 +214,26 @@
         client.showSuccess();
         var firstContent = data[0]['data'][0];
 
-        if (firstContent.encryption == "AES" ) { alert("The content you want to recieve ist encrypted with AES by the sender.") };
-
-				if (firstContent.type == "text/x-vcard") {
-					savevcard(firstContent.content);
-				} else if (firstContent.type == "text/plain") {
-					showText(firstContent.content);
-				} else if (firstContent.type == "image/jpeg") {
-					showImage(firstContent.uri);
-				} else if (firstContent.type == "text/uri-list") {
-					showDownload(firstContent.content);
-				} else {
-					showDownload(firstContent.uri)
-				}
+        if (firstContent.encryption.method == "AES" ) { 
+          if ( firstContent.type == "text/plain" ) {
+            var pass = prompt("Please enter a passphrase.","12345678");
+            showText(client.aes_decrypt(firstContent.content,pass,firstContent.encryption.salt));
+          } else { 
+            alert("Decryption of crypted non-text content isn't supported yet. Please send unencrypted Pictures, Videos, V-Cards, or Music.");
+          }
+        } else {
+				  if (firstContent.type == "text/x-vcard") {
+					  savevcard(firstContent.content);
+				  } else if (firstContent.type == "text/plain") {
+					  showText(firstContent.content);
+				  } else if (firstContent.type == "image/jpeg") {
+            showImage(firstContent.uri);
+				  } else if (firstContent.type == "text/uri-list") {
+					  showDownload(firstContent.content);
+				  } else {
+					  showDownload(firstContent.uri)
+				  }
+        }
 
 			});
 
@@ -485,6 +502,10 @@
         <div class="box clientinfo">
           <h1>Your Status</h1>
           <p>
+            <span id="crypto"></span>
+            <a id="change_crypto" href="#">Settings</a>
+          </p>
+          <p>
             <span id="info"></span>
             <a id="change_client" href="#">Change</a>
           </p>
@@ -514,8 +535,10 @@
         </div><!--name_select-->
 			  <div class="box" id="content_select">
             <section>
-							<div id="textinput">
+							<div class="textinput" id="textinput">
                 <textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+                <span>encryption </span>
+                <input class="texinput" type="checkbox" id="check_encryption"  name="check_encryption" value="check_encryption">
                 <a href="#" id="close_text">Close</a>
                 <a href="#" id="set_text">Send Text</a>
               </div>

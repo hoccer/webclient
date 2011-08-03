@@ -7,6 +7,8 @@ var WebClient = function(map) {
 	var content;
 	var active = true;
 	var mode = ""
+  var iv = [0];
+
 
   that.mode = function () {
     return mode;
@@ -60,9 +62,17 @@ var WebClient = function(map) {
   });
 
   $('#set_text').click(function() {
+    var check = document.getElementById("check_encryption");
 
-    content = { 'type': "text/plain", 'content': $('#textcontent').val() }
-    
+    if ( check.checked ) { 
+      var salt = Crypto.util.randomBytes(32);
+      var txt = that.aes_encrypt($('#textcontent').val(),"12345678", Crypto.util.bytesToBase64(salt));
+      content = { 'type': "text/plain", "encryption" : that.buildEncJSON("SHA256",256,"AES",Crypto.util.bytesToBase64(salt)), 'content': txt }
+      console.log(content);
+    } else {
+      content = { 'type': "text/plain", 'content': $('#textcontent').val() }
+    }
+
     var filename = "";
         
     filename = $('#textcontent').val();
@@ -174,6 +184,47 @@ var WebClient = function(map) {
 			event.stopPropagation();
 			return false;
 	});
+
+  that.buildEncJSON = function(hash,keysize,method,salt) {
+    var jsn = { "hash" : hash , "keysize" : keysize , "method" : method , "salt" : salt};
+
+    return jsn;
+  }
+
+  that.aes_encrypt = function(content,pass,salt) {
+
+    var pre_key = Crypto.util.bytesToHex(Crypto.charenc.UTF8.stringToBytes(pass)) + Crypto.util.bytesToHex(Crypto.util.base64ToBytes(salt));
+    var key256bit = Crypto.PBKDF2(pass, salt, 32);
+    console.log("preykey (HEX): " + pre_key);
+    console.log("preykey (new method): " + key256bit);
+    console.log("preykey (Bytes): " + Crypto.util.hexToBytes(pre_key));
+    var keyhash = Crypto.SHA256( Crypto.util.hexToBytes(pre_key) , { asByte: true });
+    console.log("Hash(SHA256): " + keyhash );
+    console.log("initial vector length: " + iv.length);
+    var crypted = Crypto.AES.encrypt(content, Crypto.util.hexToBytes(keyhash) , { mode: new Crypto.mode.CBC(Crypto.pad.pkcs7), iv : iv });
+    console.log("encrypted data: " + crypted);
+    var plain = that.aes_decrypt(crypted,"password",salt);
+    console.log("decrypted data: " + plain);
+
+    return crypted;
+  }
+
+  that.aes_decrypt = function(content,pass,salt) {
+    
+    var pre_key = Crypto.util.bytesToHex(Crypto.charenc.UTF8.stringToBytes(pass)) + Crypto.util.bytesToHex(Crypto.util.base64ToBytes(salt));
+ 
+    console.log("preKey (HEX): " + pre_key);
+    console.log("preykey (Bytes): " + Crypto.util.hexToBytes(pre_key));
+    var keyhash = Crypto.SHA256( Crypto.util.hexToBytes(pre_key) , { asByte: true });
+    console.log( "hash(SHA256): " + keyhash );
+    
+    console.log("cryptedText (base64): " + content );
+    console.log("cryptedText (utf8): " + Crypto.charenc.Binary.bytesToString(Crypto.util.base64ToBytes(content )));
+
+    var plain = Crypto.AES.decrypt(content, Crypto.util.hexToBytes(keyhash) , { mode: new Crypto.mode.CBC(Crypto.pad.pkcs7), iv : iv });
+    
+    return plain;
+  }
 
   that.readCookie = function(reason) {
       if ( reason == "help_shown" ) {
