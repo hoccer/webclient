@@ -8,6 +8,7 @@ var WebClient = function(map) {
 	var active = true;
 	var mode = ""
   var iv = [0];
+  var psk =""
 
 
   that.mode = function () {
@@ -66,7 +67,7 @@ var WebClient = function(map) {
 
     if ( check.checked ) { 
       var salt = Crypto.util.randomBytes(32);
-      var txt = that.aes_encrypt($('#textcontent').val(),"12345678", Crypto.util.bytesToBase64(salt));
+      var txt = that.aes_encrypt($('#textcontent').val(),psk, Crypto.util.bytesToBase64(salt));
       content = { 'type': "text/plain", "encryption" : that.buildEncJSON("SHA256",256,"AES",Crypto.util.bytesToBase64(salt)), 'content': txt }
       console.log(content);
     } else {
@@ -185,6 +186,17 @@ var WebClient = function(map) {
 			return false;
 	});
 
+  that.setPSK = function(_psk) {
+    if ( _psk == "" && psk == "" ) { 
+      psk = Crypto.util.bytesToBase64(Crypto.util.randomBytes(32)); return psk;
+    } else if ( _psk == "" && psk != "" ) { 
+      return psk; 
+    } else {
+      psk = _psk; return psk;
+    }
+  }
+
+
   that.buildEncJSON = function(hash,keysize,method,salt) {
     var jsn = { "hash" : hash , "keysize" : keysize , "method" : method , "salt" : salt};
 
@@ -194,17 +206,13 @@ var WebClient = function(map) {
   that.aes_encrypt = function(content,pass,salt) {
 
     var pre_key = Crypto.util.bytesToHex(Crypto.charenc.UTF8.stringToBytes(pass)) + Crypto.util.bytesToHex(Crypto.util.base64ToBytes(salt));
-    var key256bit = Crypto.PBKDF2(pass, salt, 32);
     console.log("preykey (HEX): " + pre_key);
-    console.log("preykey (new method): " + key256bit);
     console.log("preykey (Bytes): " + Crypto.util.hexToBytes(pre_key));
     var keyhash = Crypto.SHA256( Crypto.util.hexToBytes(pre_key) , { asByte: true });
     console.log("Hash(SHA256): " + keyhash );
     console.log("initial vector length: " + iv.length);
     var crypted = Crypto.AES.encrypt(content, Crypto.util.hexToBytes(keyhash) , { mode: new Crypto.mode.CBC(Crypto.pad.pkcs7), iv : iv });
     console.log("encrypted data: " + crypted);
-    var plain = that.aes_decrypt(crypted,"password",salt);
-    console.log("decrypted data: " + plain);
 
     return crypted;
   }
@@ -238,15 +246,17 @@ var WebClient = function(map) {
  	      }
 
         return bool;
-      } else if ( reason == "app_name" ) {
-        var name = "app_name=";
+      } else {
+        var name = reason + "=";
         var ca = document.cookie.split(';');
     	  for(var i=0;i < ca.length;i++) {
 	    	  var c = ca[i];
 		      while (c.charAt(0)==' ') c = c.substring(1,c.length);
 		      if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
  	      }
-      } else { return false; }
+      } 
+      
+      return false;
 
   }
 
@@ -354,5 +364,131 @@ var WebClient = function(map) {
 	  active = true;
 	}
 
+  that.encPrivateKey = function (n, e, d, p, q, dmp1, dmq1, coeff) {
+    var result,help = [];
+    var INT = 2;
+    var SEQ = 48;
+    var lenbyte = 128;
+    var all = n.length + e.length + d.length + p.length + q.length + dmp1.length + dmq1.length + coeff.length;
+    
+    if ( all.toString(16).length % 2 != 0 ) { var alls = "0".concat(all.toString(16)) } else { var alls = all.toString(16); }
+
+    help = Crypto.util.hexToBytes(alls);
+    
+    var shiftlength = function(len) {
+      var divid = (len / 256).toString();
+      var result = divid.split(".");
+      return result[0];
+    }
+    
+    if (shiftlength(all) >= 1 || all >= 128) { lenbyte += parseInt(shiftlength(all)); help.unshift(lenbyte); } 
+
+    help.unshift(SEQ); 
+    
+    if ( n.length >= 128 ) { n.unshift(INT,129,n.length); } else { n.unshift(INT,n.length); }
+    if ( e.length >= 128 ) { n.unshift(INT,129,e.length); } else { n.unshift(INT,e.length); }
+    if ( d.length >= 128 ) { d.unshift(INT,129,d.length); } else { d.unshift(INT,d.length); }
+    if ( q.length >= 128 ) { q.unshift(INT,129,q.length); } else { q.unshift(INT,q.length); }
+    if ( dmp1.length >= 128 ) { dmp1.unshift(INT,129,dmp1.length); } else { dmp1.unshift(INT,dmp1.length); }
+    if ( dmq1.length >= 128 ) { dmq1.unshift(INT,129,dmq1.length); } else { dmq1.unshift(INT,dmq1.length); }
+    if ( coeff.length >= 128 ) { coeff.unshift(INT,129,coeff.length); } else { coeff.unshift(INT,coeff.length); }
+    
+    result = help.concat(n);
+    help = result.concat(e);
+    result = help.concat(d);
+    help = result.concat(p);
+    result = help.concat(q);
+    help = result.concat(dmp1);
+    result = help.concat(dmq1);
+    help = result.concat(coeff);
+
+    result = help;
+
+    return result;
+  }
+
+  that.decPublicKey = function (pubkey) {
+    var length;
+    var result = [];
+
+    if ( pubkey[0] == 48 && pubkey[1] < 129 ) {
+      pubkey.splice(0,3);
+    } else if ( pubkey[0] == 48 && pubkey[1] >= 129 ) { 
+      pubkey.splice(0,pubkey[1] - 125);
+    }
+
+    if ( pubkey[0] >= 129 ) {
+      length = parseInt(pubkey.slice(1,pubkey[0]-127));
+      pubkey.splice(0,pubkey[0]-127)
+    } else {
+      length = parseInt(pubkey[0]);
+      pubkey.splice(0,1);
+    }
+
+    result[0] = pubkey.slice(0,length);
+    pubkey.splice(0,length+1);
+
+    if ( pubkey[0] >= 129 ) {
+      length = parseInt(pubkey.slice(1,pubkey[0]-127));
+      pubkey.splice(0,pubkey[0]-127)
+    } else {
+      length = parseInt(pubkey[0]);
+      pubkey.splice(0,1);
+    }
+
+    result[1] = pubkey.slice(0,length);
+    pubkey.splice(0,length);
+
+    return result;
+  }
+
+  that.encPublicKey = function (n,e) {
+    var result,help = [];
+    var SEQ = 48;
+    var INT = 02;
+    var lenbyte = 128;
+
+    var all = n.length + e.length;
+
+    if ( all.toString(16).length % 2 != 0 ) { var alls = "0".concat(all.toString(16)) } else { var alls = all.toString(16); }
+    
+    help = Crypto.util.hexToBytes(alls);
+    
+    var shiftlength = function(len) {
+      var divid = (len / 256).toString();
+      var result = divid.split(".");
+      return result[0];
+    }
+    if ( all > 256 ) {
+      lenbyte += parseInt(shiftlength(all)); help.unshift(lenbyte); 
+    } else if ( all >= 128 ) {
+      lenbyte += 1; help.unshift(lenbyte); 
+    }
+
+    help.unshift(SEQ); 
+
+    if ( n.length >= 128 && e.length >= 128 ) { 
+      n.unshift(INT,129,n.length);
+      e.unshift(INT,129,e.length);
+    }  else if ( n.length >= 128 && e.length < 128 ) { 
+      n.unshift(INT,129,n.length);
+      e.unshift(INT,e.length); 
+    } else if ( n.length < 128 && e.length >= 128 ) { 
+      n.unshift(INT,n.length); 
+      e.unshift(INT,129,e.length);
+    } else { 
+      n.unshift(INT,n.length); 
+      e.unshift(INT,e.length); 
+    }
+    var glen  = n.length + e.length;
+    
+    result = help.concat(n);
+    help = result;
+    result = help.concat(e);
+
+    return result;
+  }
+
+  
 	return that;
 }
