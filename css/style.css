@@ -391,3 +391,17 @@ span.check_name { margin : 0 10px; }
 div.check_name { margin-left : 10px; margin-right: 10px; margin-top: 10px; }
 div.textinput span { font-size: 80%; float: right; margin-right: 20px;}
 input#check_encryption { margin-right: 10px; float :right; margin-left: 10px; }
+
+#crypto_settings { display : none; }
+#client_psk { margin-left: 10px; width: 50%; }
+
+form.crypto_settings { margin-left : 20px; }
+form.crypto_settings input { margin-right : 20px; float : right;} 
+form.crypto_settings br { clear : both; margin-bottom : 5px;}
+#crypto_save { float : right; margin-right : 20px; }
+
+#lock { 
+  border : none; 
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+}
