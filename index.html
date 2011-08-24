@@ -22,19 +22,41 @@
 	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
 	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
 	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-  <script src="mobile.js" type="text/javascript" charset="utf-8"></script>
   <script src="webclient.js" type="text/javascript" charset="utf-8"></script>
-  <script src="hex.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" src="2.3.0-crypto-min.js"></script>
-  <script src="base64.js" type="text/javascript" charset="utf-8"></script>
+
+  <script language="JavaScript" type="text/javascript" src="lib/jsbn.js"></script> 
+  <script language="JavaScript" type="text/javascript" src="lib/jsbn2.js"></script> 
+  <script language="JavaScript" type="text/javascript" src="lib/prng4.js"></script> 
+  <script language="JavaScript" type="text/javascript" src="lib/rng.js"></script> 
+  <script language="JavaScript" type="text/javascript" src="lib/rsa.js"></script> 
+  <script language="JavaScript" type="text/javascript" src="lib/rsa2.js"></script> 
+  
+  <script>
+  // CRYPTO Functions not yet to be moved
+  function do_genrsa() {
+    var before = new Date();
+    rsa.generate(key_length,key_e);
+    var after = new Date();
+  }
+
+	</script>
+
   <script type="text/javascript" charset="utf-8">	
 
     var fileCache, linccer, client, group, myname, payload;
 
     var selected_clients = [];
-    var selected_name = "";
+    var psk;
+    var rsa = new RSAKey();
+    var key_n,rsa_d;
+    var key_length = 1024;
+    var key_e = "010001";
 
     $(document).ready(function() {
+
+      console.log(parseInt(key_e,16));
+      console.log(Crypto.util.hexToBytes("010001"));
 
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
@@ -51,6 +73,7 @@
       var content;
 
       var groupid = "";
+
       if ( !client.readCookie("app_name") ) {
         myname = "<WebApp>";
         var check = document.getElementById('check_name');
@@ -71,8 +94,46 @@
       actname.innerHTML = '<b>Webapp Name: </b>' + myname; 
 
       var crypto = document.getElementById('crypto');
+      var newRSA = document.getElementById('check_new_rsa');
 
-      crypto.innerHTML = '<b>cryptography:</b> AES (random PSK)';
+      if (client.readCookie("c_method") == "RSA new on startup") {
+          do_genrsa();
+          client.setCookie("rsa_d",rsa.d);
+          var pubkey = Crypto.util.bytesToBase64(client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16))));
+          pubkey.replace(/\+/g,"&#43;");
+          console.log(pubkey);
+          client.setCookie("public_key",pubkey);
+          var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
+          client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
+      } else if ( client.readCookie("c_method") == "RSA" && !client.readCookie("public_key")) {
+          do_genrsa();
+          client.setCookie("rsa_d",rsa.d);
+          var pubkey = Crypto.util.bytesToBase64(client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16))));
+          pubkey.replace(/\+/g,"&#43;");
+          console.log(pubkey);
+          client.setCookie("public_key",pubkey);
+          var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
+          client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
+      } else if ( client.readCookie("c_method") == "RSA" ) {
+          var checkrsa = document.getElementById('check_rsa');
+          checkrsa.checked = true;
+      } else { client.setCookie("c_method","AES"); client.deleteCookie("public_key"); client.deleteCookie("private_key");  }
+
+      crypto.innerHTML = '<b>Crypto:</b> ' + client.readCookie("c_method");
+
+      if (client.readCookie("public_key")) { linccer.setpubkey(client.readCookie("public_key")); }
+      var testkey = client.readCookie("public_key").toString(16);
+      testkey.replace(/\+/g,"&#43;");
+      console.log(testkey);
+      linccer.setpubkey(testkey);
+
+      if ( !client.readCookie("psk") ) { 
+        psk = client.setPSK(Crypto.util.bytesToBase64(Crypto.util.randomBytes(32))); 
+        document.getElementById('client_psk').value = psk;
+      } else if ( client.readCookie("psk") ) {
+        psk = client.readCookie("psk");
+        document.getElementById('client_psk').value = psk;
+      }
 
 
       linccer.peek(groupid);
@@ -125,13 +186,51 @@
         inputname.value = myname;
 
         $('#name_select').css({ "display" : "block" });
-        //$('#name_select').slideDown();
         $("#client_name").focus();
       });
 
+      $("#change_crypto").click( function() {
+	      if ( $('#crypto_settings').is(':hidden')  ) {
+          $("#change_crypto").text("Close");
+	        $('#crypto_settings').css({ "display" : "block" });
+	      } else {
+	        $('#crypto_settings').css({ "display" : "none" });
+          $("#change_crypto").text("Settings");
+	      }
+	  
+    	  return false;
+        
+      });
+
+
       $("#close_name").click( function() {
         $('#name_select').css({ "display" : "none" });
-        //$('#name_select').slideUp();
+      });
+
+      $("#crypto_save").click( function() {
+          var pskinput = document.getElementById('client_psk');
+          var checkrsa = document.getElementById('check_rsa');
+          if ( checkrsa.checked ) { 
+            client.setCookie("c_method","RSA");           
+            if ( !rsa.d ) {
+              do_genrsa();
+              var pubkey = client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)));
+              client.setCookie("public_key",Crypto.util.bytesToBase64(pubkey));
+              var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
+              client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
+            }
+          } else { 
+            client.setCookie("c_method","AES"); 
+            client.deleteCookie("public_key"); 
+            client.deleteCookie("private_key");
+          }
+          psk = pskinput.value;
+          client.setPSK(psk);
+          client.setCookie("psk",psk);
+          crypto.innerHTML = '<b>Crypto:</b> ' + client.readCookie("c_method");
+
+          $('#crypto_settings').css({ "display" : "none" });
+          $("#change_crypto").text("Settings");
       });
 
       $("#set_name").click( function() {
@@ -155,7 +254,6 @@
         actname.innerHTML =  '<b>Webapp Name: </b>' + myname;
 
         $('#name_select').css({ "display" : "none" });
-        //$('#name_select').slideUp();
 
       });
 
@@ -202,8 +300,6 @@
 
 			linccer.on('updated_environment', function(data) {
 				map.setCenter(data.gps.latitude, data.gps.longitude);
-
-  
       });
 			
 			linccer.on('sent', function(data) {
@@ -213,11 +309,10 @@
 			linccer.on('received', function(data) {
         client.showSuccess();
         var firstContent = data[0]['data'][0];
-
-        if (firstContent.encryption.method == "AES" ) { 
+        console.log(data);
+        if (firstContent.encryption.method == "AES" ) {
           if ( firstContent.type == "text/plain" ) {
-            var pass = prompt("Please enter a passphrase.","12345678");
-            showText(client.aes_decrypt(firstContent.content,pass,firstContent.encryption.salt));
+            showText(client.aes_decrypt(firstContent.content,psk,firstContent.encryption.salt));
           } else { 
             alert("Decryption of crypted non-text content isn't supported yet. Please send unencrypted Pictures, Videos, V-Cards, or Music.");
           }
@@ -237,8 +332,13 @@
 
 			});
 
+      linccer.on('publickeyed', function(data) {
+          client.pubkey(data);
+          console.log(data);
+      });
+
       linccer.on('peeked', function(data) {
-        
+
         groupid = data.group_id;
 
         group = [];
@@ -250,32 +350,10 @@
             group[a] = new Object();
             group[a]["id"] =  data.group[i].id;
             group[a]["name"] = data.group[i].name;
+            if ( data.group[i].pubkey_id ) { group[a]["pubkey_id"] = data.group[i].pubkey_id; }
             a += 1;
           }
         }
-
-        var groupdiv = document.getElementById("group");
-        var groupul = groupdiv.getElementsByTagName("ul")[0];
-        var groupli = groupul.getElementsByTagName("li");
-
-        for ( i = 0; i = groupli.length; i++) {
-          var groupitem = groupdiv.getElementsByTagName("ul")[0].firstChild;
-          groupdiv.getElementsByTagName("ul")[0].removeChild(groupitem);
-        }
-
-
-        for( i = 0; i < group.length; i++)
-        {
-            var item = document.createElement('li');
-              
-            var cname = group[i].name.replace(/</g,"");
-            cname = cname.replace(/>/g,"");
-            item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'>" + cname + "</a>";
-
-            groupul.appendChild(item);
-        }
-
-
 
         write_group();
         
@@ -298,13 +376,13 @@
         if ( !isthere ) { 
           info.style.color = "#666"; 
 
-          info.innerHTML = "<b>Selected Client: </b>" + selected_name + " (not connected)";
+          info.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name + " (not connected)";
          
         } else {
 
           info.style.color = "#888";
           
-          info.innerHTML = "<b>Selected Client: </b>" + selected_name;
+          info.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name;
         }
       }
         
@@ -325,7 +403,11 @@
               
             var cname = group[i].name.replace(/</g,"");
             cname = cname.replace(/>/g,"");
-            item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'>" + cname + "</a>";
+            if ( group[i].pubkey_id ) {
+              item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'><img id='lock' src='images/lock_close.png'/>" + cname + "</a>";
+            } else {
+              item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'>" + cname + "</a>";
+            }
 
             groupul.appendChild(item);
         }
@@ -352,18 +434,20 @@
       for( i = 0; i < group.length; i++)
       {
         if ( group[i].id == _id ) {
-          selected_name = group[i].name;
+          client.selected_client(group[i]);
         }
       }
-      infodiv.innerHTML = "<b>Selected Client: </b>" + selected_name;
+      infodiv.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name;
       infodiv.style.color = "#666";
       
     }
+
     var startApp = function (link) {
       selected_clients = [];
       selected_clients.push(link.name);
       linccer.setClients(selected_clients);
       write_info(link.name);
+      linccer.publickey(client.selected_client().pubkey_id);
       $("#group").css({"display" : "none"});
       $("#webclient").css({"display" : "block"});
       client.setActive();
@@ -522,6 +606,16 @@
               <a href="#" class="send_button" id="stop_sending">Stop Sending</a>
           </p>
         </div><!--.clientinfo-->
+
+        <div class="box" id="crypto_settings">
+          <h1>Cryptography Settings</h1>
+            <form class="crypto_settings">
+              Shared Key: <input type="text" id="client_psk" value="" placeholder="You can enter your personal Key here..."><br />
+              Enable RSA:  <input type="checkbox" class="check_rsa" id="check_rsa"  name="check_rsa" value="check_rsa">
+            </form>
+            <a id="crypto_save" href="#">Save Settings</a>
+            <br />
+         </div><!--crypto_settings-->
 
         <div class="box" id="name_select">
           <h1>Name Your WebApp</h1>
