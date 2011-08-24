@@ -9,6 +9,8 @@ var WebClient = function(map) {
 	var mode = ""
   var iv = [0];
   var psk =""
+  var selected_pubkey = "";
+  var selected_client = [];
 
 
   that.mode = function () {
@@ -33,6 +35,19 @@ var WebClient = function(map) {
     }
 	  return false;
 	};
+
+  that.pubkey = function(_pubkey) {
+
+    if ( _pubkey ) { selected_pubkey = _pubkey }
+
+    return selected_pubkey;
+  }
+
+  that.selected_client = function(_client) {
+
+    if ( _client ) { selected_client = _client }
+    return selected_client;
+  }
 
   $("#close_help").click( function() {
     that.hideHelp();
@@ -67,8 +82,21 @@ var WebClient = function(map) {
 
     if ( check.checked ) { 
       var salt = Crypto.util.randomBytes(32);
+
+      console.log(that.pubkey());
+
+      var en = client.decPublicKey(Crypto.util.base64ToBytes(that.pubkey()))[0];
+      var exp = client.decPublicKey(Crypto.util.base64ToBytes(that.pubkey()))[1];
+
+      console.log(en);
+      console.log(exp);
+
+      rsa.setPublic(Crypto.util.bytesToBase64(en), Crypto.util.bytesToBase64(exp));
+
+      var encpsk = rsa.encrypt(psk);
+
       var txt = that.aes_encrypt($('#textcontent').val(),psk, Crypto.util.bytesToBase64(salt));
-      content = { 'type': "text/plain", "encryption" : that.buildEncJSON("SHA256",256,"AES",Crypto.util.bytesToBase64(salt)), 'content': txt }
+      content = { 'type': "text/plain", "encryption" : that.buildEncJSON("SHA256",256,"AES",Crypto.util.bytesToBase64(salt), encpsk), 'content': txt }
       console.log(content);
     } else {
       content = { 'type': "text/plain", 'content': $('#textcontent').val() }
@@ -101,7 +129,6 @@ var WebClient = function(map) {
       showTextMode();
 
       $("#content_select").css({ "display" : "block" });
-    //$("#content_select").slideDown();
     
   });
 	
@@ -134,7 +161,6 @@ var WebClient = function(map) {
 
     if ( content.type == "text/plain" ) { 
       showTextMode(); 
-      //$("#content_select").slideDown();
     } 
 
     $("#start_sending").css({ "display" : "block" });
@@ -197,9 +223,16 @@ var WebClient = function(map) {
   }
 
 
-  that.buildEncJSON = function(hash,keysize,method,salt) {
-    var jsn = { "hash" : hash , "keysize" : keysize , "method" : method , "salt" : salt};
+  that.buildEncJSON = function(hash,keysize,method,salt,password) {
 
+    if ( password ) {
+      var psw = {};
+      psw[selected_client.id] = password;
+      var jsn = { "hash" : hash , "keysize" : keysize , "method" : method, "salt" : salt};
+      jsn["password"] = psw;
+    } else {
+      var jsn = { "hash" : hash , "keysize" : keysize , "method" : method, "salt" : salt};
+    }
     return jsn;
   }
 
@@ -443,52 +476,60 @@ var WebClient = function(map) {
   }
 
   that.encPublicKey = function (n,e) {
-    var result,help = [];
+    var result,help = new Array();
     var SEQ = 48;
     var INT = 02;
     var lenbyte = 128;
 
-    var all = n.length + e.length;
+    if ( n.length >= 128 ) { 
+      n.unshift(INT,129,n.length);
+    } else {
+      n.unshift(INT,n.length); 
+    }
+    var exp = [2,3,1,0,1];
+    console.log(exp);
 
-    if ( all.toString(16).length % 2 != 0 ) { var alls = "0".concat(all.toString(16)) } else { var alls = all.toString(16); }
-    
-    help = Crypto.util.hexToBytes(alls);
-    
+    var glen  = n.length + exp.length;
+
+    var all = n.length + exp.length;
+    if ( all.toString(16).length % 2 != 0 ) { console.log("yes"); var alls = "0".concat(all.toString(16)) } else { var alls = all.toString(16); }
+    help = that.hexToBytes(alls);
+
     var shiftlength = function(len) {
       var divid = (len / 256).toString();
       var result = divid.split(".");
       return result[0];
     }
+
     if ( all > 256 ) {
       lenbyte += parseInt(shiftlength(all)); help.unshift(lenbyte); 
     } else if ( all >= 128 ) {
       lenbyte += 1; help.unshift(lenbyte); 
     }
-
-    help.unshift(SEQ); 
-
-    if ( n.length >= 128 && e.length >= 128 ) { 
-      n.unshift(INT,129,n.length);
-      e.unshift(INT,129,e.length);
-    }  else if ( n.length >= 128 && e.length < 128 ) { 
-      n.unshift(INT,129,n.length);
-      e.unshift(INT,e.length); 
-    } else if ( n.length < 128 && e.length >= 128 ) { 
-      n.unshift(INT,n.length); 
-      e.unshift(INT,129,e.length);
-    } else { 
-      n.unshift(INT,n.length); 
-      e.unshift(INT,e.length); 
-    }
-    var glen  = n.length + e.length;
     
-    result = help.concat(n);
-    help = result;
-    result = help.concat(e);
+    help.unshift(SEQ); 
+    
+    console.log(help);
 
-    return result;
+    result = help.concat(n);
+
+    help = Crypto.util.bytesToHex(result);
+    result = help.concat(Crypto.util.bytesToHex(exp));
+    console.log(result);
+    for (var i = 0; i < e.length; i++)
+    {
+      e.pop();
+    }
+    
+    return that.hexToBytes(result);
+
   }
 
-  
-	return that;
+  that.hexToBytes = function (hex) {
+                for (var bytes = [], c = 0; c < hex.length; c += 2)
+                        bytes.push(parseInt(hex.substr(c, 2), 16));
+                return bytes;
+  }
+	
+  return that;
 }
