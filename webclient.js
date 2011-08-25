@@ -94,6 +94,7 @@ var WebClient = function(map) {
       rsa.setPublic(Crypto.util.bytesToBase64(en), Crypto.util.bytesToBase64(exp));
 
       var encpsk = rsa.encrypt(psk);
+      console.log(encpsk);
 
       var txt = that.aes_encrypt($('#textcontent').val(),psk, Crypto.util.bytesToBase64(salt));
       content = { 'type': "text/plain", "encryption" : that.buildEncJSON("SHA256",256,"AES",Crypto.util.bytesToBase64(salt), encpsk), 'content': txt }
@@ -196,7 +197,7 @@ var WebClient = function(map) {
   	  
       that.fire("file_canceled");
 
-  	  return false;	  
+  	  return false;	    
   	});
 
     $("#start_sending").css({ "display" : "block" });
@@ -402,12 +403,22 @@ var WebClient = function(map) {
     var INT = 2;
     var SEQ = 48;
     var lenbyte = 128;
+    console.log(n.length + ", " + e.length + ", " + d.length + ", " + p.length + ", " + q.length + ", " + dmp1.length + ", " + dmq1.length + ", " + coeff.length + ", ");
+    console.log(n);console.log(e);console.log(d);
+    if ( n.length >= 128 ) { n.unshift(INT,129,n.length); } else { n.unshift(INT,n.length); }
+    if ( e.length >= 128 ) { e.unshift(INT,129,e.length); } else { e.unshift(INT,e.length); }
+    if ( d.length >= 128 ) { d.unshift(INT,129,d.length); } else { d.unshift(INT,d.length); }
+    if ( p.length >= 128 ) { p.unshift(INT,129,p.length); } else { p.unshift(INT,p.length); }
+    if ( q.length >= 128 ) { q.unshift(INT,129,q.length); } else { q.unshift(INT,q.length); }
+    if ( dmp1.length >= 128 ) { dmp1.unshift(INT,129,dmp1.length); } else { dmp1.unshift(INT,dmp1.length); }
+    if ( dmq1.length >= 128 ) { dmq1.unshift(INT,129,dmq1.length); } else { dmq1.unshift(INT,dmq1.length); }
+    if ( coeff.length >= 128 ) { coeff.unshift(INT,129,coeff.length); } else { coeff.unshift(INT,coeff.length); }
+
     var all = n.length + e.length + d.length + p.length + q.length + dmp1.length + dmq1.length + coeff.length;
     
     if ( all.toString(16).length % 2 != 0 ) { var alls = "0".concat(all.toString(16)) } else { var alls = all.toString(16); }
 
     help = Crypto.util.hexToBytes(alls);
-    
     var shiftlength = function(len) {
       var divid = (len / 256).toString();
       var result = divid.split(".");
@@ -418,24 +429,27 @@ var WebClient = function(map) {
 
     help.unshift(SEQ); 
     
-    if ( n.length >= 128 ) { n.unshift(INT,129,n.length); } else { n.unshift(INT,n.length); }
-    if ( e.length >= 128 ) { n.unshift(INT,129,e.length); } else { n.unshift(INT,e.length); }
-    if ( d.length >= 128 ) { d.unshift(INT,129,d.length); } else { d.unshift(INT,d.length); }
-    if ( q.length >= 128 ) { q.unshift(INT,129,q.length); } else { q.unshift(INT,q.length); }
-    if ( dmp1.length >= 128 ) { dmp1.unshift(INT,129,dmp1.length); } else { dmp1.unshift(INT,dmp1.length); }
-    if ( dmq1.length >= 128 ) { dmq1.unshift(INT,129,dmq1.length); } else { dmq1.unshift(INT,dmq1.length); }
-    if ( coeff.length >= 128 ) { coeff.unshift(INT,129,coeff.length); } else { coeff.unshift(INT,coeff.length); }
     
     result = help.concat(n);
+    console.log("n: " + result);
     help = result.concat(e);
+    console.log("e: " + help);
     result = help.concat(d);
+    console.log("d: " + result);
     help = result.concat(p);
+    console.log("p: " + help);
     result = help.concat(q);
+    console.log(result);
     help = result.concat(dmp1);
     result = help.concat(dmq1);
+    console.log(result);
     help = result.concat(coeff);
 
     result = help;
+    for (var i = 0; i < result.length; i++)
+    {
+      console.log(i + ": " + result[i]);
+    }
 
     return result;
   }
@@ -443,22 +457,25 @@ var WebClient = function(map) {
   that.decPublicKey = function (pubkey) {
     var length;
     var result = [];
+    console.log(Crypto.util.bytesToHex(pubkey));
 
     if ( pubkey[0] == 48 && pubkey[1] < 129 ) {
-      pubkey.splice(0,3);
+      for ( var i=0; i<=2 ; i++ ) { pubkey.shift(); }
     } else if ( pubkey[0] == 48 && pubkey[1] >= 129 ) { 
-      pubkey.splice(0,pubkey[1] - 125);
+      for ( i=0; i<=3 ; i++ ) { pubkey.shift(); }
     }
+    console.log(Crypto.util.bytesToHex(pubkey));
 
     if ( pubkey[0] >= 129 ) {
-      length = parseInt(pubkey.slice(1,pubkey[0]-127));
-      pubkey.splice(0,pubkey[0]-127)
+      if ( pubkey[2] = 0 ) { length = parseInt(pubkey[1]) - 1 ; } else { length = parseInt(pubkey[1] - 1); }
+      for ( i=0; i<=2 ; i++ ) { pubkey.shift(); }
     } else {
       length = parseInt(pubkey[0]);
-      pubkey.splice(0,1);
+      for ( i=0; i<1 ; i++ ) { pubkey.shift(); }
     }
 
     result[0] = pubkey.slice(0,length);
+    console.log(result[0]);
     pubkey.splice(0,length+1);
 
     if ( pubkey[0] >= 129 ) {
