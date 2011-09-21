@@ -10,7 +10,7 @@
 	<script src="http://hoccer.com/webapp/shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-  <script src="http://hoccer.com/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+  <script src="http://localhost/webapp/lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
   <script src="http://hoccer.com/webapp/hoccer_map.js" type="text/javascript" charset="utf-8"></script>
   <script src="lib/jquery_textfill-0.1.js" type="text/javascript" charset="utf-8"></script>
@@ -32,7 +32,7 @@
       var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
           TIMEOUT_ERROR = 'No transfer partner found';
 
-      var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server" : "production" });
+      var linccer = Linccer( {"api_key" : "b3b03410159c012e7b5a00163e001ab0", "server" : "experimental" });
       var images = [],
           iframeDiv,
           map = HoccerMap("map_canvas", "address_field"),
@@ -46,6 +46,7 @@
       linccer.setName(name);
 
       linccer.peek(groupid);
+      linccer.setpubkey('');
 
       var myid = linccer.getID();
 
