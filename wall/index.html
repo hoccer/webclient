@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Hoccer Wall</title>
-  <meta name="generator" content="TextMate http://macromates.com/">
-  <meta name="author" content="Robert Palmer">
-  <!-- Date: 2010-12-15 -->
-  <script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
-  <script src="shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-  <script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/jquery_textfill-0.1.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/jquery.iphone-switch.js" type="text/javascript" charset="utf-8"></script>
-  <script src="lib/jquery.iCheckbox.js" type="text/javascript" charset="utf-8"></script>
-  <script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-  <script type="text/javascript" charset="utf-8">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+			<title>Hoccer Wall</title>
+			<meta name="author" content="Robert Palmer | Martin Delius | Peter Amende">
+
+			<link rel="stylesheet" href="style.css" type="text/css" media="screen" charset="utf-8">
+			
+			<!-- Date: 2010-12-15 -->
+			<script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
+			<script src="shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
+			<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+
+			<script src="lib/jquery_textfill-0.1.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/jquery.iphone-switch.js" type="text/javascript" charset="utf-8"></script>
+			<script src="lib/jquery.iCheckbox.js" type="text/javascript" charset="utf-8"></script>
+
+			<script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
+			<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+  
+			<script type="text/javascript">
+				Shadowbox.init({
+					players: ["html", "iframe", "img"]
+				});
+  			</script>
+
+  
+			<script type="text/javascript" charset="utf-8">
 
     var name = "";
 
@@ -317,21 +329,62 @@
         linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 300);
       });
 
-      $("#info_button").click(function() {
-        $("#settings").show();
-        google.maps.event.trigger(map, 'resize');
-        map.show();
 
-        return false;
-      });
 
-      $("#group_button").click(function() {
-        group_write();
 
-        $("#group").show();
+	$("#info_button").click(function() {
+		if ($("#group").is(':visible')) {
+			group_write();
+			$("#group").hide();
+		}
+		if ( $("#settings").is(':hidden')) {
+			$("#settings").show();
+			google.maps.event.trigger(map, 'resize');
+			map.show();
+		}
+		else {
+			var bssids = $("#bssid_field").val().split(",");
+			var cleanedIds = [];
+			for (var i = 0; i < bssids.length; i++) {
+				cleanedIds.push(bssids[i].trim());
+			}
+			linccer.setBssids( cleanedIds );
 
-        return false;
-      });
+			name = $("#client_name").val();
+			linccer.setName(name);
+
+			$("#settings").hide();
+		}
+		return false;
+	});
+
+	$("#group_button").click(function() {
+		if ($("#settings").is(':visible')) {
+			var bssids = $("#bssid_field").val().split(",");
+			var cleanedIds = [];
+			for (var i = 0; i < bssids.length; i++) {
+				cleanedIds.push(bssids[i].trim());
+			}
+			linccer.setBssids( cleanedIds );
+
+			name = $("#client_name").val();
+			linccer.setName(name);
+
+			$("#settings").hide();
+		}
+		if ( $("#group").is(':hidden')) {
+			group_write();
+			$("#group").show();
+		}    	
+		else {
+			$("#group").hide();
+			linccer.setClients(selected_clients);
+			group_write();
+		}
+		return false;
+	});
+
+
 
       var group_write = function () {
         var groupdiv = document.getElementById("group");
@@ -422,280 +475,14 @@
         selected_clients.splice(idx,1);
       }
     }
+    </script>
 
-  </script>
-	<script type="text/javascript">
-    Shadowbox.init(
-    {players: ["html", "iframe", "img"]}
-    );
-  </script>
-
-  <style type="text/css" media="screen">
-    html, body {
-      padding 0; margin: 0;
-      height: 100%;
-      
-      color: white;
-      font: 100% "Helvetica", "Lucida Grande", sans-serif;
-      overflow: hidden;
-    }
-
-    pre {
-      padding : 0;
-      margin : 0;
-      font: 100% "Helvetica", "Lucida Grande", sans-serif;
-      color: #ECECEC;
-    }
-
-    #wall {
-      background: #DDD url('http://hoccer.com/webapp/images/hoccer_wall_bg.jpg') repeat-x;
-      height: 100%;
-      width: 100%;
-    }
-
-    #logo {
-      padding: 20px;
-    }
-    
-    .text { 
-      padding : 10px;
-      border-top: 1px solid rgba(0, 0, 0, 0.5);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.5);
-      border-right: 1px solid rgba(0, 0, 0, 0.25);
-      border-left: 1px solid rgba(0, 0, 0, 0.25);
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      background-color: rgba(0, 0, 0, 0.9);
-      -moz-border-radius: 8px;
-      -webkit-border-radius: 8px;
-      box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.25), 0px 1px 0px rgba(255, 255, 255, 0.25) inset;
-      -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25), 0 1px 0 rgba(255, 255, 255, 0.25) inset;
-      text-shadow: black 2px 2px 2px;
-      color: #ECECEC;
-    }
-
-    #info_button {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-    }
-
-     #group_button {
-      font-size: 2em;
-      font-weight: bold;
-      text-decoration: none;
-      width: 30px;
-      float: left;
-      text-align: right;
-      text-shadow: #000 2px 2px 2px;
-      color: #ececec;
-    }
-
-    #group ul li {
-      width: 100%;
-      float: left;
-      list-style: none;
-      font-size: 1.2em;
-      margin-bottom: 0.5em;
-      border-bottom: 1px solid #aaa;
-    }
-
-    input#group_box {
-      float: right;
-    }
-    
-    #legal_notice {
-      position: absolute;
-      bottom: 28px;
-      left: 120px;
-      font-size: 0.85em;
-}
-    
-    .image {
-      position: absolute;
-      margin: auto;
-      background-color: white;
-
-      padding: 10px;
-    }
-    
-    #manual {
-      float: right;
-      padding: 30px 50px;
-      width: 350px;
-      font-size: 1.3em;
-      
-      text-shadow: #000 2px 2px 2px;
-      color: #ececec;
-    }
-    
-    #settings {
-      position: absolute;
-      top: 0; right: 0;
-      
-      width: 496px;
-      height: 100%;
-      z-index : 1;
-      
-      padding: 0 25px;
-      
-      display: none;
-    }
-
-    #group {
-      position: absolute;
-      top: 0; right: 0;
-      
-      width: 496px;
-      height: 100%;
-      z-index : 1;
-      
-      padding: 0 25px;
-      
-      display: none;
-    }
-
-    #gbdiv {
-      display: block;
-      width: 46px;
-      height: 46px;
-      position: absolute;
-      bottom: 50px;
-      right: 10px;
-    }
-
-    #group_check {
-      position: absolute;
-      width: 30px;
-      display: none;
-      margin: 0;
-      right: -10px;
-      top: -5px;
-    }
-
-    .settings_option {
-      margin-left: 4px;
-      margin-bottom: 20px;
-      font-size: 1.3em;
-      height:30px;
-      width: 488px;
-    }
-
-    #done, #done_group {
-      bottom: 20px;
-      right: 20px;
-      position: absolute;
-    }
-
-    #map_canvas {
-      margin: 10px auto;
-      width : 488px;
-      height: 350px;
-    }
-
-    #address_field {
-      width: 485px;
-      margin: 0px;
-      margin-bottom: 20px;
-    }
-
-    #client_name {
-      width: 485px;
-      margin: 0px;
-      margin-bottom: 20px;
-    }
-
-    a, a img, a:active img, a:visited {
-      color: #fff;
-      border: 0;
-    }
-
-    img#scalable_image, img#select_bg_image {
-      position: absolute;
-      top:0;
-      left:0;
-      width: 100%;
-      height: 100%;
-
-      z-index: -1;
-    }
-    
-    input {
-      font-size: 15pt;
-    }
-    
-    #bssid {
-      position: absolute;
-      bottom: 28px;
-      
-      font-size: 0.85em;
-      width: 350px;
-    }
-    
-    #bssid div {
-      display: none;
-    }
-    
-    #bssid_field {
-      width: 320px;
-    }
-    
-    #legal {
-      position: absolute;
-      left: 80px;
-      bottom: 120px;
-      font-size: 0.90em;
-      color: #000;
-
-      width: 360px;
-      height: 370px;
-      padding: 30px;
-      
-      background: white;
-      
-      display: none;
-    }
-    
-    #close_legal {
-      position: relative;
-      top: -20px;
-    }
-    
-    #close_legal a:visited {
-      color: blue;
-    }
-    
-    .iCheckbox_container {
-		height:27px;
-		width:94px;
-		position: relative;
-		overflow: hidden;
-    float:right;
-	}
-
-	.iCheckbox_switch {
-		height:27px;
-		width:94px;
-		background-image:url(images/iphone_switch.png); /* your actual slider image */
-		background-repeat:none;
-		background-position:0px;
-	  float:right;
-	}
-
-  .iCheckbox_checkbox { 
-     visibility:hidden; 
-     width:0px;
-     margin:0px;
-     display:none;
-	}
-  </style>
-  <body>
-    <div id="legal">
-      <!-- <div id="close_legal"><a href="#">close</a></div> -->
-      Legal notice:
-
-      Hoccer Wall is a product by Hoccer GmbH, Berlin. Use at your own risk. This
+    <head>
+	<body>
+		<div id="legal">
+			<div id="close_legal"><a href="#">close</a></div>
+			<p><strong>Legal notice:</strong></p>
+			<p>Hoccer Wall is a product by Hoccer GmbH, Berlin. Use at your own risk. This
       website may contain explicit or offensive content by third-party websites or
       users that might offend sensibilities. These contents do NOT constitute any
       endorsement of the content of these websites or users and are intended only
@@ -709,65 +496,76 @@
       website. Anyhow, Hoccer GmbH can NOT provide any support for the content
       made available for download, nor take any responsibility for offended
       sensibilities. Furthermore, Hoccer GmbH takes NO legal liability for any
-      possible damage that is caused by the usage of the provided website.
-    </div>
+      possible damage that is caused by the usage of the provided website.</p>
+		</div><!--legal-->
     
-    <div id="wall">
-      <img src="http://hoccer.com/webapp/images/logo.png" id="logo" width="256" height="64" alt="Logo">
-      <div id="manual">Throw images, text and youtube-links on this wall by using Hoccer for iPhone or Android</div>
-      <div id="gbdiv"><a id="group_button" href="#"></a><img src="http://hoccer.com/webapp/images/check.png" id="group_check" alt="clients selected"></div>
-      <a id="info_button" href="#"><img src="http://hoccer.com/webapp/images/i.png" width="46" height="46" alt="info"></a>
-    </div>
+		<div id="wall">
+			<div id="topbar">
+				<a target="_blank" href="http://www.hoccer.com"><img src="images/logo_wall.png" id="logo" alt="Logo"></a>
+				<div class="tabnav">
+					<a id="info_button" href="#">
+						<img src="images/icon-settings.png" alt="info">
+					</a>
+				</div>
+				<div id="gbdiv" class="tabnav">
+					<a id="group_button" href="#">
+						<img src="http://hoccer.com/webapp/images/check.png" id="group_check" alt="clients selected">
+					</a>
+				</div>
+			</div>
+			<div id="manual">Throw images, text and youtube-links on this wall by using Hoccer for iPhone or Android</div>
+    	</div><!--wall-->
 
-    <div id="settings">
-      <h1>Settings</h1>
-      <div class="settings_option">
-        <input type="text" id="client_name" value="<MyWall>" placeholder="Enter wallname here"/><br>
-      </div>
+		<div id="settings">
+			<h1 class="heading">Settings</h1>
+			<div class="settings_option">
+				<input type="text" id="client_name" value="<MyWall>" placeholder="Enter wallname here"/><br>
+			</div>
 
-        <div id="map_canvas"></div>
-      <div class="settings_option">
-        <input id="address_field" type="text" value="" placeholder="Manually enter address"/><br>
-      </div>
-      <div class="settings_option"></div>
-
-      <a id="done" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
+			<div id="map_canvas"></div>
+		
+			<div class="settings_option">
+				<input id="address_field" type="text" value="" placeholder="Manually enter address"/><br>
+			</div>
+			<div class="settings_option"></div>
+			<a id="done" class="button" href="#">Done</a>
       
-      <div id="bssid">
-        <a href="" id="show_hotspots">Enter Hotspot</a>
-        <div>
-          <input id="bssid_field" type="text" value="" placeholder="00:00:00:00:00:00, 00:00:00:00:00"/>
-          <p>Enter BSSIDs of nearby hotspots to enhance the connection between mobiles and this image wall.</p>
-        </div>
-      </div>
-      <a href="" id="legal_notice">Legal Notice</a>
-      
-      <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
-    </div>
+			<div id="bssid">
+				<a href="" id="show_hotspots">Enter Hotspot</a>
+				<div>
+					<input id="bssid_field" type="text" value="" placeholder="00:00:00:00:00:00, 00:00:00:00:00"/>
+					<p>Enter BSSIDs of nearby hotspots to enhance the connection between mobiles and this image wall.</p>
+				</div>
+			</div>
+			<a href="" id="legal_notice">Legal Notice</a>
+		</div><!--settings-->
 
-    <div id="group">
-      <h1>Clients</h1>
-      <p style="margin-left: 5px;">Restrict your wall to one or more clients in your area by clicking the checkbox related to the clientname. Uncheck all clients to free your wall.</p>
-      <ul>
-      </ul>
-      <img src="http://hoccer.com/webapp/images/bg_settings.jpg" id="select_bg_image">
-      <a id="done_group" href="#"><img src="http://hoccer.com/webapp/images/done.png" width="130" height="52" alt="Done"></a>
-
-    </div>
+		<div id="group">
+			<h1 class="heading">Clients</h1>
+			<p>Restrict your wall to one or more clients in your area by clicking the checkbox related to the clientname. Uncheck all clients to free your wall.</p>
+			
+			<!-- list all avaliable clients -->
+			<ul></ul>
+			<a id="done_group" class="button" href="#">Done</a>
+		</div><!--group-->
     
-    <!-- Piwik --> 
-    <script type="text/javascript">
-    	var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.hoccer.com/" : "http://stats.hoccer.com/");
-    	document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    	</script><script type="text/javascript">
-    	try {
-    	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
-    	piwikTracker.trackPageView();
-    	piwikTracker.enableLinkTracking();
-    	} catch( err ) {}
-    </script><noscript><p><img src="http://stats.hoccer.com/piwik.php?idsite=2" style="border:0" alt="" /></p></noscript>
-    <!-- End Piwik Tracking Tag -->
+		<!-- Piwik --> 
+		<script type="text/javascript">
+			var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.hoccer.com/" : "http://stats.hoccer.com/");
+			document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+    
+		<script type="text/javascript">
+			try {
+				var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 2);
+				piwikTracker.trackPageView();
+				piwikTracker.enableLinkTracking();
+			} catch( err ) {}
+		</script>
 
-  </body>
+		<noscript>
+			<p><img src="http://stats.hoccer.com/piwik.php?idsite=2" style="border:0" alt="" /></p>
+		</noscript><!-- End Piwik Tracking Tag -->
+	</body>
 
 </html>
