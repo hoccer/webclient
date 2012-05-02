@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Hoccer Webapp</title>
-	<meta name="generator" content="MacVim">
-  <meta name="author" content="Martin Delius">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-  
-	<!-- Date: 2010-12-15 -->
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-  <script type="text/javascript" src="2.3.0-crypto-sha256.js"></script>
-  <script type="text/javascript" src="2.4.0-crypto-sha1-hmac-pbkdf2-blockmodes-aes.js"></script>
-	<script src="lib/linccer/lib/json_parse.js" type="text/javascript" charset="utf-8"></script>
+	<head>
 	
-	<script src="lib/linccer/lib/jquery-1.4.4.js" type="text/javascript" charset="utf-8"></script>
-	<script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
-	
-	<script src="shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-	
-	<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-	<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-	<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-  <script src="webclient.js" type="text/javascript" charset="utf-8"></script>
-  <script type="text/javascript" src="2.3.0-crypto-min.js"></script>
+		<title>Hoccer Webapp</title>
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="generator" content="MacVim">
+		<meta name="author" content="Martin Delius | Peter Amende">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 
-  <script language="JavaScript" type="text/javascript" src="lib/jsbn.js"></script> 
-  <script language="JavaScript" type="text/javascript" src="lib/jsbn2.js"></script> 
-  <script language="JavaScript" type="text/javascript" src="lib/prng4.js"></script> 
-  <script language="JavaScript" type="text/javascript" src="lib/rng.js"></script> 
-  <script language="JavaScript" type="text/javascript" src="lib/rsa.js"></script> 
-  <script language="JavaScript" type="text/javascript" src="lib/rsa2.js"></script> 
-  
+		<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	
+		<script type="text/javascript" src="lib/linccer/lib/jquery-1.4.4.js" charset="utf-8"></script>
+		<script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="2.3.0-crypto-sha256.js"></script>
+		<script type="text/javascript" src="2.4.0-crypto-sha1-hmac-pbkdf2-blockmodes-aes.js"></script>
+		<script type="text/javascript" src="lib/linccer/lib/json_parse.js" charset="utf-8"></script>
+	
+		<script src="shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
+	
+		<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
+		<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
+		<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
+		<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="2.3.0-crypto-min.js"></script>
+
+		<script language="JavaScript" type="text/javascript" src="lib/jsbn.js"></script> 
+		<script language="JavaScript" type="text/javascript" src="lib/jsbn2.js"></script> 
+		<script language="JavaScript" type="text/javascript" src="lib/prng4.js"></script> 
+		<script language="JavaScript" type="text/javascript" src="lib/rng.js"></script> 
+		<script language="JavaScript" type="text/javascript" src="lib/rsa.js"></script> 
+		<script language="JavaScript" type="text/javascript" src="lib/rsa2.js"></script> 
+
+		<script type="text/javascript">
+			Shadowbox.init({
+				players: ["html", "iframe", "img"]
+			});
+		</script>
+
   <script>
   // CRYPTO Functions not yet to be moved
   function do_genrsa() {
@@ -61,8 +70,8 @@
 			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
 			var TIMEOUT_ERROR = 'No transfer partner found';
 
-			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental'  });
-			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'experimental' });
+			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'production'  });
+			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'production' });
 
 			var map = HoccerMap('map_canvas');
 			client = WebClient(map);
@@ -473,139 +482,111 @@
 
     }
 
+  	</script>
 
-	</script>
-	<script type="text/javascript">
-    Shadowbox.init(
-    {players: ["html", "iframe", "img"]}
-    );
-  </script>
-
-	<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="css/iphone.css"  type="text/css" media="only screen and (max-device-width: 480px)" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="css/iphone.css"  type="text/css" media="only screen and (max-width: 1024px)" title="no title" charset="utf-8">
-  <link rel="stylesheet" href="css/iphone.css"  type="text/css" media="only screen and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2)" title="no title" charset="utf-8">
 </head>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 
-<!--[if lt IE 7 ]> <body class="ie6"> <![endif]-->
-<!--[if IE 7 ]>    <body class="ie7"> <![endif]-->
-<!--[if IE 8 ]>    <body class="ie8"> <![endif]-->
-<!--[if IE 9 ]>    <body class="ie9"> <![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> <body> <!--<![endif]-->
+	<body>
+		<div id="main-wrapper">
+			<div id="zutrinken" data-role="page"> 
+				<div data-role="header" id="title">
+					<a href="#"><img id="logo" src="images/logo_webapp.png" alt="Hoccer Webapp" /></a>
+				</div>
 
-  <div data-role="page"> 
-      <div data-role="header" id="title">
-        <a href="#">
-          <img src="images/logo_webapp.png" alt="logo" /></a>
-      </div>
+				<div data-role="content" id="help_wrapper">
+					<div class="box">
+						<div class="help">
+							<a class="button" href="#" id="close_help">Go to Webapp</a>
+						</div>
 
-      <div data-role="content" id="help_wrapper">
-          <div class="help">
-            <ul>
-              <li><a href="#" id="close_help">Close Help</a><li>
-            </ul>
-          </div>
+						<h2 class="help">General</h2>
+						<p class="help">To work properly, the WebApp needs your location, so allow it to locate you. If autolocation fails, you can input your location manually. You can give the WebApp a custom name by pushing the „Change“-Button beside the name. To transfer data between your Android or iOS device and the Webapp you should use our native Apps.</p>
 
-          <h2 class="help">General</h2>
-          <p class="help">
-            To work properly, the WebApp needs your location, so allow it to locate you. If autolocation fails, you can input your location manually. You can give the WebApp a custom name by pushing the „Change“-Button beside the name. To transfer data between your Android or iOS device and the Webapp you should use our native Apps.
-          </p>
+						<h2 class="help">Send Content to the WebApp</h2>
 
-          <h2 class="help">Send Content to the WebApp</h2>
+						<div class="help" id="receive_help">
+							<img class="help" onclick="Shadowbox.open({ content: 'images/drag_single.jpg', player : 'img' });" id="drag" src="images/drag_single.jpg" width="200" height="126" alt="Drag">
+							<ol class="help" id="help">
+								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
+								<li>Select your device in the WebApp</li>
+								<li>Select content in your device</li>
+								<li>Slide content</li>
+								<li>If everything went successful, the content should appear in the WebApp</li>
+							</ol>
+          				</div>
 
-          <div class="help" id="receive_help">
-            <img class="help" onclick="Shadowbox.open({ content: 'images/drag_single.jpg', player : 'img' });" id="drag" src="images/drag_single.jpg" width="200" height="126" alt="Drag">
-					  <ol class="help" id="help">
-              <li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
-						  <li>Select your device in the WebApp</li>
-              <li>Select content in your device</li>
-              <li>Slide content</li>
-              <li>If everything went successful, the content should appear in the WebApp</li>
-						</ol>
-          </div>
+						<h2 class="help">Send Files to your device</h2>
 
-          <h2 class="help">Send Files to your device</h2>
+						<div class="help" id="send_text_help">
+							<ol class="help" id="help">
+								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
+								<li>Select your device in the WebApp</li>
+								<li>Select „File“</li>
+								<li>Select any file you would like to send to your Hoccer client</li>
+								<li>Push the „Start Sending“ Button</li>
+								<li>Drag the file into your device by making a sliding gesture from the border to the center of your device</li>
+								<li>If everything went successful, the file should appear on your device</li>
+							</ol>
+						</div>
 
-          <div class="help" id="send_text_help">
-					  <ol class="help" id="help">
-              <li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
-              <li>Select your device in the WebApp</li>
-						  <li>Select „File“</li>
-              <li>Select any file you would like to send to your Hoccer client</li>
-              <li>Push the „Start Sending“ Button</li>
-              <li>Drag the file into your device by making a sliding gesture from the border to the center of your device</li>
-              <li>If everything went successful, the file should appear on your device</li>
-						</ol>
-          </div>
+						<h2 class="help">Send Text to your device</h2>
 
-          <h2 class="help">Send Text to your device</h2>
+						<div class="help" class="help" id="send_file_help">
+							<ol class="help"  id="help">
+								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
+								<li>Select your device in the WebApp</li>
+								<li>Select „Text“</li>
+								<li>Input any text or a link into the inputbox</li>
+								<li>Push the „Send Text“ Button</li>
+								<li>Drag the text into your device by making a sliding gesture from the border to the center of your device</li>
+								<li>If everything went successful, the text should appear on your device</li>
+							</ol>
+							<a class="button" href="#" id="close_help2">Go to Webapp</a>
+						</div>
+						<div style="clear:both;"></div>
+					</div>
+				</div><!--help_wrapper-->
 
-          <div class="help" class="help" id="send_file_help">
-					  <ol class="help"  id="help">
-              <li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
-              <li>Select your device in the WebApp</li>
-						  <li>Select „Text“</li>
-              <li>Input any text or a link into the inputbox</li>
-              <li>Push the „Send Text“ Button</li>
-              <li>Drag the text into your device by making a sliding gesture from the border to the center of your device</li>
-              <li>If everything went successful, the text should appear on your device</li>
-						</ol>
-            <ul>
-              <li><a href="#" id="close_help2">Close Help</a><li>
-            </ul>
-          </div>
-        <div style="clear:both;"></div>
-      </div><!--help_wrapper-->
-
-      <div id="wrapper" data-role="content">
-
-      <div id="location" class="box" >
-            <h1>Your Location</h1>
-						<section><p><img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
-							<span id="waiting">locating...</span>
+				<div id="wrapper" data-role="content">
+					<div id="location" class="box">
+						<h1>Your Location</h1>
+						<section>
+							<img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
+							<span id="waiting">locating... <img width="12" height="12" id="loading_animation" src="images/loading.gif"/></span>
 							<span id="coordinates"></span>
-              <span id="show_map"><a id="sm_change" href="#">Change</a></span>
+             				<span id="show_map"><a class="button" id="sm_change" href="#">Change</a></span>
 							<div id="map_container">
-								<hr />
 								<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
 								<div id="map_canvas"></div>
 							</div>
-						</p></section>
-				</div>
+						</section>
+					</div><!--Location-->
 
-        <div class="box" id="group">
-          <h1>Select A Partner</h1>
-          <p>To Send and Receive File and Text from another Hoccer-Client select one of the Clients nearby.</p>
-          <ul>
-          </ul>
-        </div>
+					<div class="box" id="group">
+						<h1>Select A Partner</h1>
+						<p>To Send and Receive File and Text from another Hoccer-Client select one of the Clients nearby.</p>
+						<ul></ul>
+        			</div><!--Group-->
 
-      <div id="webclient">
-        <div class="box clientinfo">
-          <h1>Your Status</h1>
-          <p>
-            <span id="crypto"></span>
-            <a id="change_crypto" href="#">Settings</a>
-          </p>
-          <p>
-            <span id="info"></span>
-            <a id="change_client" href="#">Change</a>
-          </p>
-          <p>
-            <span id="my_name"></span>
-            <a id="change_name" href="#">Change</a>
-          </p>
-          
-          <p>
-            <div id="connecting_info">Connecting...<img id="connecting_animation" src="images/loading.gif"/></div>
-            <div id="sending_info">
-              <span id="filename" style="margin-left : 20px;">No file selected.</span>
-              <a href="#" class="send_button" id="start_sending">Start Sending</a>
-              <a href="#" class="send_button" id="stop_sending">Stop Sending</a>
-          </p>
-        </div><!--.clientinfo-->
+					<div id="webclient">
+						<div class="box clientinfo">
+							<h1>Your Status</h1>
+							<p style="overflow: auto;">
+								<span id="info"></span>
+								<a class="button" id="change_client" href="#">Change</a>
+							</p>
+							<p style="overflow: auto;">
+								<span id="my_name"></span>
+								<a class="button" id="change_name" href="#">Change</a>
+							</p>
+							<p>
+								<div id="connecting_info">Connecting...<img id="connecting_animation" src="images/loading.gif"/></div>
+								<div id="sending_info">
+									<span id="filename" style="margin-left : 20px;">No file selected.</span>
+									<a href="#" class="send_button" id="start_sending">Start Sending</a>
+									<a href="#" class="send_button" id="stop_sending">Stop Sending</a>
+							</p>
+						</div><!--.clientinfo-->
 
         <div class="box" id="crypto_settings">
           <h1>Cryptography Settings</h1>
@@ -617,67 +598,78 @@
             <br />
          </div><!--crypto_settings-->
 
-        <div class="box" id="name_select">
-          <h1>Name Your WebApp</h1>
-          <input type="text" id="client_name" value="" placeholder="Enter AppName here...">
-          <a id="set_name" href="#">Set Name</a>
-          <a id="close_name" href="#">Cancel</a>
-          <div class="check_name">
-            <span class="check_name">save name: </span>
-            <input type="checkbox" class="check_name" id="check_name"  name="check_name" value="check_name">
-          </div>
-        </div><!--name_select-->
-			  <div class="box" id="content_select">
-            <section>
-							<div class="textinput" id="textinput">
-                <textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
-                <span>encryption </span>
-                <input class="texinput" type="checkbox" id="check_encryption"  name="check_encryption" value="check_encryption">
-                <a href="#" id="close_text">Close</a>
-                <a href="#" id="set_text">Send Text</a>
-              </div>
-              </section>
-        </div><!--content_select-->
 
-        <div class="box" id="transfer">
-            <section>
- 							<div id="fileinput" class="fileinputs">
-								<input type="file" class="file" id="fileInputField" />
-								<div class="fakefile">
-									<img style="float:left;margin-top:5px;"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
-									<span class="transfer_button_info">File</span>
-								</div>
+
+						<div id="name_select">
+							<h1>Name Your WebApp</h1>
+							<input type="text" id="client_name" value="" placeholder="Enter AppName here...">
+							<a id="set_name" class="button" href="#">Set Name</a>
+							<a id="close_name" class="button" href="#">Cancel</a>
+						</div><!--name_select-->
+
+						<div class="box" id="name_select">
+							<h1>Name Your WebApp</h1>
+							<input type="text" id="client_name" value="" placeholder="Enter AppName here...">
+							<a id="set_name" href="#">Set Name</a>
+							<a id="close_name" href="#">Cancel</a>
+							<div class="check_name">
+								<span class="check_name">save name: </span>
+								<input type="checkbox" class="check_name" id="check_name"  name="check_name" value="check_name">
 							</div>
-              <div id="transfer_text">
-                <img style="float:left;margin-top:5px;" src="images/webapp_icon_inputtext.png" alt="logo" />
-                <span  class="transfer_button_info">Text</span>
-              </div>
-              <br style="clear: both" />
-						</section>
-				</div><!--transfer-->
+						</div><!--name_select-->
+        
+        
+						<div class="box" id="content_select">
+							<section>		
+								<div id="textinput">
+									<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+									<span>encryption </span>
+									<input class="texinput" type="checkbox" id="check_encryption"  name="check_encryption" value="check_encryption">
+									<a href="#" class="button" id="set_text">Send Text</a>
+									<a href="#" class="button" id="close_text">Close</a>
+								</div>
+							</section>
+						</div><!--content_select-->
+        
+        
+        
+						<div id="transfer">
+							<section>
+								<div id="fileinput" class="fileinputs">
+									<input type="file" class="file" id="fileInputField" />
+									<div class="fakefile">
+										<img style="float:left;"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
+										<span class="transfer_button_info">File</span>
+									</div>
+								</div>
+								<div id="transfer_text">
+									<img style="float:left;" src="images/webapp_icon_inputtext.png" alt="logo" />
+									<span class="transfer_button_info">Text</span>
+								</div>
+							</section>
+						</div><!--transfer-->
+					</div><!--webclient-->
+				
+				</div><!--wrapper-->
+				
+			</div><!--webclient-->
 
-      </div><!--webclient-->
-      </div><!--wrapper-->
-
-      <div data-role="footer" id="app_footer">
-          <ul>
-            <li><a id="help_link" href="#">Help</a></li>
-            <li><a href="http://wall.hoccer.com/">Hoccer Wall</a></li>
-            <li><a href="http://hoccer.com/support/">Support</a></li>
-            <li><a href="http://hoccer.com/developer/">Developer</a></li>
-            <li><a href="http://hoccer.com/blog/">Blog</a></li>
-            <li><a href="http://hoccer.com/company/">Company</a></li>
-            <li><a href="mailto:support@hoccer.com">Contact</a></li>
-            <li><a href="http://www.twitter.com/hoccer"><img src="http://hoccer.com/wp-content/themes/hoccer/images/twitter.png" alt="twitter"/></a></li>
-            <li><a href="http://www.facebook.com/hoccer"><img src="http://hoccer.com/wp-content/themes/hoccer/images/facebook.png" alt="facebook"/></a></li>
-          </ul>
-      </div><!--footer-->
+			<div data-role="footer" id="app_footer">
+				<ul>
+					<li><a id="help_link" href="#">Help</a></li>
+					<li><a target="_blank" href="http://wall.hoccer.com/">Hoccer Wall</a></li>
+					<li><a target="_blank" href="http://hoccer.com/support/">Support</a></li>
+					<li><a href="mailto:support@hoccer.com">Contact</a></li>
+					<li><a target="_blank" href="http://www.twitter.com/hoccer"><img src="images/icon_twitter.png" alt="twitter"/></a></li>
+					<li><a target="_blank" href="http://www.facebook.com/hoccer"><img src="images/icon_facebook.png" alt="facebook"/></a></li>
+				</ul>
+			</div><!--footer-->
 
     </div><!--webclient-->
 
 
 	</div><!--page-->
-
+</div><!--Main Wrapper-->
 	<!-- Piwik --> 
 	<script type="text/javascript">
 	var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.hoccer.com/" : "http://stats.hoccer.com/");
