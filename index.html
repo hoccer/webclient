@@ -1,511 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-	
-		<title>Hoccer Webapp</title>
-		
+	<head>	
+		<title>Hoccer WebApp</title>
+
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<meta name="generator" content="MacVim">
-		<meta name="author" content="Martin Delius | Peter Amende">
+		<meta name="author" content="Peter Amende, Philip Brechler, Martin Delius">
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
 
-		<link rel="stylesheet" href="shadowbox/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
-		<link rel="stylesheet" href="style.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	
-		<script type="text/javascript" src="lib/linccer/lib/jquery-1.4.4.js" charset="utf-8"></script>
+		<link type="text/css" rel="stylesheet" href="style.css" media="screen" charset="utf-8">
+		<link type="text/css" rel="stylesheet" href="shadowbox/shadowbox.css" media="screen" charset="utf-8">
+
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<link rel="apple-touch-icon" href="images/touch-icon.png"/>
+		<link rel="apple-touch-icon-precomposed" href="images/touch-icon.png"/>
+		<!--<link rel="apple-touch-startup-image" href="images/startup.png" />-->
+
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js" type="text/javascript">
 		<script type="text/javascript" src="http://jquery-jsonp.googlecode.com/files/jquery.jsonp-1.0.4.min.js"></script>
 		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-		<script type="text/javascript" src="2.3.0-crypto-sha256.js"></script>
-		<script type="text/javascript" src="2.4.0-crypto-sha1-hmac-pbkdf2-blockmodes-aes.js"></script>
-		<script type="text/javascript" src="lib/linccer/lib/json_parse.js" charset="utf-8"></script>
-	
-		<script src="shadowbox/shadowbox.js" type="text/javascript" charset="utf-8"></script>
-		<script src="lib/linccer/lib/base.js" type="text/javascript" charset="utf-8"></script>
-	
-		<script src="lib/linccer/lib/linccer.js" type="text/javascript" charset="utf-8"></script>
-		<script src="lib/linccer/lib/filecache.js" type="text/javascript" charset="utf-8"></script>
-		<script src="hoccer_map.js" type="text/javascript" charset="utf-8"></script>
-		<script src="webclient.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="2.3.0-crypto-min.js"></script>
+		<script type="text/javascript" src="shadowbox/shadowbox.js" charset="utf-8"></script>
 
-		<script language="JavaScript" type="text/javascript" src="lib/jsbn.js"></script> 
-		<script language="JavaScript" type="text/javascript" src="lib/jsbn2.js"></script> 
-		<script language="JavaScript" type="text/javascript" src="lib/prng4.js"></script> 
-		<script language="JavaScript" type="text/javascript" src="lib/rng.js"></script> 
-		<script language="JavaScript" type="text/javascript" src="lib/rsa.js"></script> 
-		<script language="JavaScript" type="text/javascript" src="lib/rsa2.js"></script> 
+		<script type="text/javascript" src="js/lib/linccer/lib/json_parse.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/lib/linccer/lib/base.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/lib/linccer/lib/linccer.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/lib/linccer/lib/filecache.js" charset="utf-8"></script>
 
-		<script type="text/javascript">
+		<script type="text/javascript" src="js/hoccer_map.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/mobile.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" charset="utf-8">
+			// initialising Shadowbox for receiving files
 			Shadowbox.init({
 				players: ["html", "iframe", "img"]
 			});
+
+			var xxx = 40;
+			var loadObj = {'background-position' : + xxx + 'px center'}
+			$('.loading').css(loadObj);
+			
+			setInterval(function () {
+			    xxx = xxx + 40;
+				var loadObj = {
+					'background-position' : + xxx + 'px center'
+				}
+				$('.loading').css(loadObj);
+			}, 2000);
 		</script>
 
-  <script>
-  // CRYPTO Functions not yet to be moved
-  function do_genrsa() {
-    var before = new Date();
-    rsa.generate(key_length,key_e);
-    var after = new Date();
-  }
-
-	</script>
-
-  <script type="text/javascript" charset="utf-8">	
-
-    var fileCache, linccer, client, group, myname, payload;
-
-    var selected_clients = [];
-    var psk;
-    var rsa = new RSAKey();
-    var key_n,rsa_d;
-    var key_length = 1024;
-    var key_e = "010001";
-
-    $(document).ready(function() {
-
-      console.log(parseInt(key_e,16));
-      console.log(Crypto.util.hexToBytes("010001"));
-
-			var LOCATION_ERROR = 'Could not locate you. Please set your location manually.';
-			var TIMEOUT_ERROR = 'No transfer partner found';
-
-			fileCache = FileCache( {'api_key': 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'production'  });
-			linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'production' });
-
-			var map = HoccerMap('map_canvas');
-			client = WebClient(map);
-		 	client.setInactive();
-		
-      client.showHelp();
-      
-      var content;
-
-      var groupid = "";
-
-      if ( !client.readCookie("app_name") ) {
-        myname = "<WebApp>";
-        var check = document.getElementById('check_name');
-        check.checked = false;
-      } else { 
-        myname = client.readCookie("app_name"); 
-        var check = document.getElementById('check_name');
-        check.checked = true;
-      }
-
-      linccer.setName(myname);
-
-      myname = myname.replace(/</g,"");
-      myname = myname.replace(/>/g,"");
-
-      var actname = document.getElementById('my_name');
-
-      actname.innerHTML = '<b>Webapp Name: </b>' + myname; 
-
-      var crypto = document.getElementById('crypto');
-      var newRSA = document.getElementById('check_new_rsa');
-
-      if (client.readCookie("c_method") == "RSA new on startup") {
-          do_genrsa();
-          client.setCookie("rsa_d",rsa.d);
-          var pubkey = Crypto.util.bytesToBase64(client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16))));
-          pubkey.replace(/\+/g,"&#43;");
-          console.log(pubkey);
-          client.setCookie("public_key",pubkey);
-          var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
-          client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
-      } else if ( client.readCookie("c_method") == "RSA" && !client.readCookie("public_key")) {
-          do_genrsa();
-          client.setCookie("rsa_d",rsa.d);
-          var pubkey = Crypto.util.bytesToBase64(client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16))));
-          pubkey.replace(/\+/g,"&#43;");
-          console.log(pubkey);
-          client.setCookie("public_key",pubkey);
-          var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
-          client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
-      } else if ( client.readCookie("c_method") == "RSA" ) {
-          var checkrsa = document.getElementById('check_rsa');
-          checkrsa.checked = true;
-      } else { client.setCookie("c_method","AES"); client.deleteCookie("public_key"); client.deleteCookie("private_key");  }
-
-      crypto.innerHTML = '<b>Crypto:</b> ' + client.readCookie("c_method");
-
-      if (client.readCookie("public_key")) { linccer.setpubkey(client.readCookie("public_key")); }
-      var testkey = client.readCookie("public_key").toString(16);
-      testkey.replace(/\+/g,"&#43;");
-      console.log(testkey);
-      linccer.setpubkey(testkey);
-
-      if ( !client.readCookie("psk") ) { 
-        psk = client.setPSK(Crypto.util.bytesToBase64(Crypto.util.randomBytes(32))); 
-        document.getElementById('client_psk').value = psk;
-      } else if ( client.readCookie("psk") ) {
-        psk = client.readCookie("psk");
-        document.getElementById('client_psk').value = psk;
-      }
-
-
-      linccer.peek(groupid);
-
-      setInterval( "watch()" , 5000 );
-      setInterval( "poke()" , 5000 );
-
-      var myid = linccer.getID();
-
-			var showImage = function(uri) {
-				Shadowbox.open({
-					content: uri,
-					player : "img"
-				});
-				
-			}
-
-      var savevcard = function(text) {
-        text = text.replace(/VCARD/g,"");
-        text = text.replace(/BEGIN:/g,"");
-        text = text.replace(/END:/g,"");
-        text = text.replace(/;.+=(\w+):/g," ($1): ");
-        showText("<pre>" + text + "</pre>" );
-      }
-      
-			var showDownload = function(uri) {
-				window.location = uri;
-			}
-			
-			var showText = function(text) {
-				Shadowbox.open({
-					content:  "<div class=\"box\">" +
-									  "<h2>Received Text</h2>" +
-                    "<p>" + text + "</p>" +
-										"</div>",
-
-					player : "html"
-				});
-      }
-
-      $("#drag").click( function() {
-          var uri = $("#drag").val();
-
-        console.log(uri);
-      });
-
-      $("#change_name").click( function() {
-        var inputname = document.getElementById('client_name');
-
-        inputname.value = myname;
-
-        $('#name_select').css({ "display" : "block" });
-        $("#client_name").focus();
-      });
-
-      $("#change_crypto").click( function() {
-	      if ( $('#crypto_settings').is(':hidden')  ) {
-          $("#change_crypto").text("Close");
-	        $('#crypto_settings').css({ "display" : "block" });
-	      } else {
-	        $('#crypto_settings').css({ "display" : "none" });
-          $("#change_crypto").text("Settings");
-	      }
-	  
-    	  return false;
-        
-      });
-
-
-      $("#close_name").click( function() {
-        $('#name_select').css({ "display" : "none" });
-      });
-
-      $("#crypto_save").click( function() {
-          var pskinput = document.getElementById('client_psk');
-          var checkrsa = document.getElementById('check_rsa');
-          if ( checkrsa.checked ) { 
-            client.setCookie("c_method","RSA");           
-            if ( !rsa.d ) {
-              do_genrsa();
-              var pubkey = client.encPublicKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)));
-              client.setCookie("public_key",Crypto.util.bytesToBase64(pubkey));
-              var privkey = client.encPrivateKey(Crypto.util.hexToBytes(rsa.n.toString(16)),Crypto.util.hexToBytes(rsa.e.toString(16)),Crypto.util.hexToBytes(rsa.d.toString(16)),Crypto.util.hexToBytes(rsa.p.toString(16)),Crypto.util.hexToBytes(rsa.q.toString(16)),Crypto.util.hexToBytes(rsa.dmp1.toString(16)),Crypto.util.hexToBytes(rsa.dmq1.toString(16)),Crypto.util.hexToBytes(rsa.coeff.toString(16)));
-              client.setCookie("private_key",Crypto.util.bytesToBase64(privkey));
-            }
-          } else { 
-            client.setCookie("c_method","AES"); 
-            client.deleteCookie("public_key"); 
-            client.deleteCookie("private_key");
-          }
-          psk = pskinput.value;
-          client.setPSK(psk);
-          client.setCookie("psk",psk);
-          crypto.innerHTML = '<b>Crypto:</b> ' + client.readCookie("c_method");
-
-          $('#crypto_settings').css({ "display" : "none" });
-          $("#change_crypto").text("Settings");
-      });
-
-      $("#set_name").click( function() {
-        var inputname = document.getElementById('client_name');
-
-        myname =  inputname.value;
-
-        linccer.setName(myname);
-
-        var check = document.getElementById('check_name');
-
-        if ( check.checked ) { 
-          client.setCookie("app_name",myname); 
-        } else if ( !check.checked ) {
-          client.deleteCookie("app_name");
-        }
-
-        myname = myname.replace(/</g,"");
-        myname = myname.replace(/>/g,"");
-
-        actname.innerHTML =  '<b>Webapp Name: </b>' + myname;
-
-        $('#name_select').css({ "display" : "none" });
-
-      });
-
-		  map.on('position_changed', function() {
-				linccer.setEnvironmentCoordinates(map.latitude, map.longitude, 100);
-			});
-			
-			map.on('address_changed', function(address) {
-				$("#coordinates").text(address);
-			})
-		
-		  client.on('send', function() {
-        client.connecting();
-			});
-			
-			client.on('receive', function() {
-				client.connecting();
-			});
-			
-			client.on('file_selected', function(file) {
-				content = fileCache.upload(file);
-        client.setContent(content);	
-        //client.sendmode();
-      });
-
-			client.on('file_canceled', function() {
-        client.receivemode();
-      });
-			
-			fileCache.on('started', function(url) {
-			});
-			
-			fileCache.on('progress', function(progress) {
-			});
-
-			fileCache.on('uploaded', function(uri) {
-			});
-			
-			linccer.on('ready', function() {
-        client.displayLocation();
-        $("#group").css({"display" : "block"});
-
-      })
-
-			linccer.on('updated_environment', function(data) {
-				map.setCenter(data.gps.latitude, data.gps.longitude);
-      });
-			
-			linccer.on('sent', function(data) {
-        client.showSuccess();
-     });
-
-			linccer.on('received', function(data) {
-        client.showSuccess();
-        var firstContent = data[0]['data'][0];
-        console.log(data);
-        if (firstContent.encryption.method == "AES" ) {
-          if ( firstContent.type == "text/plain" ) {
-            showText(client.aes_decrypt(firstContent.content,psk,firstContent.encryption.salt));
-          } else { 
-            alert("Decryption of crypted non-text content isn't supported yet. Please send unencrypted Pictures, Videos, V-Cards, or Music.");
-          }
-        } else {
-				  if (firstContent.type == "text/x-vcard") {
-					  savevcard(firstContent.content);
-				  } else if (firstContent.type == "text/plain") {
-					  showText(firstContent.content);
-				  } else if (firstContent.type == "image/jpeg") {
-            showImage(firstContent.uri);
-				  } else if (firstContent.type == "text/uri-list") {
-					  showDownload(firstContent.content);
-				  } else {
-					  showDownload(firstContent.uri)
-				  }
-        }
-
-			});
-
-      linccer.on('publickeyed', function(data) {
-          client.pubkey(data);
-          console.log(data);
-      });
-
-      linccer.on('peeked', function(data) {
-
-        groupid = data.group_id;
-
-        group = [];
-        var a = 0;
-
-        for( i = 0; i < data.group.length; i++)
-        {
-          if ( data.group[i].id != myid && data.group[i].name != "" ) {
-            group[a] = new Object();
-            group[a]["id"] =  data.group[i].id;
-            group[a]["name"] = data.group[i].name;
-            if ( data.group[i].pubkey_id ) { group[a]["pubkey_id"] = data.group[i].pubkey_id; }
-            a += 1;
-          }
-        }
-
-        write_group();
-        
-        test_for_client();
-
-        linccer.peek(groupid);
-
-      });
-
-      var test_for_client = function () {
-        var isthere = false;
-
-        var info = document.getElementById('info');
-
-        for( i = 0; i < group.length; i++)
-        {
-          if ( group[i].id == selected_clients[0] ) { isthere = true; } else { isthere = false; }
-        }
-
-        if ( !isthere ) { 
-          info.style.color = "#666"; 
-
-          info.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name + " (not connected)";
-         
-        } else {
-
-          info.style.color = "#888";
-          
-          info.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name;
-        }
-      }
-        
-      var write_group = function() {
-        var groupdiv = document.getElementById("group");
-        var groupul = groupdiv.getElementsByTagName("ul")[0];
-        var groupli = groupul.getElementsByTagName("li");
-
-        for ( i = 0; i = groupli.length; i++) {
-          var groupitem = groupdiv.getElementsByTagName("ul")[0].firstChild;
-          groupdiv.getElementsByTagName("ul")[0].removeChild(groupitem);
-        }
-
-
-        for( i = 0; i < group.length; i++)
-        {
-            var item = document.createElement('li');
-              
-            var cname = group[i].name.replace(/</g,"");
-            cname = cname.replace(/>/g,"");
-            if ( group[i].pubkey_id ) {
-              item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'><img id='lock' src='images/lock_close.png'/>" + cname + "</a>";
-            } else {
-              item.innerHTML = "<a href='#' name='" + group[i].id + "' onclick='return startApp(this);'>" + cname + "</a>";
-            }
-
-            groupul.appendChild(item);
-        }
-      }
-
-			linccer.on('error', function(error) {
-			  
-				if (error.code == 3) {
-					$("#coordinates").text(LOCATION_ERROR);
-					client.displayLocation();
-        } else {
-          //client.showError(error.message);
-        }
-
-      });
-  
-    });
-
-    var write_info = function(_id) {
-      
-      infodiv = document.getElementById("info");
-      cname = "";
-
-      for( i = 0; i < group.length; i++)
-      {
-        if ( group[i].id == _id ) {
-          client.selected_client(group[i]);
-        }
-      }
-      infodiv.innerHTML = "<b>Selected Client: </b>" + client.selected_client().name;
-      infodiv.style.color = "#666";
-      
-    }
-
-    var startApp = function (link) {
-      selected_clients = [];
-      selected_clients.push(link.name);
-      linccer.setClients(selected_clients);
-      write_info(link.name);
-      linccer.publickey(client.selected_client().pubkey_id);
-      $("#group").css({"display" : "none"});
-      $("#webclient").css({"display" : "block"});
-      client.setActive();
-      client.receivemode();
-
-    }
-
-    var watch = function() {
-        if ( client.active() && client.mode() == "receiveMode" ) {
-          client.showwaiting();
-          linccer.receive( 'one-to-one', { 'waiting': 'true', 'timeout': 5000 } );
-        }
-
-    }
-
-    var poke = function() {
-        var payload = { 'client' : 'webclient', 'data': [ client.content() ] };
-
-        if ( client.active() && client.mode() == "sendMode" ) {
-          client.showwaiting();
-          linccer.send("one-to-one", payload);
-        }
-
-    }
-
-  	</script>
-
-</head>
-
+	</head>
 	<body>
 		<div id="main-wrapper">
-			<div id="zutrinken" data-role="page"> 
+			<div data-role="page" id="page">
 				<div data-role="header" id="title">
 					<a href="#"><img id="logo" src="images/logo_webapp.png" alt="Hoccer Webapp" /></a>
-				</div>
-
+				</div><!-- title -->
 				<div data-role="content" id="help_wrapper">
 					<div class="box">
 						<div class="help">
 							<a class="button" href="#" id="close_help">Go to Webapp</a>
-						</div>
+						</div><!-- help -->
 
-						<h2 class="help">General</h2>
+						<h2 class="helpline"><span>General</span></h2>
 						<p class="help">To work properly, the WebApp needs your location, so allow it to locate you. If autolocation fails, you can input your location manually. You can give the WebApp a custom name by pushing the „Change“-Button beside the name. To transfer data between your Android or iOS device and the Webapp you should use our native Apps.</p>
 
-						<h2 class="help">Send Content to the WebApp</h2>
+						<h2 class="helpline"><span>Send Content to the WebApp</span></h2>
 
 						<div class="help" id="receive_help">
-							<img class="help" onclick="Shadowbox.open({ content: 'images/drag_single.jpg', player : 'img' });" id="drag" src="images/drag_single.jpg" width="200" height="126" alt="Drag">
+							<img class="helpimg alignright" onclick="Shadowbox.open({ content: 'images/hud_info_swipe-out.png', player : 'img' });" id="drag" src="images/hud_info_swipe-out.png" width="200" height="126" alt="Drag">
 							<ol class="help" id="help">
 								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
 								<li>Select your device in the WebApp</li>
@@ -513,11 +75,12 @@
 								<li>Slide content</li>
 								<li>If everything went successful, the content should appear in the WebApp</li>
 							</ol>
-          				</div>
+          				</div><!-- receive_help -->
 
-						<h2 class="help">Send Files to your device</h2>
+						<h2 class="helpline"><span>Send Files to your device</span></h2>
 
-						<div class="help" id="send_text_help">
+						<div class="help" id="send_file_help">
+							<img class="helpimg alignright" onclick="Shadowbox.open({ content: 'images/hud_info_swipe-in.png', player : 'img' });" id="drag" src="images/hud_info_swipe-in.png" width="200" height="126" alt="Drag">
 							<ol class="help" id="help">
 								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
 								<li>Select your device in the WebApp</li>
@@ -527,11 +90,11 @@
 								<li>Drag the file into your device by making a sliding gesture from the border to the center of your device</li>
 								<li>If everything went successful, the file should appear on your device</li>
 							</ol>
-						</div>
+						</div><!-- send_help_file -->
 
-						<h2 class="help">Send Text to your device</h2>
+						<h2 class="helpline"><span>Send Text to your device</span></h2>
 
-						<div class="help" class="help" id="send_file_help">
+						<div class="help" id="send_text_help">
 							<ol class="help"  id="help">
 								<li>Activate the <a href="http://hoccer.com">Hoccer App</a> on your device</li>
 								<li>Select your device in the WebApp</li>
@@ -541,36 +104,42 @@
 								<li>Drag the text into your device by making a sliding gesture from the border to the center of your device</li>
 								<li>If everything went successful, the text should appear on your device</li>
 							</ol>
+						</div><!-- send_text_help -->
+
+						<div class="help">
 							<a class="button" href="#" id="close_help2">Go to Webapp</a>
-						</div>
+						</div><!-- help -->
+
 						<div style="clear:both;"></div>
-					</div>
+					</div><!-- box -->
 				</div><!--help_wrapper-->
 
 				<div id="wrapper" data-role="content">
 					<div id="location" class="box">
-						<h1>Your Location</h1>
-						<section>
-							<img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
-							<span id="waiting">locating... <img width="12" height="12" id="loading_animation" src="images/loading.gif"/></span>
-							<span id="coordinates"></span>
-             				<span id="show_map"><a class="button" id="sm_change" href="#">Change</a></span>
-							<div id="map_container">
-								<form id="addressForm"><input id="addressInput" type="text" /><input type="Submit" value="search" /></form>
-								<div id="map_canvas"></div>
-							</div>
-						</section>
-					</div><!--Location-->
+						<img src="images/webapp_icon_location.png" width="27" height="25" alt="Location">
+						<span id="waiting">locating... <img width="12" height="12" id="loading_animation" src="images/loading.gif"/></span>
+						<span id="coordinates"></span>
+             			<span id="show_map">
+             				<a class="button" id="sm_change" href="#">Location</a>
+             			</span>
+						<div id="map_container">
+							<form id="addressForm">
+								<input id="addressInput" type="text" />
+								<input type="Submit" value="search" />
+							</form>
+							<div id="map_canvas"></div>
+						</div>
+					</div><!-- location -->
 
 					<div class="box" id="group">
-						<h1>Select A Partner</h1>
+						<h2>Select A Partner</h2>
 						<p>To Send and Receive File and Text from another Hoccer-Client select one of the Clients nearby.</p>
 						<ul></ul>
-        			</div><!--Group-->
+        			</div><!-- group -->
 
 					<div id="webclient">
-						<div class="box clientinfo">
-							<h1>Your Status</h1>
+
+						<div id="clientinfo" class="box">
 							<p style="overflow: auto;">
 								<span id="info"></span>
 								<a class="button" id="change_client" href="#">Change</a>
@@ -579,109 +148,80 @@
 								<span id="my_name"></span>
 								<a class="button" id="change_name" href="#">Change</a>
 							</p>
-							<p>
-								<div id="connecting_info">Connecting...<img id="connecting_animation" src="images/loading.gif"/></div>
-								<div id="sending_info">
-									<span id="filename" style="margin-left : 20px;">No file selected.</span>
-									<a href="#" class="send_button" id="start_sending">Start Sending</a>
-									<a href="#" class="send_button" id="stop_sending">Stop Sending</a>
-							</p>
-						</div><!--.clientinfo-->
+						</div><!-- clientinfo -->
 
-        <div class="box" id="crypto_settings">
-          <h1>Cryptography Settings</h1>
-            <form class="crypto_settings">
-              Shared Key: <input type="text" id="client_psk" value="" placeholder="You can enter your personal Key here..."><br />
-              Enable RSA:  <input type="checkbox" class="check_rsa" id="check_rsa"  name="check_rsa" value="check_rsa">
-            </form>
-            <a id="crypto_save" href="#">Save Settings</a>
-            <br />
-         </div><!--crypto_settings-->
-
-
-
-						<div id="name_select">
-							<h1>Name Your WebApp</h1>
-							<input type="text" id="client_name" value="" placeholder="Enter AppName here...">
+						<div id="name_select" class="box" >
+							<input type="text" id="client_name" value="" placeholder="Enter AppName here..." />
 							<a id="set_name" class="button" href="#">Set Name</a>
 							<a id="close_name" class="button" href="#">Cancel</a>
-						</div><!--name_select-->
+						</div><!-- name_select -->
 
-						<div class="box" id="name_select">
-							<h1>Name Your WebApp</h1>
-							<input type="text" id="client_name" value="" placeholder="Enter AppName here...">
-							<a id="set_name" href="#">Set Name</a>
-							<a id="close_name" href="#">Cancel</a>
-							<div class="check_name">
-								<span class="check_name">save name: </span>
-								<input type="checkbox" class="check_name" id="check_name"  name="check_name" value="check_name">
+						<div id="connecting" class="box" >
+							<div id="connecting_info" class="loading">Connecting...</div>
+						</div><!-- connecting -->
+
+						<div id="send_handler" class="box" >
+							<div id="sending_info">
+								<span id="filename">No file selected.</span>
+								<a class="button send_button" id="start_sending">Start Sending</a>
+								<a class="button send_button" id="stop_sending">Stop Sending</a>
 							</div>
-						</div><!--name_select-->
-        
-        
-						<div class="box" id="content_select">
-							<section>		
-								<div id="textinput">
-									<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
-									<span>encryption </span>
-									<input class="texinput" type="checkbox" id="check_encryption"  name="check_encryption" value="check_encryption">
-									<a href="#" class="button" id="set_text">Send Text</a>
-									<a href="#" class="button" id="close_text">Close</a>
+						</div><!-- send_handler -->
+
+						<div id="content_select" class="box" >
+							<div id="textinput">
+								<textarea type="text" id="textcontent" placeholder="Enter text or url ..."></textarea>
+								<a class="button" id="set_text">Send Text</a>
+								<a class="button" id="close_text">Close</a>
+							</div>
+						</div><!-- content_select -->
+
+						<div id="dropzone-wrapper" class="box" >
+							<div id="dropzone">
+								<span class="dropzone-info">Drop your file here!</span>
+							</div><!-- dropzone -->
+							<input type="file" class="file fileInputField" id="fileInputField1" />
+							<span class="transfer_text">Click here to send Text.</span>
+						</div><!-- dropzone-wrapper -->
+					
+						<div id="transfer" class="box">
+							<div id="fileinput" class="fileinputs">
+								<input type="file" class="file fileInputField" id="fileInputField2" />
+								<div class="fakefile">
+									<span class="transfer_button_info">File</span>
 								</div>
-							</section>
-						</div><!--content_select-->
-        
-        
-        
-						<div id="transfer">
-							<section>
-								<div id="fileinput" class="fileinputs">
-									<input type="file" class="file" id="fileInputField" />
-									<div class="fakefile">
-										<img style="float:left;"; src="images/webapp_icon_selectfile.png"width="52" height="40" alt="Select File">
-										<span class="transfer_button_info">File</span>
-									</div>
-								</div>
-								<div id="transfer_text">
-									<img style="float:left;" src="images/webapp_icon_inputtext.png" alt="logo" />
-									<span class="transfer_button_info">Text</span>
-								</div>
-							</section>
-						</div><!--transfer-->
-					</div><!--webclient-->
+							</div><!-- fileinput -->
+							<div class="transfer_text">
+								<span class="transfer_button_info">Text</span>
+							</div><!-- transfer_text -->
+						</div><!-- transfer -->
+
+					</div><!-- webclient -->
 				
-				</div><!--wrapper-->
-				
-			</div><!--webclient-->
+				</div><!-- wrapper -->
 
-			<div data-role="footer" id="app_footer">
-				<ul>
-					<li><a id="help_link" href="#">Help</a></li>
-					<li><a target="_blank" href="http://wall.hoccer.com/">Hoccer Wall</a></li>
-					<li><a target="_blank" href="http://hoccer.com/support/">Support</a></li>
-					<li><a href="mailto:support@hoccer.com">Contact</a></li>
-					<li><a target="_blank" href="http://www.twitter.com/hoccer"><img src="images/icon_twitter.png" alt="twitter"/></a></li>
-					<li><a target="_blank" href="http://www.facebook.com/hoccer"><img src="images/icon_facebook.png" alt="facebook"/></a></li>
-				</ul>
-			</div><!--footer-->
+				<div data-role="footer" id="app_footer">
+					<ul>
+						<li><a id="help_link" href="#">Help</a></li>
+						<li><a target="_blank" href="http://wall.hoccer.com/">Hoccer Wall</a></li>
+						<li><a target="_blank" href="http://hoccer.com/support/">Support</a></li>
+						<li><a href="mailto:support@hoccer.com">Contact</a></li>
+						<li><a target="_blank" href="http://www.twitter.com/hoccer"><img src="images/icon_twitter.png" alt="twitter"/></a></li>
+						<li><a target="_blank" href="http://www.facebook.com/hoccer"><img src="images/icon_facebook.png" alt="facebook"/></a></li>
+					</ul>
+				</div><!-- footer -->
+			</div><!-- page -->
+		</div><!-- main-wrapper -->
 
-    </div><!--webclient-->
-
-
-	</div><!--page-->
-</div><!--Main Wrapper-->
-	<!-- Piwik --> 
-	<script type="text/javascript">
-	var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.hoccer.com/" : "http://stats.hoccer.com/");
-	document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-	</script><script type="text/javascript">
-	try {
-	var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 5);
-	piwikTracker.trackPageView();
-	piwikTracker.enableLinkTracking();
-	} catch( err ) {}
-	</script><noscript><p><img src="http://stats.hoccer.com/piwik.php?idsite=5" style="border:0" alt="" /></p></noscript>
-	<!-- End Piwik Tracking Code -->
-</body>
-
+		<script type="text/javascript" src="js/webclient.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/script.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/jquery.filedrop.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/dropzone.js" charset="utf-8"></script>
+		<script type="text/javascript" src="js/piwik.js" charset="utf-8"></script>
+		
+		<!-- -->
+		<!--              ▲              -->
+		<!--             ▲ ▲             -->
+		<!-- -->
+	</body>
 </html>
