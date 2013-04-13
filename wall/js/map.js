@@ -4,13 +4,36 @@ var HoccerMap = function(id, addressFieldId) {
 	
 	var geocoder = new google.maps.Geocoder();
 	var berlin = new google.maps.LatLng(52.5167780325, 13.409039925);
+	var styles = [
+		{
+			stylers: [
+				{ saturation: -50 }
+			]
+			},{
+			featureType: "road",
+			elementType: "geometry",
+			stylers: [
+				{ lightness: 100 },
+				{ visibility: "simplified" }
+			]
+			},{
+			featureType: "road",
+			elementType: "labels",
+			stylers: [
+				{ visibility: "on" }
+			]
+		}
+	]; 
 	var myOptions = {
 		zoom: 15,
 		center: berlin,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
+		streetViewControl: false,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		styles: styles
 	};
 
 	var map = new google.maps.Map(document.getElementById(id), myOptions);
+	
 	var marker = new google.maps.Marker({
 		map: map,
 		draggable: true,
