@@ -243,6 +243,9 @@ body {
 }
 .tab-nav:hover {
 }
+#download_button {
+	display: none;
+}
 #group_button {
 }
 #info_button {

@@ -279,7 +279,12 @@ $(document).ready(function() {
 
 	/* Actions for received content */
 	linccer.on('received', function(data) {
+	
+		//hide the manual after the first receiving
 		$('#manual').hide();
+		
+		//show download button after min one file was received
+		$("#download_button").show();
 
 		if (iframeDiv !== undefined) {
 			$(iframeDiv).remove();
@@ -305,6 +310,7 @@ $(document).ready(function() {
 		} else if (firstContent.type === 'audio/mp4') {
 			addAudio(firstContent.uri, preview);
 		}
+		
 		watch();
 	});
 
