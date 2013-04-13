@@ -135,7 +135,8 @@ h4 {
           box-shadow: 0 0 25px rgba(0,0,0,0.5);
 }
 
-.text { 
+.text {
+	position: absolute;
 	padding: 20px;
       
 	margin-bottom: 10px;
@@ -144,7 +145,6 @@ h4 {
 	border: 10px solid #fff;
 	background: #fff;
 
-	text-shadow: 0 -2px 0 rgba(0,0,0,0.1);
 	color: #333;
 
   -webkit-box-shadow: 0 0 25px rgba(0,0,0,0.5), inset 0 0 100px #eee;
@@ -153,6 +153,44 @@ h4 {
 }
 .text > * {
 	line-height: 100%;
+}
+
+
+
+.vcard {
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+	font-size: 16px;
+}
+.vcard hr {
+	width: 75%;
+}
+.vcard span {
+	display: block;
+}
+.vcard .photo {
+	position: absolute;
+	right: 0;
+	margin: 10px;
+	
+	border: 10px solid #fff;
+
+  -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.25);
+     -moz-box-shadow: 0 0 5px rgba(0,0,0,0.25);
+          box-shadow: 0 0 5px rgba(0,0,0,0.25);
+}
+.vcard .fn {
+	font-size: 32px;
+	margin: 20px 0 30px;
+}
+.vcard .type {
+	font-weight: 700;
+}
+.vcard .content,
+.vcard .value {
+	padding: 10px;
+	display: block;
 }
 
 
