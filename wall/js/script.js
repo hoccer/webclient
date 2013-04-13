@@ -519,16 +519,20 @@ $(document).ready(function() {
 	});
 	
 	
-	/*
-	function create_zip() {
-		var zip = new JSZip();
 
-		var obj = $(".image img").attr("src");
-		$.each( obj, function() {
-			zip.file(obj);
+	/* function create_zip() {
+		var zip = new JSZip();
+	
+		hoccerFolder = zip.folder("hoccer");
+	
+		$(".image img").each( function(index){
+			imageLink = $(this).attr('src');
+			hoccerFolder.file("hoccer" + index + ".gif", imageLink, {base64: true});
 		});
 		
-		//zip.file("hello.txt", "Hello World\n");
+		var xoxo = "http://blogtest.hoccer.com/webapp/wall/images/logo_wall.png";
+		hoccerFolder.file("smile.png", xoxo, {base64: false, binary: false});
+
 
 		var blobLink = document.getElementById("download_button");
 		try {
