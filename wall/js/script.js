@@ -88,7 +88,9 @@ $(document).ready(function() {
 				.css({ 'opacity': '1'})
 				.css(position);
 
-			$(img).css({ 'width': '100%', 'height': '100%'});
+			// xoxo class is for the zip generator
+			$(img).addClass('xoxo').css({ 'width': '100%', 'height': '100%'});
+
 			images.push(div);
 			if (images.length > MAX_ELEMENTS) {
 				$(images.shift()).remove();
@@ -285,7 +287,7 @@ $(document).ready(function() {
 		$('#manual').hide();
 		
 		//show download button after min one file was received
-		$("#download_button").show();
+		//$("#download_button").show();
 
 		if (iframeDiv !== undefined) {
 			$(iframeDiv).remove();
@@ -518,30 +520,61 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	/*
+	// Convert an image to Base64 Code for the zip file
+	function getBase64Image(img) {
 	
-
-	/* function create_zip() {
-		var zip = new JSZip();
-	
-		hoccerFolder = zip.folder("hoccer");
-	
-		$(".image img").each( function(index){
-			imageLink = $(this).attr('src');
-			hoccerFolder.file("hoccer" + index + ".gif", imageLink, {base64: true});
-		});
+		// Create an empty canvas element
+		var canvas = document.createElement("canvas");
+		canvas.width = img.width * 4;
+		canvas.height = img.height * 4;
 		
-		var xoxo = "http://blogtest.hoccer.com/webapp/wall/images/logo_wall.png";
-		hoccerFolder.file("smile.png", xoxo, {base64: false, binary: false});
+		// Copy the image contents to the canvas
+		var ctx = canvas.getContext("2d");
+		ctx.drawImage(img, 0, 0);
+		
+		// Get the data-URL formatted image
+		// Firefox supports PNG and JPEG. You could check img.src to guess the
+		// original format, but be aware the using "image/jpg" will re-encode the image.
+		var dataURL = canvas.toDataURL("image/png");
+		
+		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+	}
+    
 
-
+	// Create a zip file of all images on the wall
+	function create_zip() {
+		
+		var zip = new JSZip();
+		
+		// Create zip folder
+		hoccerFolder = zip.folder("hoccer");
+		
+		// Read all images on the wall
+		var images = document.getElementsByClassName("xoxo");
+		
+		console.log(images);
+		
+		for (var i = 0; i < images.length; i++) {
+			
+			// Convert Image to Base64
+			var imageData = getBase64Image(images[i]);
+			
+			console.log(imageData);
+			
+			// Add image to folder
+			hoccerFolder.file("image_" + i.toString() + ".jpg", imageData, {base64: true});
+		}
+		
 		var blobLink = document.getElementById("download_button");
 		try {
 			blobLink.download = "hoccer.zip";
 			blobLink.href = window.URL.createObjectURL(zip.generate({type:"blob"}));
 		} catch(e) {}
 	}
-	$("#download_button").click(create_zip());
+	$("#download_button").click(create_zip);
 	*/
+	
 });
 
 var selected_clients = [];
