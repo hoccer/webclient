@@ -71,21 +71,31 @@ $(document).ready(function() {
 			div = $('<div></div>')
 				.append(img)
 				.attr('class', 'image')
-				.css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
-				.css({ '-moz-transform': 'rotate(' + rotation + 'deg)' })
-				.css({ 'height': '2000px', 'width': '2000px'})
-				.css({ 'opacity': '0', 'overflow': 'none' })
+				.css({
+					'-webkit-transform'		: 'rotate(' + rotation + 'deg)'
+					'-moz-transform'		: 'rotate(' + rotation + 'deg)'
+					'transform'				: 'rotate(' + rotation + 'deg)'
+					'height'				: '2000px',
+					'width'					: '2000px'
+					'opacity'				: '0',
+					'overflow'				: 'hidden'
+				})
 				.appendTo('#wall');
 
 			var position = positionForElement($(img));
 
 			div
-				.css({ '-webkit-transition-property': 'opacity, top, left, width, height' })
-				.css({ '-webkit-transition-duration': '0.3s' })
-				.css({ '-moz-transition-property': 'opacity, top, left, width, height' })
-				.css({ '-moz-transition-duration': '0.3s' })
-				.css({ 'width': img.width, 'height': img.height})
-				.css({ 'opacity': '1'})
+				.css({
+					'-webkit-transition-property'	: 'opacity, top, left, width, height',
+					'-moz-transition-property'		: 'opacity, top, left, width, height',
+					'transition-property'			: 'opacity, top, left, width, height',
+					'-webkit-transition-duration'	: '0.3s',
+					'-moz-transition-duration'		: '0.3s',
+					'transition-duration'			: '0.3s',
+					'width'							: img.width,
+					'height'						: img.height,
+					'opacity'						: '1'
+				})
 				.css(position);
 
 			// xoxo class is for the zip generator
@@ -120,28 +130,46 @@ $(document).ready(function() {
 				left     = ($(oldImage).width() - img.width) / 2 + 10,
 				fadeDuration = '1s', transformDuration = '0.2s';
                 
-				$(img).css({'position': 'absolute', 'left': left+'px', 'top': '10px', 'opacity': '0'});
-				div.css({ '-webkit-transition-property': 'left, width, height' })
-					.css({ '-webkit-transition-duration': transformDuration })
-					.css({ '-moz-transition-property': 'left, width, height' })
-					.css({ '-moz-transition-duration': transformDuration })
-					.css({ 'width': img.width, 'height': img.height})
-					.append(img);
+				$(img).css({
+					'position'	: 'absolute',
+					'left'		: left+'px',
+					'top'		: '10px',
+					'opacity'	: '0'
+				});
+				div.css({
+					'-webkit-transition-property'	: 'left, width, height',
+					'-moz-transition-property'		: 'left, width, height',
+					'transition-property'			: 'left, width, height',
+					'-webkit-transition-duration'	: transformDuration,
+					'-moz--transition-duration'		: transformDuration,
+					'transition-duration'			: transformDuration,
+					'width'							: img.width,
+					'height'						: img.height
+				}).append(img);
 				div.css(positionForElement($(img)));
-				$(img)
-					.css({ '-webkit-transition-property': 'opacity, left' })
-					.css({ '-webkit-transition-duration': fadeDuration +', ' + transformDuration })
-					.css({ '-moz-transition-property': 'opacity, left' })
-					.css({ '-moz-transition-duration': fadeDuration +', ' + transformDuration })
-					.css({ 'opacity': '1', 'left': '10px'} );
+				$(img).css({
+						'-webkit-transition-property'	: 'opacity, left',
+						'-moz-transition-property'		: 'opacity, left',
+						'transition-property'			: 'opacity, left',
+						'-webkit-transition-duration'	: fadeDuration +', ' + transformDuration,
+						'-moz-transition-duration'		: fadeDuration +', ' + transformDuration,
+						'transition-duration'			: fadeDuration +', ' + transformDuration,
+						'opacity'						: '1',
+						'left'							: '10px'
+				});
 				$(oldImage)
-					.css({ '-webkit-transition-property': 'opacity' })
-					.css({ '-webkit-transition-duration': fadeDuration })
-					.css({ '-webkit-transition-timing-function': 'ease-in' })
-					.css({ '-moz-transition-property': 'opacity' })
-					.css({ '-moz-transition-duration': fadeDuration })
-					.css({ '-moz-transition-timing-function': 'ease-in' })
-					.css('opacity', '0');
+					.css({
+						'-webkit-transition-property'			: 'opacity',
+						'-moz-transition-property'				: 'opacity',
+						'transition-property'					: 'opacity',
+						'-webkit-transition-duration'			: fadeDuration,
+						'-moz-transition-duration'				: fadeDuration,
+						'transition-duration'					: fadeDuration,
+						'-webkit-transition-timing-function'	: 'ease-in',
+						'-moz--transition-timing-function'		: 'ease-in',
+						'transition-timing-function'			: 'ease-in',
+						'opacity'								: '0'
+					});
 			};
 		};
 		return div;
@@ -163,12 +191,17 @@ $(document).ready(function() {
 		div = $('<div></div>')
 			.html("<span>" + txt + "</span>")
 			.attr('class', 'text')
-			.css({ '-webkit-transform': 'rotate(' + rotation + 'deg)' })
-			.css({ '-moz-transform': 'rotate(' + rotation + 'deg)' })
-			.css({ 'position' : 'absolute' })
-			.css({ 'height': '50%', 'width': '50%'})
-			.css({ 'margin' : '0 auto' })
-			.css({ 'opacity': '1', 'overflow': 'none' })
+			.css({
+				'-webkit-transform'		: 'rotate(' + rotation + 'deg)',
+				'-moz-transform'		: 'rotate(' + rotation + 'deg)',
+				'transform'				: 'rotate(' + rotation + 'deg)',
+				'position'				: 'absolute',
+				'height'				: '50%',
+				'width'					: '50%',
+				'margin'				: '0 auto',
+				'opacity'				: '1',
+				'overflow'				: 'hidden'
+			})
 			.appendTo('#wall');
 
 		var position = positionForElement($(div));
