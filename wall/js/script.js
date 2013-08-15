@@ -72,11 +72,11 @@ $(document).ready(function() {
 				.append(img)
 				.attr('class', 'image')
 				.css({
-					'-webkit-transform'		: 'rotate(' + rotation + 'deg)'
-					'-moz-transform'		: 'rotate(' + rotation + 'deg)'
-					'transform'				: 'rotate(' + rotation + 'deg)'
+					'-webkit-transform'		: 'rotate(' + rotation + 'deg)',
+					'-moz-transform'		: 'rotate(' + rotation + 'deg)',
+					'transform'				: 'rotate(' + rotation + 'deg)',
 					'height'				: '2000px',
-					'width'					: '2000px'
+					'width'					: '2000px',
 					'opacity'				: '0',
 					'overflow'				: 'hidden'
 				})
@@ -99,7 +99,10 @@ $(document).ready(function() {
 				.css(position);
 
 			// xoxo class is for the zip generator
-			$(img).addClass('xoxo').css({ 'width': '100%', 'height': '100%'});
+			$(img).css({
+				'width'		: '100%',
+				'height'	: '100%'
+			});
 
 			images.push(div);
 			if (images.length > MAX_ELEMENTS) {
@@ -213,6 +216,7 @@ $(document).ready(function() {
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * VCARD */
 	var showVcard = function(text) {
+/*
 		var div;
 		var rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1);
 		var lines = [];
@@ -236,7 +240,7 @@ $(document).ready(function() {
 		var position = positionForElement($(div));
 
 		div.css(position);
-		//div.textfill({ maxFontPixels: 600 });
+*/
 		return div;
 	};
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * YOUTUBE */
@@ -331,7 +335,8 @@ $(document).ready(function() {
 		preview = firstContent.preview;
 		
 		if (firstContent.type.match(/^text\/x-vcard/)) {
-			//showVcard(firstContent.content);
+/* 			showVcard(firstContent.content); */
+			showText(firstContent.content);
 		} else if (firstContent.type.match(/^text\/*/) && (!(firstContent.content.match(/www\.youtube\.com/) || firstContent.content.match(/m\.youtube\.com/))) ) {
 			showText(firstContent.content);
 		} else if (firstContent.type.match(/^image\/*/)) {
