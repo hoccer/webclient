@@ -145,7 +145,7 @@ h4 {
 	border: 10px solid #fff;
 	background: #fff;
 
-	color: #333;
+	color: #404040;
 
   -webkit-box-shadow: 0 0 25px rgba(0,0,0,0.5), inset 0 0 100px #eee;
      -moz-box-shadow: 0 0 25px rgba(0,0,0,0.5), inset 0 0 100px #eee;
@@ -271,7 +271,7 @@ body {
 	font-size: 16px;
 	text-decoration: none;
 	display: block;
-	color: #333;
+	color: #404040;
 
 	display: block;
 }
@@ -321,7 +321,7 @@ body {
 	margin: 0 0 0 -30%;
 	top: 20%;
 	
-	background: #333;
+	background: #404040;
 	border: 1px solid #000;
 
   -webkit-border-radius: 10px;
@@ -365,7 +365,7 @@ body {
 	border: 1px solid #ccc;
 	background: #bbb;
 
-	color: #333!important;
+	color: #404040!important;
 	text-shadow: 0 1px 0 #eee;
 
 	padding: 20px 0;
@@ -431,7 +431,7 @@ body {
 	margin: 0;
 	padding: 0 10px;
 	width: 100%;
-	color: #333;
+	color: #404040;
 	border: 0;
 
 	font-size: 24px;
@@ -544,7 +544,7 @@ body {
 	z-index: 1000;
 	
 	color: #fff;
-	background: #333;
+	background: #404040;
 	border: 1px solid #222;
 	
   -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 2px 8px rgba(0,0,0,0.5);
@@ -635,7 +635,7 @@ body {
 	padding: 0;
 	width: 100%;
 	background: transparent;
-	color: #333;
+	color: #404040;
 	border: 0;
 	
 	font-size: 24px;
@@ -711,7 +711,7 @@ img#select_bg_image {
 	padding: 0;
 	width: 100%;
 	background: #fff;
-	color: #333;
+	color: #404040;
 	border: 0;
 }
 #bssid .settings_bssid #bssid_info {
