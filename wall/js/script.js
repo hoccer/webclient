@@ -11,7 +11,10 @@ $(document).ready(function() {
 	var LOCATION_ERROR = 'Could not locate you. Please set your location manually.',
 		TIMEOUT_ERROR = 'No transfer partner found';
 
-	var linccer = Linccer( {'api_key' : 'b3b03410159c012e7b5a00163e001ab0', 'server' : 'production' });
+	var linccer = Linccer({
+		'api_key'	: 'b3b03410159c012e7b5a00163e001ab0',
+		'server'	: 'production'
+	});
 	var images = [],
 		iframeDiv,
 		map = HoccerMap('map_canvas', 'address_field'),
@@ -62,14 +65,15 @@ $(document).ready(function() {
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * IMAGE */
 	var addImage = function(uri, preview) {
-		var div,
-		rotation = Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1),
-		dropImage = function( img ) {
+		var	div			= $('<div></div>'),
+			rotation	= Math.floor(Math.random() * 16) * ((Math.floor(Math.random() * 2) - 1) | 1),
+			dropImage	= function(img) {
+
 			setTimeout(function() {
 				audio.play();
-			}, 300);          
-			div = $('<div></div>')
-				.append(img)
+			}, 300);
+
+			div.append(img)
 				.attr('class', 'image')
 				.css({
 					'-webkit-transform'		: 'rotate(' + rotation + 'deg)',
@@ -84,8 +88,7 @@ $(document).ready(function() {
 
 			var position = positionForElement($(img));
 
-			div
-				.css({
+			div.css({
 					'-webkit-transition-property'	: 'opacity, top, left, width, height',
 					'-moz-transition-property'		: 'opacity, top, left, width, height',
 					'transition-property'			: 'opacity, top, left, width, height',
@@ -95,10 +98,8 @@ $(document).ready(function() {
 					'width'							: img.width,
 					'height'						: img.height,
 					'opacity'						: '1'
-				})
-				.css(position);
+				}).css(position);
 
-			// xoxo class is for the zip generator
 			$(img).css({
 				'width'		: '100%',
 				'height'	: '100%'
@@ -122,17 +123,17 @@ $(document).ready(function() {
 			};
 		}
 */
-		var img = new Image();
-		img.src = uri;
-		img.onload = function() {
+		var	img			= new Image();
+			img.src		= uri;
+			img.onload	= function() {
 			scaleImage(img);
 			if (div === undefined) {
 				dropImage(img);
 			} else {
-				var oldImage = $(div).children()[0],
-				left     = ($(oldImage).width() - img.width) / 2 + 10,
-				fadeDuration = '1s', transformDuration = '0.2s';
-                
+				var oldImage 		= $(div).children()[0],
+					left     		= ($(oldImage).width() - img.width) / 2 + 10,
+					fadeDuration	= '1s', transformDuration = '0.2s';
+
 				$(img).css({
 					'position'	: 'absolute',
 					'left'		: left+'px',
@@ -160,8 +161,7 @@ $(document).ready(function() {
 						'opacity'						: '1',
 						'left'							: '10px'
 				});
-				$(oldImage)
-					.css({
+				$(oldImage).css({
 						'-webkit-transition-property'			: 'opacity',
 						'-moz-transition-property'				: 'opacity',
 						'transition-property'					: 'opacity',
@@ -172,7 +172,7 @@ $(document).ready(function() {
 						'-moz--transition-timing-function'		: 'ease-in',
 						'transition-timing-function'			: 'ease-in',
 						'opacity'								: '0'
-					});
+				});
 			};
 		};
 		return div;
@@ -246,10 +246,7 @@ $(document).ready(function() {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * YOUTUBE */
 	var addYoutube = function(uri) {
 		var iframe = $('<iframe title="YouTube video player" width="853" height="510" src="' + uri + '?rel=0&autoplay=1" frameborder="0"></iframe>');
-		iframeDiv = $('<div></div>').
-			append(iframe).
-			attr('class', 'image').
-			appendTo('#wall');
+		iframeDiv = $('<div></div>').append(iframe).attr('class', 'image').appendTo('#wall');
 
 		var position = positionForElement(iframe);
 		iframeDiv.css(position);
@@ -262,10 +259,7 @@ $(document).ready(function() {
 		} else {
 			var iframe = $('<video id="player_' + randomNumber + '" class="projekktor" title="Video" width="640" height="360" controls><source src="' + uri + '" type="video/mp4" /></video>');
 		}
-		iframeDiv = $('<div></div>').
-			append(iframe).
-			attr('class', 'image').
-			appendTo('#wall');
+		iframeDiv = $('<div></div>').append(iframe).attr('class', 'image').appendTo('#wall');
 
 		var position = positionForElement(iframe);
 		iframeDiv.css(position);
@@ -287,10 +281,7 @@ $(document).ready(function() {
 		} else {
 			var iframe = $('<video id="player_' + randomNumber + '" class="projekktor" title="Video" width="640" height="360" controls><source src="' + uri + '" type="video/mp4" /></video>');
 		}
-		iframeDiv = $('<div></div>').
-			append(iframe).
-			attr('class', 'image').
-			appendTo('#wall');
+		iframeDiv = $('<div></div>').append(iframe).attr('class', 'image').appendTo('#wall');
 
 		var position = positionForElement(iframe);
 		iframeDiv.css(position);
@@ -390,6 +381,12 @@ $(document).ready(function() {
 	/* Linccer error handling */
 	linccer.on('error', function(error) {
 		if (error.code == 3 || error.code == 1) {
+			if (error.code == 3) {
+				console.log('Linccer Error Code 3')
+			}
+			if (error.code == 1) {
+				console.log('Linccer Error Code 1')
+			}
 			//$('#settings').slideDown(1000, function() {});
 			//map.show();
 		} else if (error.message === 'request_timeout') {
@@ -557,61 +554,6 @@ $(document).ready(function() {
 		}
 		return false;
 	});
-	
-	/*
-	// Convert an image to Base64 Code for the zip file
-	function getBase64Image(img) {
-	
-		// Create an empty canvas element
-		var canvas = document.createElement("canvas");
-		canvas.width = img.width * 4;
-		canvas.height = img.height * 4;
-		
-		// Copy the image contents to the canvas
-		var ctx = canvas.getContext("2d");
-		ctx.drawImage(img, 0, 0);
-		
-		// Get the data-URL formatted image
-		// Firefox supports PNG and JPEG. You could check img.src to guess the
-		// original format, but be aware the using "image/jpg" will re-encode the image.
-		var dataURL = canvas.toDataURL("image/png");
-		
-		return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-	}
-    
-
-	// Create a zip file of all images on the wall
-	function create_zip() {
-		
-		var zip = new JSZip();
-		
-		// Create zip folder
-		hoccerFolder = zip.folder("hoccer");
-		
-		// Read all images on the wall
-		var images = document.getElementsByClassName("xoxo");
-		
-		console.log(images);
-		
-		for (var i = 0; i < images.length; i++) {
-			
-			// Convert Image to Base64
-			var imageData = getBase64Image(images[i]);
-			
-			console.log(imageData);
-			
-			// Add image to folder
-			hoccerFolder.file("image_" + i.toString() + ".jpg", imageData, {base64: true});
-		}
-		
-		var blobLink = document.getElementById("download_button");
-		try {
-			blobLink.download = "hoccer.zip";
-			blobLink.href = window.URL.createObjectURL(zip.generate({type:"blob"}));
-		} catch(e) {}
-	}
-	$("#download_button").click(create_zip);
-	*/
 	
 });
 
