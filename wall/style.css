@@ -545,25 +545,18 @@ body {
 	z-index: 1000;
 	
 	color: #fff;
-	background: #404040;
-	border: 1px solid #222;
-	
-  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 2px 8px rgba(0,0,0,0.5);
-     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 2px 8px rgba(0,0,0,0.5);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 2px 8px rgba(0,0,0,0.5);
-
-  -webkit-border-radius: 10px;
-     -moz-border-radius: 10px;
-          border-radius: 10px;
+	background: #f4f4f4;
 }
 .settings_option {
 	width: 40%;
 	float: left;
 }
-.settings_option_inner {
-	margin: 10px 0 10px 10px;
+.settings_option .settings_option_inner {
+	position: relative;
+	padding: 10px 0 10px 10px;
 	height: 60px;
 	line-height: 60px;
+	border-right: 1px solid #404040;
 }
 .settings_done {
 	width: 20%;
@@ -572,29 +565,19 @@ body {
 #done_settings {
 	cursor: pointer;
 	display: block;
-	padding: 0;
-	margin: 10px;
+	padding: 10px;
+	margin: 0;
 	
 	width: auto;
 	height: 60px;
 	line-height: 60px;
 	text-align: center;
 
-	font-size: 24px;
+	font-size: 16px;
 	font-weight: 700;
 
 	background: #2e8ae5;
-	border: 1px solid #000;
 	color: #fff;
-	text-shadow: 0 -1px 0 #143d66;
-
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-
-  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
-     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
-          box-shadow: inset 0 1px 0 rgba(255,255,255,0.33), inset 0 -1px 0 rgba(0,0,0,0.33), 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
 
   -webkit-transition: all 0.1s ease-out;
      -moz-transition: all 0.1s ease-out;
@@ -608,21 +591,10 @@ body {
 	display: block;
 	height: 60px;
 	line-height: 60px;
-	text-align: center;
+	text-align: left;
 
 	padding: 0 10px;
 	width: auto;
-
-	background: #fff;
-	border: 1px solid #000;
-
-  -webkit-border-radius: 5px;
-     -moz-border-radius: 5px;
-          border-radius: 5px;
-
-  -webkit-box-shadow: 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
-     -moz-box-shadow: 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
-          box-shadow: 0 1px 0 rgba(255,255,255,0.33), 0 -1px 0 rgba(0,0,0,0.33);
 }
 
 #address_field,
@@ -630,7 +602,6 @@ body {
 	display: block;
 	height: 60px;
 	line-height: 60px;
-	text-align: center;
 	
 	margin: 0;
 	padding: 0;
@@ -639,7 +610,7 @@ body {
 	color: #404040;
 	border: 0;
 	
-	font-size: 24px;
+	font-size: 16px;
 }
 
 #client_name {
@@ -667,14 +638,8 @@ img#select_bg_image {
 	
 	padding: 0 10px;
 	color: #ddd;
-	text-shadow: 0 -1px 1px #000;
 	background: #666;
-	border: 1px solid #555;
 	border-top: 0;
-
-  -webkit-border-radius: 0 0 3px 3px;
-     -moz-border-radius: 0 0 3px 3px;
-          border-radius: 0 0 3px 3px;
 
   -webkit-transition: all 0.1s ease-out;
      -moz-transition: all 0.1s ease-out;
@@ -685,14 +650,16 @@ img#select_bg_image {
 	background: #555;
 }
 .more_btn#show_hotspots {
-	left: 10px;
+	left: 0;
 }
 .more_btn#legal_notice {
-	left: 120px;
+	left: 104px;
 }
 
 #bssid {
 	display: none;
+	overflow: auto;
+	border-top: 1px solid #404040;
 }
 #bssid .settings_bssid {
 	overflow: auto;
@@ -700,49 +667,43 @@ img#select_bg_image {
 	width: 40%;
 }
 #bssid .settings_bssid .settings_bssid_inner {
-	margin: 0 0 10px 10px;
+	position: relative;
+	padding: 10px 0 10px 10px;
+	height: 60px;
+}
+#bssid .settings_bssid:first-child .settings_bssid_inner {
+	border-right: 1px solid #404040;
 }
 #bssid .settings_bssid #bssid_field {
 	display: block;
 	height: 60px;
 	line-height: 60px;
-	text-align: center;
+	text-align: left;
+	background: transparent;
 	
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	background: #fff;
 	color: #404040;
 	border: 0;
 }
 #bssid .settings_bssid #bssid_info {
 	display: block;
-	margin: 5px 10px;
+	padding: 10px;
+	color: #808080;
 }
 
 
 
 #legal {
 	display: none;
+	overflow: auto;
+	border-top: 1px solid #404040;
 }
 #legal_inner {
-	margin: 10px;
-	padding: 0 20px 20px;
-		
+	margin: 0;
+	padding: 20px;
 	color: #808080;
-	
-	/*
-	background: #f4f4f4;
-	border: 1px solid #e3e3e3;
-	
-  -webkit-box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.5);
-     -moz-box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.5);
-          box-shadow: inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 1px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.5);
-
-  -webkit-border-radius: 6px;
-     -moz-border-radius: 6px;
-          border-radius: 6px;
-          */
 }
 #legal p {
 	margin: 10px 0 0;
