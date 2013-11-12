@@ -533,6 +533,7 @@ body {
 	padding: 0;
 	min-width: 100% !important;
 	min-height: 100% !important;
+	background: #333 !important;
 }
 
 #map-text {
