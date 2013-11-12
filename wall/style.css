@@ -303,7 +303,7 @@ body {
 	margin: 0;
 	display: none;
 	border: 0;
-	background: #333;
+	background: #242628;
 }
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * --- Group --- */
@@ -317,7 +317,7 @@ body {
 	top: 20%;
 	
 	background: #f4f4f4;
-	color: #808080;
+	color: #7D878A;
 }
 #done_group {
 	display: block;
@@ -367,9 +367,9 @@ body {
 }
 #group ul#client_list li.client_item .client_item_inner {
 	display: block;
-	background: #bfbfbf;
+	background: #7D878A;
 
-	color: #404040!important;
+	color: #fff!important;
 
 	padding: 20px 0;
  	margin: 0 0 1px 1px;
@@ -379,14 +379,14 @@ body {
           transition: all 0.1s ease-out;
 }
 #group ul#client_list li.client_item .client_item_inner:hover {
-	background: #b3b3b3;
+	box-shadow: 0 0 0 8px rgba(0,0,0,0.1) inset;
 }
 #group ul#client_list li.client_item.active .client_item_inner {
-	color: #fff!important;
-	background: #404040;
+	color: #7D878A!important;
+	background: #242628;
 }
 #group ul#client_list li.client_item.active .client_item_inner:hover {
-	background: #333;
+	box-shadow: 0 0 0 8px rgba(255,255,255,0.1) inset;
 }
 #group ul#client_list li.client_item input.group_box {
 	position: absolute;
@@ -503,6 +503,7 @@ body {
 	z-index: 1000;
 
 	background: #f4f4f4;
+	color: #7D878A;
 }
 .settings_option {
 	width: 40%;
@@ -513,7 +514,7 @@ body {
 	padding: 10px 0 10px 10px;
 	height: 60px;
 	line-height: 60px;
-	border-right: 1px solid #404040;
+	border-right: 1px solid #242628;
 }
 .settings_done {
 	width: 20%;
@@ -564,7 +565,7 @@ body {
 	padding: 0;
 	width: 100%;
 	background: transparent;
-	color: #404040;
+	color: #242628;
 	border: 0;
 	
 	font-size: 16px;
@@ -594,8 +595,8 @@ img#select_bg_image {
 	line-height: 30px;
 	
 	padding: 0 10px;
-	color: #ddd;
-	background: #666;
+	color: #7D878A;
+	background: #242628;
 	border-top: 0;
 
   -webkit-transition: all 0.1s ease-out;
@@ -604,7 +605,6 @@ img#select_bg_image {
 }
 .more_btn:hover {
 	color: #fff;
-	background: #555;
 }
 .more_btn#show_hotspots {
 	left: 0;
@@ -616,7 +616,7 @@ img#select_bg_image {
 #bssid {
 	display: none;
 	overflow: auto;
-	border-top: 1px solid #404040;
+	border-top: 1px solid #7D878A;
 }
 #bssid .settings_bssid {
 	overflow: auto;
@@ -629,7 +629,7 @@ img#select_bg_image {
 	height: 60px;
 }
 #bssid .settings_bssid:first-child .settings_bssid_inner {
-	border-right: 1px solid #404040;
+	border-right: 1px solid #7D878A;
 }
 #bssid .settings_bssid #bssid_field {
 	display: block;
@@ -641,13 +641,12 @@ img#select_bg_image {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	color: #404040;
+	color: #242628;
 	border: 0;
 }
 #bssid .settings_bssid #bssid_info {
 	display: block;
 	padding: 10px;
-	color: #808080;
 }
 
 
@@ -655,13 +654,15 @@ img#select_bg_image {
 #legal {
 	display: none;
 	overflow: auto;
-	border-top: 1px solid #404040;
+	border-top: 1px solid #7D878A;
 }
 #legal_inner {
 	margin: 0;
 	padding: 20px;
-	color: #808080;
 }
 #legal p {
-	margin: 10px 0 0;
+	margin: 20px 0 0;
+}
+#legal p:first-child {
+	margin: 0;
 }
