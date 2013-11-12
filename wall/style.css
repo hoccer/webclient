@@ -1,8 +1,11 @@
-	/* Hoccer Wall Style by Peter Amende */
+	/*
+		Hoccer Wall 
+		Peter Amende, 2013
+	*/
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * --- Fonts --- */
 
-@import url(http://fonts.googleapis.com/css?family=PT+Sans:400,700);
+@import url('http://fonts.googleapis.com/css?family=PT+Sans:400,700');
 
 	/* * * * * * * * * * * * * * * * * * * * * * * * * --- Reset --- */
 
@@ -101,13 +104,10 @@ textarea {
 	font-size: 14px;
 	line-height: 18px;
 
-	color: #888;
+	color: #7D878A;
 }
 
 h1, h2, h3, h4 {
-	font-family: Trebuchet MS, Helvetica, Arial, Sans-Serif;
-
-	color: #ccc;
 	margin: 20px 0;
 }
 h1 {

@@ -1,4 +1,9 @@
-/* Hoccer Wall Script by Peter Amende, Martin Delius and Robert Palmer */
+/*
+	Hoccer Wall
+	Robert Palmer, 2010
+	Martin Delius, 2011
+	Peter Amende, 2013
+*/
 
 var name = '';
 $(document).ready(function() {
